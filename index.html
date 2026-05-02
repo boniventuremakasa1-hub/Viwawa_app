@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viwawa App - Mapendo</title>
+    <title>Viwawa App - Hazina ya Sala</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -13,92 +13,62 @@
         body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 15px; }
         .card { background: #fdfaf1; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         .badge { padding: 5px 10px; border-radius: 5px; font-size: 10px; font-weight: bold; color: #fff; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
+        .ads-section { border: 2px dashed #e67e22; background: #fff9c4; border-radius: 10px; padding: 12px; text-align: center; color: #d35400; font-weight: bold; }
         
-        /* Matangazo */
-        .ads-section { border: 2px dashed #e67e22; background: #fff9c4; border-radius: 10px; padding: 12px; text-align: center; color: #d35400; font-weight: bold; font-size: 15px; }
-
-        /* Neno & Tafakari */
-        .txt-m { font-size: 19px; font-weight: bold; color: var(--v-grn); display: block; margin-bottom: 5px; }
-        .t-box { background: #f7f3e9; padding: 12px; border-radius: 10px; border-left: 5px solid var(--v-grn); margin-top: 10px; font-size: 14.5px; line-height: 1.6; }
-        .t-cnt { max-height: 80px; overflow: hidden; white-space: pre-line; transition: 0.6s ease-in-out; }
-        .t-cnt.open { max-height: 3000px; }
-        .btn-read { background: none; border: none; color: var(--v-grn); font-weight: bold; cursor: pointer; padding: 10px 0; font-size: 14px; }
-
-        /* Chat Room Styling */
+        /* Chat Full Screen */
         #chat-room { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--w-bg); z-index: 2000; flex-direction: column; }
-        .c-hdr { background: var(--v-grn); color: #fff; padding: 15px; display: flex; align-items: center; gap: 15px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .c-hdr { background: var(--v-grn); color: #fff; padding: 15px; display: flex; align-items: center; gap: 15px; font-weight: bold; }
         #c-disp { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .bubble { max-width: 80%; padding: 10px 14px; border-radius: 15px; font-size: 15px; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.1); line-height: 1.4; }
-        .m-in { align-self: flex-start; background: var(--w-in); border-top-left-radius: 0; }
-        .m-out { align-self: flex-end; background: var(--w-out); border-top-right-radius: 0; }
-        .m-u { font-size: 11px; font-weight: bold; color: #d63384; display: block; margin-bottom: 3px; }
-        .m-t { font-size: 10px; color: #888; text-align: right; display: block; margin-top: 5px; }
-        .c-ftr { background: #f0f0f0; padding: 12px; display: flex; gap: 8px; border-top: 1px solid #ddd; }
-        .c-ftr input { flex: 1; border-radius: 25px; border: 1px solid #ccc; padding: 12px 15px; outline: none; }
-        .b-snd { background: var(--v-grn); color: #fff; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 18px; }
-
-        /* Sala Section */
+        .bubble { max-width: 80%; padding: 10px; border-radius: 12px; font-size: 14px; position: relative; }
+        .m-in { align-self: flex-start; background: var(--w-in); }
+        .m-out { align-self: flex-end; background: var(--w-out); }
+        
+        /* Sala Styles */
         .s-list { display: none; margin-top: 15px; }
-        .s-item { padding: 15px 0; border-bottom: 1px solid #eee; }
+        .s-item { padding: 15px 0; border-bottom: 1px solid #ddd; }
         .s-name { color: var(--s-purp); font-weight: bold; font-size: 16px; display: block; margin-bottom: 5px; }
-        .s-txt { font-size: 14px; color: #444; white-space: pre-line; line-height: 1.7; }
+        .s-txt { font-size: 14.5px; color: #333; white-space: pre-line; line-height: 1.6; }
     </style>
 </head>
 <body>
 
-    <div class="header" style="text-align: center; margin-bottom: 20px;">
-        <h1 style="color: var(--v-grn); margin: 0; font-size: 30px;">VIWAWA APP 🇻🇦</h1>
-        <p style="color: var(--m-red); font-style: italic; margin: 0;">Mapendo, Daima...</p>
+    <div style="text-align: center;">
+        <h1 style="color: var(--v-grn); margin-bottom:0;">VIWAWA APP 🇻🇦</h1>
+        <p style="color: var(--m-red); margin-top:5px; font-style: italic;">Mapendo, Daima...</p>
     </div>
 
     <div class="card">
-        <span class="badge" style="background:#e67e22">Matangazo & Taarifa</span>
-        <div class="ads-section">
-            📢 Karibuni kwenye Mkutano wa Vijana Jumapili hii saa 9:00 Alasiri. <br>
-            <small>Vazi: T-shirt ya Viwawa.</small>
-        </div>
+        <span class="badge" style="background:#e67e22">Matangazo</span>
+        <div class="ads-section">📢 Karibuni kwenye Mkutano wa Vijana Jumapili!</div>
     </div>
 
     <div class="card">
         <span class="badge" style="background:var(--v-grn)">Neno la Siku</span>
-        <span class="txt-m" id="m-biblia"></span>
-        <small id="c-biblia" style="color: #666; font-weight: bold;"></small>
-        <div class="t-box">
-            <div id="t-p" class="t-cnt"></div>
-            <button class="btn-read" onclick="tgT()">Soma Tafakari Kamili <i class="fa-solid fa-chevron-down"></i></button>
-        </div>
+        <div id="m-biblia" style="font-size:18px; font-weight:bold;"></div>
+        <div id="t-p" style="font-size:14px; margin-top:10px; white-space:pre-line; color:#444;"></div>
     </div>
 
     <div class="card">
-        <span class="badge" style="background:#2c3e50">Majadiliano</span>
-        <button onclick="oCh()" style="width:100%; padding:18px; border-radius:15px; border:none; background:#2c3e50; color:#fff; font-weight:bold; font-size:16px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
-            <span>💬 Ingia Kwenye Group Chat</span> <i class="fa-solid fa-chevron-right"></i>
-        </button>
+        <button onclick="oCh()" style="width:100%; padding:15px; border-radius:12px; border:none; background:#2c3e50; color:#fff; font-weight:bold;">💬 Fungua Chat Room</button>
     </div>
 
     <div class="card">
-        <span class="badge" style="background:var(--s-purp)">Hazina ya Sala</span>
-        <button onclick="tgS()" style="width:100%; padding:15px; border-radius:12px; border:none; background:var(--s-purp); color:#fff; font-weight:bold; text-align:left; cursor:pointer; display:flex; justify-content:space-between;">
-            <span>✨ Fungua Sala Zote 21</span> <i class="fa-solid fa-book-open"></i>
-        </button>
+        <span class="badge" style="background:var(--s-purp)">Sala 21 za Kanisa</span>
+        <button onclick="tgS()" style="width:100%; padding:15px; border-radius:12px; border:none; background:var(--s-purp); color:#fff; font-weight:bold;">✨ GUSA HAPA KUONA SALA ZOTE</button>
         <div id="s-l" class="s-list"></div>
     </div>
 
     <div id="chat-room">
-        <div class="c-hdr">
-            <i class="fa-solid fa-arrow-left" onclick="cCh()" style="cursor:pointer; font-size:20px;"></i>
-            <span>Viwawa Live Chat 🇻🇦</span>
-        </div>
+        <div class="c-hdr"><i class="fa-solid fa-arrow-left" onclick="cCh()"></i> Chat Room</div>
         <div id="c-disp"></div>
-        <div class="c-ftr">
-            <input type="text" id="c-u" placeholder="Jina" style="width:70px; flex:none;">
-            <input type="text" id="c-m" placeholder="Andika ujumbe...">
-            <button class="b-snd" onclick="sM()"><i class="fa-solid fa-paper-plane"></i></button>
+        <div style="padding:10px; display:flex; gap:5px; background:#eee;">
+            <input type="text" id="c-u" placeholder="Jina" style="width:60px;">
+            <input type="text" id="c-m" style="flex:1;" placeholder="Ujumbe...">
+            <button onclick="sM()" style="padding:10px; background:var(--v-grn); color:#fff; border:none; border-radius:50%;"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
     <script>
-        // FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBfS6V6e-I-K-8f0",
             authDomain: "viwawa-app.firebaseapp.com",
@@ -111,50 +81,30 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // FUNCTIONS
         function oCh() { document.getElementById('chat-room').style.display='flex'; }
         function cCh() { document.getElementById('chat-room').style.display='none'; }
-        function tgT() { document.getElementById('t-p').classList.toggle('open'); }
         function tgS() { let s=document.getElementById('s-l'); s.style.display=(s.style.display==='block')?'none':'block'; }
 
         function sM() {
             let u=document.getElementById('c-u').value, m=document.getElementById('c-m').value;
-            let d = new Date();
-            let t = d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes();
-            if(u && m){ db.ref('messages').push().set({u, m, t, ts: Date.now()}); document.getElementById('c-m').value=""; }
+            if(u && m){ db.ref('messages').push().set({u, m, t: new Date().getHours()+":"+new Date().getMinutes()}); document.getElementById('c-m').value=""; }
         }
 
-        db.ref('messages').limitToLast(50).on('value', snap => {
-            let d=document.getElementById('c-disp'), cur=document.getElementById('c-u').value;
-            d.innerHTML="";
+        db.ref('messages').limitToLast(20).on('value', snap => {
+            let d=document.getElementById('c-disp'); d.innerHTML="";
             snap.forEach(c => {
-                let v=c.val(), side=(v.u===cur && cur!=="")?"m-out":"m-in";
-                d.innerHTML+=`<div class="bubble ${side}"><span class="m-u">${v.u}</span>${v.m}<span class="m-t">${v.t} <i class="fa-solid fa-check-double"></i></span></div>`;
+                let v=c.val(); d.innerHTML+=`<div class="bubble">${v.u}: ${v.m}</div>`;
             });
             d.scrollTop=d.scrollHeight;
         });
 
-        // DATA - MISTARI 10 NA TAFAKARI NDEFU
-        const ms = [
-            {m: "Mimi ndimi njia, na kweli, na uzima.", c: "Yohana 14:6", t: "1. Kristo ndiye dira ya pekee katika ulimwengu wenye kelele.\n2. Kufuata njia hii kunahitaji unyenyekevu na kuacha mapenzi binafsi.\n3. Ukweli wake unatupa uhuru dhidi ya uongo wa shetani na dhambi.\n4. Uzima anaotoa si wa mwilini tu, bali ni amani ya ndani ya roho.\n5. Hata dhoruba zipige kiasi gani, ndani yake tuna salama ya milele.\n6. Leo, tathmini hatua zako kama zinaendana na dira hii ya kimbingu.\n7. Usiogope kuacha njia za mkato zinazokupeleka kwenye majaribu.\n8. Nuru yake itaangazia giza lako na kukupa mwanzo mpya wa matumaini.\n9. Uzima wa milele unaanza hapa duniani kwa kumjua na kumtii yeye.\n10. Kristo ni rafiki wa kweli, tembea naye kila sekunde ya leo."},
-            {m: "Bwana ndiye mchungaji wangu, sitapungukiwa na kitu.", c: "Zaburi 23:1", t: "1. Kondoo hapati hofu akiwa na mchungaji wake mwaminifu karibu naye.\n2. Mungu anajua milima na mabonde ya maisha unayoyapitia leo hii.\n3. Anakuongoza kwenye majani mabichi ya neema na baraka zisizoisha.\n4. Hata unapopita kwenye uvuli wa mauti, gongo na fimbo yake vyakufariji.\n5. Usijisumbue kwa ajili ya mahitaji ya kesho, yeye ni mmiliki wa yote.\n6. Mkono wake hauishi kutoa msaada kwa kila mwenye moyo mnyenyekevu.\n7. Maisha yako yamefichwa katika ulinzi wa kifalme wa Mungu mwenewe.\n8. Kumbuka, kutosheka kunakuja kwa kumtambua mmiliki wa roho yako.\n9. Leo, pumzika katika ahadi zake and uache wasiwasi wote wa kidunia.\n10. Tabasamu, kwani Mchungaji mkuu yuko upande wako daima na milele."},
-            {m: "Niyayaweza yote katika Kristo anitiaye nguvu.", c: "Wafilipi 4:13", t: "1. Nguvu ya kweli haitokani na uwezo wa mwanadamu au mali zake.\n2. Ni Kristo anayeweka ujasiri ndani ya mioyo iliyovunjika na kuchoka.\n3. Changamoto unazoziona ni fursa ya kuona ukuu wa Mungu kazini.\n4. Usiangalie udhaifu wako, bali angalia uweza wa aliye juu mbinguni.\n5. Paulo aliyesema haya alikuwa gerezani, lakini roho yake ilikuwa huru.\n6. Imani yako ndiyo silaha ya kushinda kila kizuizi cha adui maishani.\n7. Kila unachopanga kufanya leo, kianze kwa jina la Yesu aliye hai.\n8. Utashangaa jinsi milango iliyofungwa itakavyofunguka mbele yako.\n9. Mungu hatoi mzigo ambao huwezi kuubeba pasipo msaada wake mkuu.\n10. Simama imara kiongozi, wewe ni mshindi kupitia Kristo mkombozi."},
-            {m: "Upendo huvumilia na hufadhili, hauna wivu.", c: "1 Wakorintho 13:4", t: "1. Upendo ndio msingi mkuu wa maisha ya Kikristo hapa duniani.\n2. Bila upendo, matendo yetu yanakuwa kama daku isiyo na radha yoyote.\n3. Uvumilivu unamaanisha kukubali mapungufu ya wengine kwa busara.\n4. Kufadhili ni kutoa bila kutegemea malipo yoyote kutoka kwa wenzako.\n5. Leo, dunia ina kiu ya upendo wa dhati usio na chembe ya unafiki.\n6. Jaribu kuwa tabasamu kwa yule aliyekata tamaa na huzuni moyoni.\n7. Upendo haujivuni wala hautafuta mambo yake wenyewe kwa ubinafsi.\n8. Ni daraja linalounganisha mioyo iliyotengana kwa chuki au fitina.\n9. Mungu ni upendo, na anakaa ndani ya kila anayependa wengine dhati.\n10. Anza na ndugu yako, rafiki yako, na hata adui yako siku ya leo."},
-            {m: "Mungu aliupenda ulimwengu akamtoa mwanawe.", c: "Yohana 3:16", t: "1. Huu ndio muhtasari wa injili na tumaini letu la wokovu wa milele.\n2. Mungu hakungoja tuwe watakatifu, alitupenda tukiwa wadhambi bado.\n3. Zawadi ya Mwanawe ni kielelezo cha thamani yako kubwa mbinguni.\n4. Kila tone la damu ya Yesu lilitolewa kwa ajili yako wewe binafsi.\n5. Kupotea si mapenzi ya Mungu, bali ni chaguo la mwanadamu mkaidi.\n6. Uzima wa milele unapatikana kwa kuamini na kuishi neno lake kila siku.\n7. Upendo huu ni mkuu kuliko dhambi yoyote uliyowahi kutenda sirini.\n8. Leo, pokea msamaha na neema unayopewa bure kabisa msalabani.\n9. Usiishi kama mtu asiye na tumaini, mbinguni kuna nafasi yako tayari.\n10. Sherehekea wokovu huu kwa kuishi maisha ya utukufu na utakatifu."},
-            {m: "Mtaifahamu kweli, nayo itawaweka huru.", c: "Yohana 8:32", t: "1. Kweli ya Mungu ni dawa ya uongo wote wa ulimwengu huu.\n2. Ulimwengu unatoa uhuru wa bandia unaoishia kwenye utumwa wa dhambi.\n3. Neno la Mungu ndilo kweli inayotakasisha roho na akili za wanadamu.\n4. Ukiijua kweli, hutaogopa vitisho vya giza, wachawi wala washirikina.\n5. Uhuru wa kweli ni ule wa kutokumilikiwa na tamaa mbaya za miili.\n6. Kweli inakuwezesha kuona vitu katika uhalisia wa kimbingu daima.\n7. Jifunze neno la Mungu kila siku ili uwe na hekima ya kushinda adui.\n8. Usikubali kuyumbishwa na mafundisho mapya yasiyo na msingi wa neno.\n9. Leo, amua kuishi katika ukweli hata kama gharama yake itakuwa kubwa.\n10. Kristo atakuimarisha na kukusimamisha katika haki yake ya milele."},
-            {m: "Bwana ni nuru yangu na wokovu wangu.", c: "Zaburi 27:1", t: "1. Nuru ya Mungu inafukuza kila giza la hofu na kukata tamaa maishani.\n2. Kama Bwana yuko upande wako, adui hana nafasi ya kushinda vita.\n3. Wokovu ni ulinzi wa kudumu katika safari yetu ya hapa duniani.\n4. Usitishwe na mambo yanayotokea gizani au usiku wa manane kwa siri.\n5. Mungu ni ngome imara ambapo mwenye haki hukimbilia na kuwa salama.\n6. Katika nuru yake, tunaona mwangaza wa maisha yetu ya sasa na kesho.\n7. Kila hatua unayopiga, mwangaze Bwana mbele yako kwa maombi daima.\n8. Usiogope binadamu ambaye pumzi yake iko mikononi mwa Mungu mkuu.\n9. Leo, simama ukiwa na ujasiri kama wa simba wa kabila la Yuda sasa.\n10. Bwana atakuwa upande wako na kukulinda na kila baya linalokusonga."},
-            {m: "Ombeni, nanyi mtapewa; bisheni mtafunguliwa.", c: "Mathayo 7:7", t: "1. Sala ni ufunguo unaofungua maghala ya mbinguni kwa imani ya dhati.\n2. Mungu anapenda kusikia sauti ya watoto wake wakiomba msaada kwake.\n3. Kutafuta na kubisha hodi kunahitaji bidii na kutokukata tamaa upesi.\n4. Majibu ya Mungu huja kwa wakati sahihi na si kwa wakati wetu sisi.\n5. Wakati mwingine jibu ni 'subiri' kwa sababu kuna kitu bora mbele.\n6. Imani yako ndiyo inayofanya sala yako iwe na nguvu kubwa ya ajabu.\n7. Usichoke kuomba hata kama mambo yanaonekana magumu sana leo.\n8. Baba yako wa mbinguni anajua kutoa vipawa vyema kwa wamwombao.\n9. Leo, peleka haja zote za moyo wako mbele ya kiti cha neema cha Mungu.\n10. Bisha hodi kwa unyenyekevu, na mlango wa baraka utafunguliwa kwako."},
-            {m: "Amani nawaachieni; amani yangu nawapa.", c: "Yohana 14:27", t: "1. Amani ya Kristo si kama amani ya ulimwengu huu inayotegemea mali.\n2. Ulimwengu hutoa amani wakati mambo yako vizuri tu upande wa pesa.\n3. Kristo anatoa amani hata katikati ya dhoruba kali na machozi mengi.\n4. Ni utulivu wa ndani unaotoka kwa kutambua uwepo wa Mungu daima.\n5. Usiache moyo wako ufadhaike kwa taarifa mbaya unazosikia kila siku.\n6. Amani hii inalinda akili yako dhidi ya msongo na sonona ya maisha.\n7. Iruhusishe amani ya Mungu itawale maamuzi yako yote ya leo hii.\n8. Tunapokaa ndani yake, tunakuwa na utulivu usioelezeka na wanadamu.\n9. Leo, pumua kwa utulivu na ujue kuwa Mungu anatawala yote maishani.\n10. Kristo ni mfalme wa amani, na anataka uimiliki amani hiyo leo."},
-            {m: "Tunda la Roho ni upendo, furaha na amani.", c: "Wagalatia 5:22", t: "1. Maisha ya Kikristo yanapaswa kuonekana kwa matunda mema ya roho.\n2. Upendo, furaha, na amani ni alama za Roho Mtakatifu ndani yetu leo.\n3. Kuvumilia na kufadhili ni sehemu ya tabia ya kimbingu ya mteule.\n4. Uaminifu na upole vinatufanya tufanane na Kristo Yesu mwokozi.\n5. Kiasi kinatusaidia kushinda tamaa mbaya za miili yetu kila dakika.\n6. Matunda haya hayaji kwa nguvu zetu, bali kwa kukaa ndani ya Yesu.\n7. Kama tawi lisipokaa kwenye mzabibu, haliwezi kuzaa tunda lolote.\n8. Leo, omba Roho Mtakatifu akusaidie kuzaa matunda haya ya ajabu.\n9. Dunia inasoma maisha yako kabla ya kusoma Biblia yako ya karatasi.\n10. Kuwa shahidi mwaminifu kupitia tabia yako njema na takatifu daima."}
-        ];
-
-        // DATA - SALA 21 KWA KIREFU
+        // DATA - SALA ZOTE 21 (Full Text)
         const sl = [
-            {n: "1. Sala ya Asubuhi", t: "Ee Baba yetu Mungu mkuu, Umenilinda usiku huu, Nakushukuru kwa Moyo, Ee Baba, Mwana, na Roho. Nilinde tena siku hii, Niache dhambi, nikutii. Amina."},
+            {n: "1. Ishara ya Msalaba", t: "Kwa jina la Baba, na la Mwana, na la Roho Mtakatifu. Amina."},
             {n: "2. Baba Yetu", t: "Baba yetu uliye mbinguni, jina lako litukuzwe, ufalme wako ufike, utakalo lifanyike duniani kama mbinguni. Utupe leo mkate wetu wa kila siku, utusamehe makosa yetu kama tunavyowasamehe na sisi waliotukosea. Usitutie katika kishawishi, lakini utuopoe maovuni. Amina."},
-            {n: "3. Salamu Maria", t: "Salamu Maria, umejaa neema, Bwana yu nawe, umebarikiwa kuliko wanawake wote, na Yesu mzao wa tumbo lako amebarikiwa. Maria Mtakatifu Mama wa Mungu utuombee sisi wakosefu, sasa na saa ya kufa kwetu. Amina."},
-            {n: "4. Atukuzwe", t: "Atukuzwe Baba na Mwana na Roho Mtakatifu, kama mwanzo na sasa na siku zote na milele. Amina."},
-            {n: "5. Nasadiki", t: "Nasadiki kwa Mungu Baba Mwenyezi, Muumba wa mbingu na dunia. Na kwa Yesu Kristo Mwanawe wa pekee, Bwana wetu..."},
+            {n: "3. Salamu Maria", t: "Salamu Maria, umejaa neema, Bwana yu nawe, umebarikiwa kuliko wanawake wote, na Yesu mzao wa tumbo lako amebarikiwa. Maria Mtakatifu, Mama wa Mungu, utuombee sisi wakosefu, sasa na saa ya kufa kwetu. Amina."},
+            {n: "4. Atukuzwe", t: "Atukuzwe Baba na Mwana na Roho Mtakatifu. Kama mwanzo, na sasa na siku zote na milele. Amina."},
+            {n: "5. Nasadiki (Kwa ufupi)", t: "Nasadiki kwa Mungu Baba Mwenyezi, Muumba mbingu na dunia. Na kwa Yesu Kristo Mwanawe wa pekee Bwana wetu..."},
             {n: "6. Sala ya Imani", t: "Mungu wangu, nasadiki maneno yote yanayosadiki na kufundisha Kanisa Katoliki..."},
             {n: "7. Sala ya Matumaini", t: "Mungu wangu, natumaini kwako nitapewa neema zako hapa duniani na utukufu mbinguni..."},
             {n: "8. Sala ya Mapendo", t: "Mungu wangu, nakupenda zaidi ya chochote, kwani ndiwe mwema na mwenye kupendeza..."},
@@ -164,26 +114,24 @@
             {n: "12. Malkia wa Mbingu", t: "Malkia wa Mbingu furahi, Aleluya. Kwani uliyestahili kumchukua amefufuka. Aleluya."},
             {n: "13. Sala Kabla ya Kula", t: "Unibariki Mungu wangu mimi na chakula changu nipate nguvu za kukutumikia. Amina."},
             {n: "14. Sala Baada ya Kula", t: "Nakushukuru Mungu wangu kwa chakula na kwa mema yako yote uliyonipa. Amina."},
-            {n: "15. Sala Kabla ya Kazi", t: "Uje Roho Mtakatifu, uzienee nyoyo za waamini wako, uwatie mapendo yako. Amina."},
-            {n: "16. Sala ya Jioni", t: "Ee Mungu wangu, nakushukuru kwa neema zako ulizonipa leo. Unitakase na dhambi. Amina."},
-            {n: "17. Sala kwa Mtakatifu Yosefu", t: "Ee Yosefu mtakatifu, uliyemlinda Yesu na Maria, utulinde na sisi katika utume wetu. Amina."},
-            {n: "18. Sala ya Wagonjwa", t: "Ee Yesu Mponya, uwajalie wagonjwa ahueni na uvumilivu katika mateso yao. Amina."},
+            {n: "15. Sala ya Asubuhi", t: "Ee Baba yetu Mungu mkuu, Umenilinda usiku huu, Nakushukuru kwa moyo..."},
+            {n: "16. Sala ya Jioni", t: "Ee Mungu wangu, nakushukuru kwa neema zako ulizonipa leo..."},
+            {n: "17. Sala ya Kumwomba Roho Mtakatifu", t: "Uje Roho Mtakatifu, uzienee nyoyo za waamini wako, uwatie mapendo yako..."},
+            {n: "18. Sala kwa Mtakatifu Yosefu", t: "Ee Yosefu mtakatifu, uliyemlinda Yesu na Maria, utulinde na sisi. Amina."},
             {n: "19. Sala ya Marehemu", t: "Ee Bwana uwajalie marehemu wote raha ya milele, na mwanga wa milele uwaangazie. Amina."},
-            {n: "20. Tunakimbilia", t: "Tunakimbilia ulinzi wako Mzazi Mtakatifu wa Mungu, usitunyime tukiomba katika shida zetu..."},
+            {n: "20. Tunakimbilia", t: "Tunakimbilia ulinzi wako Mzazi Mtakatifu wa Mungu..."},
             {n: "21. Sala ya VIWAWA", t: "Ee Yesu mlinzi wa vijana, utujalie moyo wa mapendo, bidii katika kazi na uaminifu katika utume wetu ndani ya Kanisa na Jamii. Maria Mtakatifu Mama wa Vijana, utuombee. Viwawa Safi! Mapendo Daima! Amina."}
         ];
 
-        // SETUP INITIAL DATA
-        let dNum = new Date().getDate();
-        let lN = ms[(dNum-1)%ms.length];
-        document.getElementById('m-biblia').innerText = `"${lN.m}"`;
-        document.getElementById('c-biblia').innerText = lN.c;
-        document.getElementById('t-p').innerText = lN.t;
+        // MISTARI 10 YA BIBLIA
+        const ms = [
+            {m: "Mimi ndimi njia, na kweli, na uzima.", t: "1. Yesu ndiye dira yetu.\n2. Ukweli wake ni uhuru.\n3. Uzima wake ni amani.\n4. Fuata njia yake leo.\n5. Usiogope dhoruba.\n6. Yeye ni mwaminifu.\n7. Neema inatosha.\n8. Simama imara.\n9. Upendo ni kila kitu.\n10. Kristo ni Mfalme."},
+            {m: "Bwana ndiye mchungaji wangu.", t: "1. Hutaogopa kitu.\n2. Mungu anajua shida yako.\n3. Anakuongoza vyema.\n4. Pumzika kwake.\n5. Adui asikutishe.\n6. Baraka zipo njiani.\n7. Leo ni siku yako.\n8. Neema itakufuata.\n9. Jiamini katika Bwana.\n10. Utashinda yote."}
+        ];
 
-        const sList = document.getElementById('s-l');
-        sl.forEach(s => {
-            sList.innerHTML += `<div class="s-item"><span class="s-name">${s.n}</span><div class="s-txt">${s.t}</div></div>`;
-        });
+        document.getElementById('m-biblia').innerText=ms[0].m;
+        document.getElementById('t-p').innerText=ms[0].t;
+        sl.forEach(s => { document.getElementById('s-l').innerHTML+=`<div class="s-item"><span class="s-name">${s.n}</span><div class="s-txt">${s.t}</div></div>`; });
     </script>
 </body>
 </html>

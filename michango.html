@@ -21,7 +21,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: var(--bg); padding-bottom: 80px; color: var(--text); }
 
-        /* Header */
+        /* Header - Nimehakikisha mshale una nafasi yake */
         .header {
             background: var(--maroon);
             color: white;
@@ -31,8 +31,8 @@
             gap: 15px;
             position: sticky; top: 0; z-index: 100;
         }
-        .header h1 { font-size: 18px; font-weight: 700; }
-        .back-btn { cursor: pointer; display: none; } /* Itaonekana tu tukiwa ndani ya majina */
+        .header h1 { font-size: 18px; font-weight: 700; flex-grow: 1; }
+        .back-btn { cursor: pointer; font-size: 20px; color: white; text-decoration: none; }
 
         /* Main Menu Cards */
         .menu-container { padding: 20px; }
@@ -151,8 +151,7 @@
             -
         </div>
         
-        <div id="dataRows">
-            </div>
+        <div id="dataRows"></div>
     </div>
 
     <a href="#" class="admin-fab">
@@ -163,7 +162,7 @@
         <a href="index.html" class="nav-item">
             <i class="fa-solid fa-house"></i>NYUMBANI
         </a>
-        <a href="#" class="nav-item">
+        <a href="biblia.html" class="nav-item">
             <i class="fa-solid fa-book-bible"></i>BIBLIA
         </a>
         <a href="michango.html" class="nav-item active">
@@ -175,13 +174,12 @@
     </nav>
 
     <script>
-        let currentMode = ''; // 'ada' au 'mingine'
+        let currentMode = ''; 
 
         function showMembers(mode) {
             currentMode = mode;
             document.getElementById('mainCategories').style.display = 'none';
             document.getElementById('membersPage').style.display = 'block';
-            document.getElementById('backBtn').style.display = 'block';
             document.getElementById('headerTitle').innerText = mode === 'ada' ? 'ADA YA MWEZI' : 'MICHANGO MINGINE';
         }
 
@@ -191,10 +189,9 @@
             document.getElementById('detailsTitle').innerText = name;
             
             const dataRows = document.getElementById('dataRows');
-            dataRows.innerHTML = ''; // Safisha kwanza
+            dataRows.innerHTML = ''; 
 
             if(currentMode === 'ada') {
-                // Orodha ya Miezi
                 const miezi = ['Januari', 'Februari', 'Machi', 'Aprili', 'Mei'];
                 miezi.forEach(mwezi => {
                     dataRows.innerHTML += `
@@ -205,7 +202,6 @@
                         </div>
                     `;
                 });
-                // Mfano wa mwezi ambao haijalipwa
                 dataRows.innerHTML += `
                     <div class="data-row">
                         <div class="row-left">Juni</div>
@@ -214,7 +210,6 @@
                     </div>
                 `;
             } else {
-                // Orodha ya Michango Mingine
                 const michango = [
                     {aina: 'Mchango wa Kambi', hali: 'tiki', kiasi: '5,000'},
                     {aina: 'Ujenzi wa Ofisi', hali: 'kosa', kiasi: '0'},
@@ -234,19 +229,26 @@
             }
         }
 
+        // Script ya kurudi nyuma imeboreshwa
         function goBack() {
-            if (document.getElementById('detailsPage').style.display === 'block') {
-                document.getElementById('detailsPage').style.display = 'none';
-                document.getElementById('membersPage').style.display = 'block';
-            } else {
-                document.getElementById('membersPage').style.display = 'none';
-                document.getElementById('mainCategories').style.display = 'block';
-                document.getElementById('backBtn').style.display = 'none';
+            const mainCats = document.getElementById('mainCategories');
+            const membersPage = document.getElementById('membersPage');
+            const detailsPage = document.getElementById('detailsPage');
+
+            if (detailsPage.style.display === 'block') {
+                // Kama tupo kwenye details, rudi kwenye list ya majina
+                detailsPage.style.display = 'none';
+                membersPage.style.display = 'block';
+            } else if (membersPage.style.display === 'block') {
+                // Kama tupo kwenye majina, rudi kwenye menyu kuu ya michango
+                membersPage.style.display = 'none';
+                mainCats.style.display = 'block';
                 document.getElementById('headerTitle').innerText = 'MICHANGO';
+            } else {
+                // Kama tupo menyu kuu ya michango, rudi Home (index.html)
+                window.location.href = 'index.html';
             }
         }
     </script>
 </body>
 </html>
-
- 

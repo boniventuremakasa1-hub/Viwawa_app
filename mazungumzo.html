@@ -3,161 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Viwawa chat 💬</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Mazungumzo - VIWAWA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --maroon: #801313; --chat-bg: #e5ddd5; --my-bubble: #801313; --other-bubble: #ffffff; }
+        :root { --maroon: #801313; --bg-chat: #e5ddd5; --white: #ffffff; --msg-in: #ffffff; --msg-out: #dcf8c6; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body, html { height: 100%; width: 100%; overflow: hidden; background-color: var(--chat-bg); }
-
-        .app-container {
-            display: flex; flex-direction: column; height: 100vh; width: 100vw;
-            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
-            background-size: contain;
-        }
+        
+        body { background-color: var(--bg-chat); height: 100vh; display: flex; flex-direction: column; }
 
         /* Header */
-        .chat-header {
-            background: var(--maroon); color: white; padding: 10px 15px;
-            display: flex; align-items: center; gap: 10px; z-index: 100;
+        .chat-header { 
+            background: var(--maroon); 
+            color: white; 
+            padding: 10px 15px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000;
         }
-        .back-btn { color: white; text-decoration: none; font-size: 20px; }
-        .group-img { width: 42px; height: 42px; border-radius: 50%; background: #fff; overflow: hidden; flex-shrink: 0; }
-        .group-img img { width: 100%; height: 100%; object-fit: cover; }
-        .group-info { flex: 1; }
-        .group-info h2 { font-size: 16px; font-weight: 600; }
+        .chat-header a { color: white; text-decoration: none; font-size: 18px; }
+        .group-img { width: 40px; height: 40px; border-radius: 50%; background: #eee; }
+        .group-info h3 { font-size: 16px; }
+        .group-info p { font-size: 11px; opacity: 0.8; }
 
-        /* Messages Area */
-        .messages-area { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .msg-row { display: flex; gap: 8px; max-width: 85%; }
-        .msg-row.me { align-self: flex-end; flex-direction: row-reverse; }
-        .user-pic { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; flex-shrink: 0; align-self: flex-end; }
-        .user-pic img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .bubble { padding: 8px 12px; border-radius: 15px; font-size: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .me .bubble { background: var(--my-bubble); color: white; border-bottom-right-radius: 2px; }
-        .other .bubble { background: var(--other-bubble); color: #333; border-bottom-left-radius: 2px; }
+        /* Area ya Meseji */
+        .messages-container { 
+            flex: 1; 
+            padding: 15px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px;
+            padding-bottom: 80px; /* Nafasi ya kutosha chini */
+        }
 
-        /* Input Bar - HAPA NDIPO MABADILIKO YALIPO */
-        .input-bar {
-            padding: 8px;
-            display: flex;
-            align-items: center;
-            background: transparent;
-            gap: 5px;
-        }
-        .input-box-wrapper {
-            flex: 1;
-            background: white;
-            border-radius: 25px;
-            padding: 2px 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .input-box-wrapper input {
-            flex: 1;
-            border: none;
-            padding: 10px 5px;
-            outline: none;
-            font-size: 15px;
-            background: transparent;
-        }
-        .input-box-wrapper i { color: #888; font-size: 19px; cursor: pointer; }
+        .message { max-width: 75%; padding: 8px 12px; border-radius: 10px; font-size: 14px; position: relative; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .received { align-self: flex-start; background: var(--msg-in); border-top-left-radius: 0; }
+        .sent { align-self: flex-end; background: var(--msg-out); border-top-right-radius: 0; }
         
-        /* Batani ya Tuma imesogezwa mbele ya pini na kamera */
-        .send-btn {
-            width: 45px;
-            height: 45px;
-            background: var(--maroon);
-            color: white;
-            border-radius: 50%;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        .user-name { font-size: 11px; font-weight: 700; color: var(--maroon); display: block; margin-bottom: 2px; }
+        .time { font-size: 10px; color: #888; display: block; text-align: right; margin-top: 4px; }
+
+        /* Input Area (Imepunguzwa Ukubwa) */
+        .chat-input-area { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            background: #f0f0f0; 
+            padding: 8px 10px; 
+            display: flex; 
+            align-items: flex-end; 
+            gap: 8px; 
+        }
+
+        .input-box { 
+            flex: 1; 
+            background: white; 
+            border-radius: 25px; 
+            display: flex; 
+            align-items: flex-end; 
+            padding: 5px 12px; 
+            min-height: 40px;
+        }
+
+        .input-box textarea { 
+            flex: 1; 
+            border: none; 
+            outline: none; 
+            padding: 8px 5px; 
+            font-size: 15px; 
+            resize: none; 
+            max-height: 100px; 
+            background: transparent;
+        }
+
+        .input-box i { color: #888; padding: 10px; cursor: pointer; }
+
+        .send-btn { 
+            background: var(--maroon); 
+            color: white; 
+            width: 42px; 
+            height: 42px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border: none; 
+            font-size: 18px; 
             cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <div class="chat-header">
-            <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
-            <div class="group-img"><img src="https://cdn-icons-png.flaticon.com/512/681/681494.png"></div>
-            <div class="group-info">
-                <h2>Viwawa chat 💬</h2>
-                <p>Maria, Thadeo, Boniventure...</p>
-            </div>
-            <i class="fa-solid fa-ellipsis-vertical"></i>
-        </div>
-
-        <div class="messages-area" id="chatBox">
-            <div class="msg-row other">
-                <div class="user-pic"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"></div>
-                <div class="bubble">
-                    <span style="font-size:11px; font-weight:700; color:var(--maroon)">Maria</span><br>
-                    Tumsifu Yesu Kristo vijana! 💬
-                    <div style="font-size:10px; text-align:right; opacity:0.6; margin-top:4px;">10:00 AM</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="input-bar">
-            <div class="input-box-wrapper">
-                <i class="fa-regular fa-face-smile"></i>
-                <input type="text" id="userInput" placeholder="Andika ujumbe...">
-                <i class="fa-solid fa-paperclip"></i>
-                <i class="fa-solid fa-camera"></i>
-            </div>
-            <button class="send-btn" id="sendBtn">
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
+    <div class="chat-header">
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i></a>
+        <div class="group-img"><img src="https://via.placeholder.com/40" style="width:100%; border-radius:50%;"></div>
+        <div class="group-info">
+            <h3>VIWAWA PAROKIA</h3>
+            <p>Washiriki 124, Mtandaoni</p>
         </div>
     </div>
 
-    <script>
-        const chatBox = document.getElementById('chatBox');
-        const userInput = document.getElementById('userInput');
-        const sendBtn = document.getElementById('sendBtn');
+    <div class="messages-container" id="chatBox">
+        <div class="message received">
+            <span class="user-name">Dominick</span>
+            Tumsifu Yesu Kristo wapendwa!
+            <span class="time">10:05 AM</span>
+        </div>
+        
+        <div class="message sent">
+            Milele Amina! Karibuni kwenye kikao.
+            <span class="time">10:07 AM</span>
+        </div>
 
-        function getMyPic() {
-            const profile = JSON.parse(localStorage.getItem('viwawa_profile'));
-            return (profile && profile.image) ? profile.image : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+        <div class="message received">
+            <span class="user-name">Sr. Maria</span>
+            Naomba tujue muda wa sala ya jioni utakuwa saa ngapi leo?
+            <span class="time">10:15 AM</span>
+        </div>
+    </div>
+
+    <div class="chat-input-area">
+        <div class="input-box">
+            <i class="fa-regular fa-face-smile"></i>
+            <textarea id="msgInput" rows="1" placeholder="Andika ujumbe..." oninput="autoGrow(this)"></textarea>
+            <i class="fa-solid fa-paperclip"></i>
+            <i class="fa-solid fa-camera"></i>
+        </div>
+        <button class="send-btn" onclick="sendMsg()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+
+    <script>
+        // Inafanya sehemu ya kuandikia ikue kulingana na maandishi
+        function autoGrow(element) {
+            element.style.height = "5px";
+            element.style.height = (element.scrollHeight) + "px";
         }
 
-        sendBtn.onclick = () => {
-            const text = userInput.value.trim();
-            if(!text) return;
-
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const myPic = getMyPic();
-
-            const html = `
-                <div class="msg-row me">
-                    <div class="user-pic"><img src="${myPic}"></div>
-                    <div class="bubble">
-                        <span style="font-size:11px; font-weight:700; color:#ffca28">Mimi</span><br>
-                        ${text}
-                        <div style="font-size:10px; text-align:right; opacity:0.8; margin-top:4px;">
-                            ${time} <i class="fa-solid fa-check-double" style="color:#4fc3f7"></i>
-                        </div>
-                    </div>
-                </div>
-            `;
+        // Kutuma meseji
+        function sendMsg() {
+            const input = document.getElementById('msgInput');
+            const chatBox = document.getElementById('chatBox');
             
-            chatBox.innerHTML += html;
-            userInput.value = "";
+            if(input.value.trim() !== "") {
+                const now = new Date();
+                const timeStr = now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes() + (now.getHours() >= 12 ? " PM" : " AM");
+
+                const newMsg = `
+                    <div class="message sent">
+                        ${input.value}
+                        <span class="time">${timeStr}</span>
+                    </div>
+                `;
+                
+                chatBox.innerHTML += newMsg;
+                input.value = "";
+                input.style.height = "auto"; // Inarudisha urefu wa kawaida baada ya kutuma
+                chatBox.scrollTop = chatBox.scrollHeight; // Inashusha scroll chini
+            }
+        }
+
+        // Inahakikisha inashuka chini kabisa ikifunguka
+        window.onload = function() {
+            const chatBox = document.getElementById('chatBox');
             chatBox.scrollTop = chatBox.scrollHeight;
         };
-
-        userInput.addEventListener("keypress", (e) => { if(e.key === "Enter") sendBtn.click(); });
     </script>
 </body>
 </html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sala Zetu - VIWAWA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --maroon: #801313; --bg: #f4f4f4; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        body { background-color: var(--bg); padding-bottom: 30px; }
+        .header { background: var(--maroon); color: white; padding: 15px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; z-index: 100; }
+        .header a { color: white; text-decoration: none; }
+        .search-box { padding: 15px; background: white; }
+        .search-box input { width: 100%; padding: 10px; border-radius: 20px; border: 1px solid #ddd; outline: none; }
+        .sala-container { padding: 10px; }
+        .sala-card { background: white; margin-bottom: 8px; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .sala-title { padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: bold; color: var(--maroon); font-size: 15px; }
+        .sala-content { padding: 0 15px; max-height: 0; overflow: hidden; transition: 0.3s ease-out; background: #fffafb; line-height: 1.6; color: #444; font-size: 15px; }
+        .sala-content.open { padding: 15px; max-height: 3000px; border-top: 1px solid #eee; }
+        b { color: var(--maroon); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i></a>
+        <h2>Sala Zetu (21)</h2>
+    </div>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Tafuta sala hapa..." onkeyup="filterSala()">
+    </div>
+
+    <div class="sala-container" id="salaList">
+        
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">1. Ishara ya Msalaba <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Kwa jina la Baba, na la Mwana, na la Roho Mtakatifu. Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">2. Sala ya Asubuhi <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Ee Baba yetu Mungu mkuu, Umenilinda usiku huu, Nakushukuru kwa Moyo, Ee Baba, Mwana, na Roho. Nilinde tena siku hii, Niache dhambi, nikutii. Naomba sana, Baba wee, Baraka yako nipokee. Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">3. Nia Njema <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Kumheshimu Mungu wangu namtolea roho yangu, nifanye kazi nipumzike, Amri zake tu nishike. Wazo, neno, tendo lote namtolea Mungu pote. Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">4. Baba Yetu <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Baba yetu uliye mbinguni, jina lako litukuzwe, ufalme wako ufike, utakalo lifanyike duniani kama mbinguni. Utupe leo mkate wetu wa kila siku, utusamehe makosa yetu kama tunavyowasamehe na sisi waliotukosea, usitutie katika kishawishi, lakini utuopoe maovuni. Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">5. Salamu Maria <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Salamu Maria umejaa neema, Bwana yu nawe, umebarikiwa kuliko wanawake wote, na Yesu mzao wa tumbo lako amebarikiwa. Maria Mtakatifu Mama wa Mungu, utuombee sisi wakosefu, sasa na saa ya kufa kwetu. Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">6. Atukuzwe <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Atukuzwe Baba, na Mwana, na Roho Mtakatifu. Kama mwanzo, na sasa, na siku zote, na milele. Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">7. Kanuni ya Imani <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Nasadiki kwa Mungu Baba mwenyezi, muumba mbingu na dunia. Na kwa Yesu Kristo Mwana wake wa pekee Bwana wetu... (Inaendelea mpaka mwisho)... Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">8. Amri 10 za Mungu <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">1. Usiabudu miungu migeni. 2. Usitaje bure jina la Mungu. 3. Takasa siku ya Bwana. 4. Waheshimu baba na mama. 5. Usiue. 6. Usizini. 7. Usiibe. 8. Usiseme uongo. 9. Usitamani mke wa mwingine. 10. Usitamani mali ya mwingine.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">9. Amri 5 za Kanisa <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">1. Hudhuria Misa Takatifu Dominika na sikukuu zilizoamriwa. 2. Funga wakati uliowekwa. 3. Ungama dhambi zako angalau mara moja kwa mwaka. 4. Pokea Sakramenti ya Altare wakati wa Pasaka. 5. Saidia Kanisa kwa zaka na sadaka.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">10. Malaika Mlinzi <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Malaika wa Mungu, niliye kabidhiwa kwako kwa wema wa Mungu mbinguni, niangaze, unilinde, uniongoze, na kunitawala. Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">11. Sala ya Chakula (Kabla) <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Bariki Ee Bwana chakula hiki tunachotaka kukila ili kitufae kwa afya ya roho na mwili. Kwa njia ya Kristo Bwana wetu. Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">12. Sala ya Chakula (Baada) <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Tunakushukuru Ee Mungu mwenyezi kwa mapaji yako yote, unayeishi na kutawala milele. Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">13. Sala za Imani, Matumaini na Mapendo <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content"><b>Imani:</b> Mungu wangu, nasadiki maneno yote liliyofundisha Kanisa Katoliki... <br><b>Tumaini:</b> Mungu wangu, natumaini kwako nitapata neema... <br><b>Mapendo:</b> Mungu wangu, nakupenda kwa moyo wote... Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">14. Malaika wa Bwana <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Malaika wa Bwana alimpasha habari Maria... (Sala nzima ya asubuhi, mchana na jioni). Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">15. Sala ya Kutubu <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Mungu wangu, nichukie dhambi zangu zote kwa moyo, kwani kwa dhambi nimepoteza mbingu na kupata moto wa milele... Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">16. Sala ya Jioni <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Ee Mungu wangu, nakushukuru kwa neema zote ulizonijalia siku ya leo. Nipe mwanga nione dhambi nilizofanya na unipe neema ya kutubu kweli. Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">17. Kumbuka (Memorare) <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Kumbuka, Ee Bikira Maria mwenye rehema, haijasikika bado mja yeyote aliyekimbilia ulinzi wako akatupwa... Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">18. Sala kwa Roho Mtakatifu <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Ee Roho Mtakatifu, uje utujaze mioyo yetu na uwashe moto wa mapendo yako. Tuma Roho wako na kila kitu kitaumbwa upya. Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">19. Sala kwa Mt. Yosefu <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Ee Mtakatifu Yosefu, mlinzi wa familia takatifu, utulinde sisi na familia zetu kama ulivyomlinda Yesu na Maria. Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">20. Sala ya Marehemu <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Ee Bwana, uwape mapumziko ya milele, na mwanga wa milele uwaangazie. Wapumzike kwa amani. Amina.</div>
+        </div>
+
+        <div class="sala-card">
+            <div class="sala-title" onclick="toggleSala(this)">21. Sala ya Hitimisho <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="sala-content">Mungu utubariki, utulinde na maovu yote na utufikishe kwenye uzima wa milele. Amina.</div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleSala(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('i');
+            content.classList.toggle('open');
+            icon.classList.toggle('fa-chevron-up');
+            icon.classList.toggle('fa-chevron-down');
+        }
+        function filterSala() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('sala-card');
+            for (let card of cards) {
+                let title = card.innerText.toLowerCase();
+                card.style.display = title.includes(input) ? "" : "none";
+            }
+        }
+    </script>
+</body>
+</html>
+

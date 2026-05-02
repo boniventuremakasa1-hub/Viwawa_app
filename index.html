@@ -47,7 +47,6 @@
             padding: 0 20px;
         }
 
-        /* Card Link Style */
         .card-link { text-decoration: none; color: inherit; display: block; }
 
         .menu-card {
@@ -142,7 +141,7 @@
             </div>
         </a>
 
-        <a href="#" class="card-link">
+        <a href="michango.html" class="card-link">
             <div class="menu-card">
                 <div class="icon-box icon-michango"><i class="fa-solid fa-wallet"></i></div>
                 <span>Michango</span>
@@ -177,29 +176,23 @@
 
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item active">
-            <i class="fa-solid fa-house"></i>
-            NYUMBANI
+            <i class="fa-solid fa-house"></i>NYUMBANI
         </a>
         <a href="#" class="nav-item">
-            <i class="fa-solid fa-book-bible"></i>
-            BIBLIA
+            <i class="fa-solid fa-book-bible"></i>BIBLIA
         </a>
-        <a href="matangazo.html" class="nav-item">
-            <i class="fa-solid fa-bullhorn"></i>
-            HABARI
+        <a href="michango.html" class="nav-item">
+            <i class="fa-solid fa-wallet"></i>MICHANGO
         </a>
         <a href="#" class="nav-item">
-            <i class="fa-regular fa-comments"></i>
-            CHAT
+            <i class="fa-regular fa-comments"></i>CHAT
         </a>
         <a href="profile.html" class="nav-item">
-            <i class="fa-regular fa-user"></i>
-            WASIFU
+            <i class="fa-regular fa-user"></i>WASIFU
         </a>
     </nav>
 
     <script>
-        // Kuchukua jina kutoka LocalStorage ili liisomeke "Karibu Boniventure"
         window.onload = function() {
             const savedData = JSON.parse(localStorage.getItem('viwawa_profile'));
             if (savedData && savedData.name) {

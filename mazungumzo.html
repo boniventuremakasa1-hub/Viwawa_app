@@ -5,57 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Viwawa chat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --maroon: #801313; --bg-chat: #efe7dd; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        :root { 
+            --navy-blue: #072e54; /* Rangi ya Blue uliyoichagua */
+            --bg-color: #e5ddd5; /* Background ya WhatsApp classic */
+            --received-bubble: #ffffff;
+            --sent-bubble: #f1f0f0; /* Rangi ya cream/grey laini badala ya kijani */
+            --text-main: #303030;
+            --text-sub: #8696a0;
+        }
         
-        body { background-color: var(--bg-chat); height: 100vh; display: flex; flex-direction: column; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body { 
+            background-color: var(--bg-color);
+            /* Pattern ya WhatsApp */
+            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
 
-        /* Header - Viwawa chat */
+        /* Header */
         .chat-header { 
-            background: var(--maroon); 
+            background: var(--navy-blue); 
             color: white; 
             padding: 10px 15px; 
             display: flex; 
             align-items: center; 
-            gap: 12px; 
+            gap: 10px; 
             position: sticky; 
             top: 0; 
             z-index: 1000;
         }
-        .chat-header a { color: white; text-decoration: none; }
-        .group-info h3 { font-size: 17px; }
-        .group-info p { font-size: 11px; opacity: 0.8; }
+        
+        .header-left { display: flex; align-items: center; gap: 5px; text-decoration: none; color: white; }
+        
+        /* Picha ya Group kwenye Header */
+        .group-img { 
+            width: 35px; 
+            height: 35px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            background: #ccc;
+        }
 
-        /* Chat Messages */
+        .title-area h3 { font-size: 16px; font-weight: 600; }
+        .title-area p { font-size: 11px; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+
+        /* Messages */
         .messages-container { 
             flex: 1; 
             padding: 15px; 
             overflow-y: auto; 
             display: flex; 
             flex-direction: column; 
-            gap: 10px;
-            padding-bottom: 100px; /* Nafasi ya kutosha juu ya input */
+            gap: 8px;
         }
 
-        .message { max-width: 75%; padding: 8px 12px; border-radius: 10px; font-size: 14px; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
-        .received { align-self: flex-start; background: white; border-top-left-radius: 0; }
-        .sent { align-self: flex-end; background: #dcf8c6; border-top-right-radius: 0; }
-        
-        .u-name { font-size: 11px; font-weight: bold; color: var(--maroon); margin-bottom: 2px; display: block; }
-        .time { font-size: 10px; color: #888; text-align: right; display: block; margin-top: 4px; }
+        .message-row { display: flex; align-items: flex-start; gap: 8px; max-width: 85%; position: relative; }
+        .message-row.sent { align-self: flex-end; flex-direction: row-reverse; }
+        .message-row.received { align-self: flex-start; }
 
-        /* Bottom Input Area - Fixed for Keyboard */
+        /* Profile Pic kwenye kila SMS */
+        .user-sms-img { 
+            width: 30px; 
+            height: 30px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            flex-shrink: 0; 
+            margin-top: 5px;
+        }
+
+        .bubble { 
+            padding: 8px 12px; 
+            border-radius: 10px; 
+            font-size: 14.5px; 
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .received .bubble { background: var(--received-bubble); color: var(--text-main); border-top-left-radius: 0; }
+        .sent .bubble { background: var(--sent-bubble); color: var(--text-main); border-top-right-radius: 0; }
+
+        .u-name { font-size: 12px; font-weight: 600; color: #d91e18; margin-bottom: 3px; display: block; }
+        .sent .u-name { color: var(--navy-blue); text-align: right; }
+
+        .msg-footer { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 4px; }
+        .time { font-size: 10px; color: var(--text-sub); }
+        .ticks { font-size: 13px; color: #53bdeb; }
+
+        /* Input Area */
         .chat-footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
             background: #f0f0f0;
-            padding: 8px 10px;
+            padding: 10px;
             display: flex;
             align-items: center;
             gap: 8px;
-            z-index: 1100;
         }
 
         .input-wrapper {
@@ -64,65 +111,89 @@
             border-radius: 25px;
             display: flex;
             align-items: center;
-            padding: 2px 12px;
-            height: 40px; /* Length fupi kama ulivyoomba */
+            padding: 5px 15px;
+            min-height: 45px;
         }
-
-        .plus-btn { color: var(--maroon); font-size: 20px; cursor: pointer; padding-right: 5px; }
 
         #msgInput {
             flex: 1;
             border: none;
             outline: none;
             font-size: 15px;
-            padding: 5px;
+            padding: 8px;
         }
 
+        .icon-btn { color: var(--text-sub); font-size: 20px; cursor: pointer; }
+
         .send-btn { 
-            background: var(--maroon); 
+            background: var(--navy-blue); 
             color: white; 
-            width: 40px; 
-            height: 40px; 
+            width: 45px; 
+            height: 45px; 
             border-radius: 50%; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             border: none;
-            flex-shrink: 0;
         }
     </style>
 </head>
 <body>
 
     <div class="chat-header">
-        <a href="index.html"><i class="fa-solid fa-arrow-left"></i></a>
-        <div class="group-info">
+        <a href="#" class="header-left">
+            <i class="fa-solid fa-arrow-left"></i>
+            <img src="https://via.placeholder.com/100" class="group-img" alt="GP">
+        </a>
+        <div class="title-area">
             <h3>Viwawa chat</h3>
             <p>Maria, Thadeo, Mzee, Wewe...</p>
         </div>
     </div>
 
     <div class="messages-container" id="chatBox">
-        <div class="message received">
-            <span class="u-name">Maria</span>
-            Tumsifu Yesu Kristo vijana!
-            <span class="time">10:00 AM</span>
+        
+        <div class="message-row received">
+            <img src="https://i.pravatar.cc/100?u=1" class="user-sms-img">
+            <div class="bubble">
+                <span class="u-name">Maria</span>
+                Tumsifu Yesu Kristo vijana!
+                <div class="msg-footer">
+                    <span class="time">10:00 AM</span>
+                </div>
+            </div>
         </div>
-        <div class="message sent">
-            Milele Amina! Karibuni kwenye kikao.
-            <span class="time">10:07 AM</span>
+
+        <div class="message-row sent">
+            <img id="myPic" src="https://via.placeholder.com/100" class="user-sms-img">
+            <div class="bubble">
+                <span class="u-name">Wewe</span>
+                Milele Amina! Karibuni kwenye kikao.
+                <div class="msg-footer">
+                    <span class="time">10:07 AM</span>
+                    <span class="ticks"><i class="fa-solid fa-check-double"></i></span>
+                </div>
+            </div>
         </div>
-        <div class="message received">
-            <span class="u-name">Sr. Maria</span>
-            Naomba tujue muda wa sala ya jioni?
-            <span class="time">10:15 AM</span>
+
+        <div class="message-row received">
+            <img src="https://i.pravatar.cc/100?u=2" class="user-sms-img">
+            <div class="bubble">
+                <span class="u-name">Sr. Maria</span>
+                Naomba tujue muda wa sala ya jioni?
+                <div class="msg-footer">
+                    <span class="time">10:15 AM</span>
+                </div>
+            </div>
         </div>
+
     </div>
 
-    <div class="chat-footer" id="footer">
+    <div class="chat-footer">
+        <i class="fa-solid fa-plus icon-btn"></i>
         <div class="input-wrapper">
-            <i class="fa-solid fa-plus plus-btn" onclick="alert('Chagua faili...')"></i>
-            <input type="text" id="msgInput" placeholder="Andika ujumbe..." onfocus="adjustView()">
+            <input type="text" id="msgInput" placeholder="Andika ujumbe...">
+            <i class="fa-regular fa-face-smile icon-btn"></i>
         </div>
         <button class="send-btn" onclick="send()"><i class="fa-solid fa-paper-plane"></i></button>
     </div>
@@ -131,27 +202,39 @@
         const chatBox = document.getElementById('chatBox');
         const msgInput = document.getElementById('msgInput');
 
-        // Hii inahakikisha input haifichwi na keyboard
-        function adjustView() {
-            setTimeout(() => {
-                document.getElementById('footer').scrollIntoView(false);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 300);
-        }
+        // Pakia picha yako
+        window.onload = function() {
+            const data = JSON.parse(localStorage.getItem('viwawa_profile'));
+            if(data && data.image) {
+                document.getElementById('myPic').src = data.image;
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
 
         function send() {
             if(msgInput.value.trim() !== "") {
                 const now = new Date();
                 const time = now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes();
+                const myImg = document.getElementById('myPic').src;
                 
-                const m = `<div class="message sent">${msgInput.value}<span class="time">${time}</span></div>`;
+                const m = `
+                <div class="message-row sent">
+                    <img src="${myImg}" class="user-sms-img">
+                    <div class="bubble">
+                        <span class="u-name">Wewe</span>
+                        ${msgInput.value}
+                        <div class="msg-footer">
+                            <span class="time">${time}</span>
+                            <span class="ticks"><i class="fa-solid fa-check-double"></i></span>
+                        </div>
+                    </div>
+                </div>`;
+                
                 chatBox.innerHTML += m;
                 msgInput.value = "";
                 chatBox.scrollTop = chatBox.scrollHeight;
             }
         }
-
-        window.onload = () => { chatBox.scrollTop = chatBox.scrollHeight; };
     </script>
 </body>
 </html>

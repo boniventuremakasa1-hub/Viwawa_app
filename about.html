@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuhusu App - VIWAWA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --maroon: #801313;
+            --white: #ffffff;
+            --bg-light: #f8f9fa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-light); color: #333; line-height: 1.6; }
+
+        /* Header */
+        .header {
+            background-color: var(--maroon);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header a { color: white; text-decoration: none; font-size: 20px; }
+
+        /* App Logo Area */
+        .app-branding {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            margin-bottom: 20px;
+        }
+        .app-logo {
+            width: 100px;
+            height: 100px;
+            background: var(--maroon);
+            color: white;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            margin: 0 auto 15px;
+            box-shadow: 0 10px 20px rgba(128, 19, 19, 0.2);
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: white;
+            margin: 10px 15px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .content-section h3 {
+            color: var(--maroon);
+            margin-bottom: 10px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .content-section p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* Footer Info */
+        .app-footer {
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 13px;
+            color: #888;
+        }
+        .version-badge {
+            background: #eee;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i></a>
+        <h2 style="font-size: 18px;">Kuhusu App</h2>
+    </div>
+
+    <div class="app-branding">
+        <div class="app-logo">
+            <i class="fa-solid fa-cross"></i>
+        </div>
+        <h2 style="color: var(--maroon);">VIWAWA APP</h2>
+        <p style="font-style: italic; color: #777;">"Mapendo Daima"</p>
+        <span class="version-badge">Toleo la 1.0.2 (Beta)</span>
+    </div>
+
+    <div class="content-section">
+        <h3><i class="fa-solid fa-bullseye"></i> Lengo la App</h3>
+        <p>
+            App ya VIWAWA imetengenezwa mahususi kurahisisha mawasiliano, uratibu wa michango, na kukuza maisha ya kiroho kwa vijana wa Katoliki. 
+            Lengo letu ni kuwaunganisha vijana wote katika jukwaa moja la kisasa.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h3><i class="fa-solid fa-star"></i> Huduma Zilizopo</h3>
+        <p>• Biblia Takatifu (Kila mahali, kila wakati).</p>
+        <p>• Mazungumzo (Chatting) ya kikundi.</p>
+        <p>• Taarifa za michango na malipo kwa uwazi.</p>
+        <p>• Matangazo ya kiparokia na kitaifa.</p>
+    </div>
+
+    <div class="content-section">
+        <h3><i class="fa-solid fa-shield-halved"></i> Faragha na Usalama</h3>
+        <p>
+            Data zako zinalindwa kwa usalama wa hali ya juu. Hatushiriki taarifa zako za siri na upande wa tatu bila ridhaa yako.
+        </p>
+    </div>
+
+    <div class="app-footer">
+        <p>&copy; 2026 VIWAWA TAIFA.</p>
+        <p>Haki zote zimehifadhiwa.</p>
+        <p style="margin-top: 5px;">Imeandaliwa kwa upendo kwa ajili ya Vijana.</p>
+    </div>
+
+</body>
+</html>
+

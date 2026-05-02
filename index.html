@@ -10,9 +10,10 @@
             --viwawa-green: #1b4332; 
             --mapendo-red: #9d174d; 
             --bg-gray: #f2f2f7; 
-            --milk-white: #fdfaf1; /* Rangi ya Maziwa */
+            --milk-white: #fdfaf1; 
             --sala-purple: #4a148c; 
             --tangazo-blue: #0056b3;
+            --mchango-orange: #e67e22;
         }
 
         body { 
@@ -23,10 +24,9 @@
             color: #333; 
         }
 
-        /* Header Style: Mstari mrefu screen nzima */
         .header { 
             margin-bottom: 24px; 
-            border-bottom: 3px solid var(--viwawa-green); /* Mstari mrefu */
+            border-bottom: 3px solid var(--viwawa-green); 
             padding-bottom: 10px;
         }
         .viwawa-title { 
@@ -37,11 +37,10 @@
             display: flex;
             align-items: center;
         }
-        .viwawa-title i { margin-right: 12px; } /* Msalaba mbele */
+        .viwawa-title i { margin-right: 12px; }
 
         .mapendo-title { font-size: 24px; font-weight: 700; color: var(--mapendo-red); margin: 8px 0 0 0; }
 
-        /* Kadi zenye rangi ya maziwa */
         .card { 
             background: var(--milk-white); 
             border-radius: 16px; 
@@ -64,6 +63,37 @@
         .badge-neno { background-color: #2d6a4f; }
         .badge-sala { background-color: #6a1b9a; }
         .badge-tangazo { background-color: var(--tangazo-blue); }
+        .badge-mchango { background-color: var(--mchango-orange); }
+
+        /* Style za Vitufe vya Michango */
+        .tab-container { display: flex; gap: 10px; margin-bottom: 15px; }
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--mchango-orange);
+            background: transparent;
+            color: var(--mchango-orange);
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .tab-btn.active {
+            background: var(--mchango-orange);
+            color: white;
+        }
+
+        .list-mchango { display: none; margin-top: 10px; }
+        .list-mchango.active { display: block; }
+
+        .mchangiaji {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        .kiasi { font-weight: bold; color: var(--viwawa-green); }
 
         .mstari { font-size: 18px; font-weight: 700; color: #1c1c1e; margin-bottom: 4px; line-height: 1.3; }
         .chanzo { font-size: 14px; color: #8e8e93; margin-bottom: 12px; display: block; font-style: italic; }
@@ -79,12 +109,7 @@
             text-align: justify; 
         }
 
-        .tangazo-text {
-            font-size: 15px;
-            color: #1c1c1e;
-            line-height: 1.6;
-            font-weight: 500;
-        }
+        .tangazo-text { font-size: 15px; color: #1c1c1e; line-height: 1.6; font-weight: 500; }
 
         .btn-fungua { 
             background-color: var(--sala-purple); 
@@ -111,6 +136,29 @@
     <div class="header">
         <h1 class="viwawa-title"><i class="fa-solid fa-cross"></i> Viwawa App</h1>
         <h2 class="mapendo-title">Mapendo...</h2>
+    </div>
+
+    <div class="card">
+        <span class="badge badge-mchango">
+            <i class="fa-solid fa-hand-holding-dollar" style="margin-right:8px;"></i> Michango
+        </span>
+        
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab(event, 'ada')">Mchango wa Ada</button>
+            <button class="tab-btn" onclick="switchTab(event, 'mingine')">Michango Mingine</button>
+        </div>
+
+        <div id="ada" class="list-mchango active">
+            <div class="mchangiaji"><span>1. John Doe</span> <span class="kiasi">2,000/=</span></div>
+            <div class="mchangiaji"><span>2. Maria Peter</span> <span class="kiasi">2,000/=</span></div>
+            <div class="mchangiaji"><span>3. Josephat K.</span> <span class="kiasi">2,000/=</span></div>
+            <p style="font-size: 11px; color: gray; margin-top: 10px;">* Orodha hii inahuishwa kila wiki.</p>
+        </div>
+
+        <div id="mingine" class="list-mchango">
+            <div class="mchangiaji"><span>Mchango wa Ujenzi</span> <span class="kiasi">Inaendelea...</span></div>
+            <div class="mchangiaji"><span>Mchango wa Sherehe</span> <span class="kiasi">0/=</span></div>
+        </div>
     </div>
 
     <div class="card">
@@ -148,12 +196,23 @@
     </div>
 
     <script>
+        // JS ya kubadili Michango
+        function switchTab(evt, tabName) {
+            var i, x, tablinks;
+            x = document.getElementsByClassName("list-mchango");
+            for (i = 0; i < x.length; i++) { x[i].style.display = "none"; }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < x.length; i++) { tablinks[i].className = tablinks[i].className.replace(" active", ""); }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
         const mistariYaMwezi = [
             { m: "Mimi ndimi njia, na kweli, na uzima.", c: "Yohana 14:6", t: "Katika ulimwengu huu wenye sauti nyingi, Kristo anasimama kama dira pekee.\nNjia yake haijajengwa kwa matofali, bali kwa upendo na kafara.\nKufuata njia hii kunahitaji unyenyekevu na kuacha mapenzi binafsi.\nUkweli wake unatupa uhuru dhidi ya uongo wa shetani.\nPasipo ukweli huu, roho zetu zinabaki utumwani.\nUzima anaotoa si wa mwilini tu, bali ni amani ya ndani.\nHata dhoruba zipige kiasi gani, ndani yake tuna salama.\nLeo, tathmini hatua zako kama zinaendana na dira hii.\nUsiogope kuacha njia za mkato zinazokupeleka kwenye dhambi.\nNuru yake itaangazia giza lako na kukupa mwanzo mpya." },
             { m: "Bwana ndiye mchungaji wangu.", c: "Zaburi 23:1", t: "Kondoo hapati hofu akiwa na mchungaji wake mwaminifu.\nMungu anajua milima na mabonde ya maisha unayoyapitia leo.\nAnakuongoza kwenye majani mabichi ya neema na baraka.\nHata unapopita kwenye uvuli wa mauti, gongo lake lakufariji.\nUsijisumbue kwa ajili ya mahitaji ya kesho, yeye anajua.\nMkono wake hauishi kutoa msaada kwa wenye uhitaji.\nMaisha yako yamefichwa katika ulinzi wa kifalme.\nKumbuka, kutosheka kunakuja kwa kumtambua mmiliki wa roho yako.\nLeo, pumzika katika ahadi zake na uache wasiwasi.\nTabasamu, kwani Mchungaji mkuu yuko upande wako daima." },
             { m: "Niyayaweza yote katika Kristo.", c: "Wafilipi 4:13", t: "Nguvu ya kweli haitokani na uwezo wa mwanadamu.\nNi Kristo anayeweka ujasiri ndani ya mioyo iliyovunjika.\nChangamoto unazoziona ni fursa ya kuona ukuu wa Mungu.\nUsiangalie udhaifu wako, bali angalia uweza wa aliye juu.\nPaulo aliyesema haya alikuwa amefungwa, lakini roho yake ilikuwa huru.\nImani yako ndiyo silaha ya kushinda kila kizuizi cha adui.\nKila unachopanga kufanya leo, kianze kwa jina la Yesu.\nUtashangaa jinsi milango iliyofungwa itakavyofunguka.\nMungu hatoi mzigo ambao huwezi kuubeba pasipo yeye.\nSimama imara, wewe ni mshindi mkuu kupitia Kristo." },
             { m: "Upendo huvumilia na hufadhili.", c: "1 Wakorintho 13:4", t: "Upendo ndio msingi mkuu wa maisha ya Kikristo hapa duniani.\nBila upendo, matendo yetu yote yanakuwa kama daku ya bure.\nUvumilivu unamaanisha kukubali mapungufu ya wengine kwa busara.\nKufadhili ni kutoa bila kutegemea malipo yoyote kutoka kwao.\nLeo, dunia ina kiu ya upendo wa dhati usio na unafiki.\nJaribu kuwa tabasamu kwa yule aliyekata tamaa na huzuni.\nUpendo haujivuni wala hautafuta mambo yake wenyewe.\nNi daraja linalounganisha mioyo iliyotengana kwa chuki.\nMungu ni upendo, na anakaa ndani ya anayependa wengine.\nAnza na ndugu yako, rafiki yako, na hata adui yako leo." },
-            { m: "Maana Mungu aliupenda ulimwengu.", c: "Yohana 3:16", t: "Huu ndio muhtasari wa injili na tumaini letu la wokovu.\nMungu hakungoja tuwe watakatifu ili atupende, alitupenda kwanza.\nZawadi ya Mwanawe wa pekee ni kielelezo cha thamani yetu.\nKila tone la damu ya Yesu lilitolewa kwa ajili yako binafsi.\nKupotea si mapenzi ya Mungu, bali ni chaguo la mwanadamu.\nUzima wa milele unapatikana kwa kuamini na kuishi neno.\nUpendo huu ni mkuu kuliko dhambi yoyote uliyowahi kutenda.\nLeo, pokea msamaha na neema unayopewa bure kabisa.\nUsiishi kama mtu asiye na tumaini, mbinguni kuna nafasi yako.\nSherehekea wokovu huu kwa kuishi maisha ya utukufu." },
+            { m: "Maana Mungu aliupenda ulimwengu.", c: "Yohana 3:16", t: "Huu ndio muhtasari wa injili na tumaini letu la wokovu.\nMungu hakungoja tuwe watakatifu ili atupende, alitupenda kwanza.\nZawadi ya Mwanawe wa pekee ni kielelezo cha thamani yetu.\nKila tone la damu ya Yesu lilitolewa kwa ajili yako binafsi.\nKupotea si mapenzi ya Mungu, bali ni chaguo la mwanadamu.\nUzima wa milele unapatikana kwa kuamini na kuishi neno.\nUpendo huu ni mkuu kuliko dhambi yoyote uliyowahi kutenda.\nLeo, pokea msamaha na neema unayopewa bure kabisa.\nUsiishi kama mtu asiye na tumaini, mbinguni kuna nasi yako.\nSherehekea wokovu huu kwa kuishi maisha ya utukufu." },
             { m: "Nanyi mtaifahamu kweli.", c: "Yohana 8:32", t: "Kweli ya Mungu ni dawa ya uongo wa ulimwengu huu.\nUlimwengu unatoa uhuru wa bandia unaishia kwenye utumwa.\nNeno la Mungu ndilo kweli inayotakasisha roho na akili.\nUkiijua kweli, hutaogopa vitisho vya giza na wachawi.\nUhuru wa kweli ni ule wa kutokumilikiwa na dhambi tena.\nKweli inakuwezesha kuona vitu katika uhalisia wa kimbingu.\nJifunze neno la Mungu kila siku ili uwe na hekima.\nUsikubali kuyumbishwa na mafundisho yasiyo na msingi.\nLeo, amua kuishi katika ukweli hata kama gharama ni kubwa.\nKristo atakuimarisha na kukusimamisha katika haki yake." },
             { m: "Bwana ni nuru yangu na wokovu.", c: "Zaburi 27:1", t: "Nuru ya Mungu inafukuza kila giza la hofu na kukata tamaa.\nKama Bwana yuko upande wako, adui hana nafasi ya kushinda.\nWokovu ni ulinzi wa kudumu katika safari yetu ya hapa.\nUsitishwe na mambo yanayotokea gizani au usiku wa manane.\nMungu ni ngome imara ambapo mwenye haki hukimbilia.\nKatika nuru yake, tunaona mwangaza wa maisha yetu ya baadaye.\nKila hatua unayopiga, mwangaze Bwana mbele yako daima.\nUsiogope binadamu ambaye pumzi yake iko mikononi mwa Mungu.\nLeo, simama ukiwa na ujasiri wa simba wa kabila la Yuda.\nBwana atakuwa upande wako na kukulinda na kila baya." },
             { m: "Ombeni, nanyi mtapewa.", c: "Mathayo 7:7", t: "Sala ni ufunguo unaofungua maghala ya mbinguni kwa imani.\nMungu anapenda kusikia sauti ya watoto wake wakiomba msaada.\nKutafuta na kubisha hodi kunahitaji bidii na kutokukata tamaa.\nMajibu ya Mungu huja kwa wakati sahihi na si kwa wakati wetu.\nWakati mwingine jibu ni 'subiri' kwa sababu kuna kitu bora.\nImani yako ndiyo inayofanya sala yako iwe na nguvu kubwa.\nUsichoke kuomba hata kama mambo yanaonekana magumu sana.\nBaba yako wa mbinguni anajua kutoa vipawa vyema kwao.\nLeo, peleka haja za moyo wako mbele ya kiti cha neema.\nBisha hodi kwa unyenyekevu, na mlango utafunguliwa." },
@@ -161,7 +220,7 @@
             { m: "Tunda la Roho ni upendo.", c: "Wagalatia 5:22", t: "Maisha ya Kikristo yanapaswa kuonekana kwa matunda mema.\nUpendo, furaha, na amani ni alama za Roho Mtakatifu ndani yetu.\nKuvumilia na kufadhili ni sehemu ya tabia ya kimbingu.\nUaminifu na upole vinatufanya tufanane na Kristo Yesu.\nKiasi kinatusaidia kushinda tamaa mbaya za miili yetu.\nMatunda haya hayaji kwa nguvu zetu, bali kwa kukaa ndani.\nKama tawi lisipokaa kwenye mzabibu, haliwezi kuzaa tunda.\nLeo, omba Roho Mtakatifu akusaidie kuzaa matunda haya.\nDunia inasoma maisha yako kabla ya kusoma Biblia yako.\nKuwa shahidi mwaminifu kupitia tabia yako njema na takatifu." },
             { m: "Njoni kwangu ninyi msumbukao.", c: "Mathayo 11:28", t: "Yesu anatualika tupumzike kwake tunapolemewa na mizigo.\nMizigo ya dhambi, hofu, na majonzi ni mizito kwa binadamu.\nYeye ni mbeba mizigo yetu mkuu na rafiki wa kweli kabisa.\nKatika unyenyekevu wake, tunajifunza jinsi ya kuishi kwa amani.\nUsiendelee kubeba matatizo yako peke yako, utachoka sana.\nKuna nguvu katika kukiri udhaifu wako mbele ya miguu yake.\nLeo, toa mizigo yote ya familia, kazi, na mahusiano kwake.\nPokea nira yake ambayo ni laini na mzigo wake ni mwepesi.\nAnza siku yako ukiwa na wepesi wa roho na moyo mweupe.\nKristo yu tayari kukupa pumziko la kweli la nafsi yako." },
             { m: "Heri wenye moyo safi.", c: "Mathayo 5:8", t: "Usafi wa moyo ndio viza ya kumwona Mungu katika maisha.\nMoyo ni chemchemi ya uzima, unapaswa kulindwa kwa makini.\nDhambi inachafua kioo cha roho na kuzuia nuru ya Mungu.\nUtakatifu si jambo la nje tu, bali ni nia safi ya ndani kabisa.\nMungu haangalii sura, bali anaangalia kilichomo moyoni mwa mtu.\nOmba Daudi aseme 'Uniumbie moyo safi, ee Ee Mungu wangu'.\nLeo, epuka mawazo mabaya, fitina, na chuki dhidi ya wengine.\nKaa katika maombi na neno ili uweze kutakaswa kila wakati.\nKuwa na moyo mweupe kutakupa ujasiri wa kusogea madhabahuni.\nBaraka ya kuwaona Mungu inaanza hapa duniani kupitia imani." },
-            { m: "Moyo wa mtu huifikiri njia.", c: "Mithali 16:9", t: "Tunapanga mambo mengi, lakini Mungu ndiye mwenye neno la mwisho.\nNi vizuri kuwa na mipango, lakini ni bora kumhusisha Muumba.\nHekima ya Mungu inapita uelewa wa kibinadamu kwa mbali.\nNjia zetu wakati mwingine zinaweza kuonekana sawa, kumbe mbaya.\nKubali mwongozo wa Mungu hata kama unapingana na matamanio.\nAnajua mwisho tangu mwanzo, hivyo anatuokoa na mitego mingi.\nLeo, mkabidhi Bwana mipango yako yote ya biashara na kazi.\nUsiwe na haraka ya kupata mafanikio pasipo baraka yake.\nUtulivu unakuja kwa kujua kuwa Mungu anaongoza hatua zako.\nKila hatua unayopiga iwe imebarikiwa na mkono wake mkuu." },
+            { m: "Moyo wa mtu huifikiri njia.", c: "Mithali 16:9", t: "Tunapanga mambo mengi, lakini Mungu ndiye mwenye neno la mwisho.\nNi vizuri kuwa na mipango, lakini ni bora kumhusisha Muumba.\nHekima ya Mungu inapita uelewa wa kibinadamu kwa mbali.\nNjia zetu wakati mwingine zinaweza kuonekana sawa, kumbe mbaya.\nKubali mwongozo wa Mungu hata kama unapingana na matamanio.\nAnajua mwisho tangu mwanzo, hivyo anatuokoa na mitego mingi.\nLeo, mkabidhi Bwana mipango yako yote ya biashara na kazi.\nUsiowe na haraka ya kupata mafanikio pasipo baraka yake.\nUtulivu unakuja kwa kujua kuwa Mungu anaongoza hatua zako.\nKila hatua unayopiga iwe imebarikiwa na mkono wake mkuu." },
             { m: "Neno lako ni taa ya miguu yangu.", c: "Zaburi 119:105", t: "Biblia ni dira inayotuongoza katika giza la ulimwengu huu.\nBila neno la Mungu, tutakwama kwenye mabwawa ya dhambi.\nTaa inatuonyesha wapi pa kukanyaga sasa, na nuru ni kwa mbali.\nKusoma neno kila siku kunaimarisha misuli yetu ya kiroho.\nNi silaha yenye makali kuwili dhidi ya majaribu ya yule muovu.\nNuru ya neno inafichua siri za moyo na kutupa mwelekeo.\nLeo, chukua muda wako kutafakari ahadi za Mungu kwako.\nUsiache Biblia yako ijae vumbi wakati roho yako ina njaa.\nKila amri ya Mungu ni kwa ajili ya usalama na ustawi wako.\nNeno lake ni amini na kweli, halitakuacha uanguke kamwe." },
             { m: "Wamtumainio Bwana watapata nguvu.", c: "Isaya 40:31", t: "Kumtumaini Mungu ni siri ya kudumu katika mapambano yetu.\nHata vijana wanachoka, lakini wenye imani wanapata ujasiri mpya.\nUtapaa kwa mabawa kama tai, juu ya matatizo yako yote leo.\nKukimbia bila kulemewa kunakuja kwa neema ya Roho Mtakatifu.\nSubira ni sehemu ya mchakato wa Mungu wa kutuimarisha.\nUsiwe na haraka ya kutafuta suluhisho nje ya mapenzi ya Mungu.\nNguvu mpya inapatikana katika siri ya maombi na kufunga.\nLeo, jikumbushe kuwa Mungu hashindwi na jambo lolote kubwa.\nKuwa hodari na moyo wa ushujaa, kwani ushindi wako u karibu.\nWamtumainio Bwana hawataaibika kamwe mbele ya mataifa." },
             { m: "Upendo na uwe bila unafiki.", c: "Warumi 12:9", t: "Kuishi Kikristo ni kuishi kwa ukweli na dhati ya moyo wako.\nUnafiki ni sumu inayoharibu ushirika na upendo wa kidugu.\nChukia yaliyo maovu, na uambatane na yaliyo mema daima.\nHeshima kwa wengine iwe kipaumbele chako katika kila jambo.\nUpendo wa kweli unaonekana kwa matendo na si kwa maneno tu.\nKuwa tayari kusaidia bila kutafuta sifa za watu au umaarufu.\nLeo, jitathmini kama mahusiano yako yanajengwa kwa ukweli.\nMungu anachukizwa na midomo inayosema upendo huku moyo una chuki.\nTafuta kuwa na amani na watu wote kwa kadiri unavyoweza.\nBaraka za Mungu hupumzika kwenye nyumba yenye upendo wa dhati." },
@@ -170,7 +229,7 @@
             { m: "Sikuogopi mabaya.", c: "Zaburi 23:4", t: "Hofu ni adui wa imani na inazuia baraka za Mungu maishani.\nDaudi alijua kuwa uwepo wa Mungu ni ulinzi tosha kabisa.\nHata katika bonde la giza nene, mkono wa Bwana upo pale.\nGongo na fimbo ya Mungu vinatupa faraja na usalama mkuu.\nUsiogope vitisho vya wanadamu wala nguvu za giza na giza.\nImani inakuambia kuwa uko salama chini ya mbawa za aliye juu.\nLeo, amua kufukuza kila roho ya hofu inayokutesa akilini.\nTamka maneno ya ushindi na ujasiri katika kila unachofanya.\nMaisha yako yanalindwa na jeshi la malaika wa mbinguni.\nMungu ni mwamba wako, hutaondoshwa wala kutikisika leo." },
             { m: "Tafuteni kwanza ufalme wake.", c: "Mathayo 6:33", t: "Kuweka vipaumbele sawa ndiyo siri ya mafanikio ya kiroho.\nMungu anapaswa kuwa namba moja katika kila eneo la maisha yako.\nUnapotafuta haki ya Mungu, mambo mengine yote yatafuata.\nChakula, mavazi, na fedha ni vitu vidogo mbele za Baba yetu.\nUsiishi kwa wasiwasi kama mataifa wasiomjua Mungu wa kweli.\nUfalme wa Mungu unahusu haki, amani, na furaha katika Roho.\nLeo, fanya maamuzi yanayomtukuza Mungu kwanza kabisa.\nUaminifu wako katika mambo ya Mungu utafungua milango ya ajabu.\nBaraka za Mungu hutajirisha wala haziongezi huzuni ndani yake.\nWekeza katika hazina za mbinguni ambazo haziharibiki kamwe." },
             { m: "Kila neno la Mungu limehakikishwa.", c: "Mithali 30:5", t: "Neno la Mungu ni safi kama dhahabu iliyopitishwa motoni mara saba.\nYeye ni ngao kwa kila mmoja anayeweka tumaini lake kwake.\nUsiongeze wala kupunguza chochote katika maagizo ya mbinguni.\nUaminifu kwa neno ndio unaleta matokeo ya miujiza maishani.\nKila ahadi iliyoandikwa ni haki yako kama mwana wa ufalme.\nNeno la Mungu halirudi bure pasipo kutimiza kusudi lake.\nLeo, simama juu ya ahadi fulani ya Mungu na uikiri kwa sauti.\nUlimwengu unaweza kubadilika, lakini neno la Mungu ni thabiti.\nJenga nyumba ya maisha yako juu ya mwamba huu wa neno.\nUtakuwa imara wakati wa upepo, mvua, na dhoruba za dunia." },
-            { m: "Hata sasa, nirudieni mimi.", c: "Yoeli 2:12", t: "Mlango wa toba uko wazi kwa kila aliyepotea njia ya haki.\nMungu hapendi kifo cha mwenye dhambi, bali arudi na kuishi.\nKurudi kwa Mungu kunahitaji moyo uliopasuka and kutubu kweli.\nUsirarue mavazi yako, bali rarua moyo wako mbele ya Bwana.\nNeema ya Mungu ni pana kiasi cha kusamehe makosa yote makuu.\nUsiogope kuhukumiwa, kwani Mungu ni mwingi wa rehema leo.\nLeo ni siku ya wokovu na kuanza upya safari yako ya imani.\nAcha dhambi zinazokulemea na urudi kwenye mikono ya Baba.\nKuna furaha mbinguni kwa ajili ya mwenye dhambi mmoja atubuye.\nPata amani ya kweli kwa kupatana na Muumba wako leo." },
+            { m: "Hata sasa, nirudieni mimi.", c: "Yoeli 2:12", t: "Mlango wa toba uko wazi kwa kila aliyepotea njia ya haki.\nMungu hapendi kifo cha mwenye dhambi, bali arudi na kuishi.\nKurudi kwa Mungu kunahitaji moyo uliopasuka na kutubu kweli.\nUsirarue mavazi yako, bali rarua moyo wako mbele ya Bwana.\nNeema ya Mungu ni pana kiasi cha kusamehe makosa yote makuu.\nUsiogope kuhukumiwa, kwani Mungu ni mwingi wa rehema leo.\nLeo ni siku ya wokovu na kuanza upya safari yako ya imani.\nAcha dhambi zinazokulemea na urudi kwenye mikono ya Baba.\nKuna furaha mbinguni kwa ajili ya mwenye dhambi mmoja atubuye.\nPata amani ya kweli kwa kupatana na Muumba wako leo." },
             { m: "Sauti ya Bwana iko juu ya maji.", c: "Zaburi 29:3", t: "Mungu wetu ni mwenye nguvu na mamlaka juu ya asili yote.\nSauti yake inaweza kutuliza dhoruba kali zaidi za maisha yako.\nMungu anapotamka neno, mbingu na dunia vinatii amri yake.\nUsiogope makelele ya adui au dhoruba zinazokuzunguka leo.\nSauti ya Bwana inavunja mierezi na kutikisa jangwa la Kadeshi.\nNguvu yake ni kimbilio letu tunapokuwa hatuna msaada mwingine.\nLeo, sikiliza sauti ya Mungu ndani ya moyo wako kupitia neno.\nAtasema amani, upendo, na mwelekeo wa hatua zako za sasa.\nUkuu wake hauna mwisho, na anatawala kama mfalme milele.\nBarikiwa kwa kujua kuwa Mungu wako ni mkuu kuliko vyote." },
             { m: "Sisi ni kazi ya mikono yake.", c: "Waefeso 2:10", t: "Wewe si ajali, bali ni kiumbe kilichoundwa kwa kusudi maalum.\nMungu alikuandaa tangu tumboni mwa mama yako kwa utukufu.\nTuliumbwa katika Kristo Yesu ili tutende matendo yaliyo mema.\nKila talanta na karama uliyonayo ni kwa ajili ya huduma yake.\nUsijidharau, kwani wewe ni kito cha thamani mbele za macho yake.\nMaisha yako yana maana kubwa sana katika ufalme wa mbinguni.\nLeo, tafuta kutimiza kusudi la Mungu katika eneo ulilopo sasa.\nKuwa chumvi na nuru kwa watu wanaokuzunguka kila siku.\nMatendo yako mema yamtukuze Baba yako aliye mbinguni.\nWewe ni baraka kwa dunia, fanya kazi yako kwa uaminifu mkuu." },
             { m: "Msijisumbue kwa neno lo lote.", c: "Wafilipi 4:6", t: "Wasiwasi ni adui wa amani na hauwezi kuongeza kitu maishani.\nBadala ya kuhangaika, geuza kila jambo kuwa maombi ya imani.\nShukrani ni kiungo muhimu sana katika kuomba kwetu kwa Mungu.\nMkabidhi Bwana mahitaji yako na uache yeye ashughulike nayo.\nAmani ya Mungu inayopita akili itulinde mioyo yenu leo.\nUsiache presha ya maisha ikuondolee furaha ya kumjua Kristo.\nLeo, amua kutokuwa na wasiwasi juu ya fedha au afya yako.\nOmba, amini, na kisha pumzika katika mikono ya Baba mwema.\nKumbuka ndege wa angani wanavyolishwa bila kufanya kazi.\nWewe ni wa thamani zaidi kuliko ndege hao, Mungu atakujali." },
@@ -187,7 +246,7 @@
             {n: "3. Baba Yetu", t: "Baba yetu uliye mbinguni, jina lako litukuzwe, Ufalme wako ufike, utakalo lifanyike duniani kama mbinguni. Utupe leo mkate wetu wa kila siku. Utusamehe makosa yetu, kama tunavyowasamehe na sisi waliotukosea. Usitutie katika kishawishi, lakini utuopoe maovuni. Amina."},
             {n: "4. Salamu Maria", t: "Salamu Maria, umejaa neema, Bwana yu nawe, umebarikiwa kuliko wanawake wote, na Yesu, mzao wa tumbo lako, amebarikiwa. Maria Mtakatifu, Mama wa Mungu, utuombee sisi wakosefu, sasa na saa ya kufa kwetu. Amina."},
             {n: "5. Atukuzwe", t: "Atukuzwe Baba na Mwana na Roho Mtakatifu. Kama mwanzo na sasa na siku zote na milele. Amina."},
-            {n: "6. Nasadiki", t: "Nasadiki kwa Mungu Baba Mwenyezi, Muumba mbingu na dunia, Na kwa Yesu Kristo, Mwana wa pekee, Bwana wetu, aliye tungwa kwa uwezo wa Roho Mtakatifu, Akazaliwa na Bikira Maria, Akateswa kwa mamlaka ya Ponsyo Pilato, akasulubiwa, akafa, akazikwa, Akashukia kuzimu, siku ya tatu akafufuka katika wafu, Akapaa Mbinguni, Amekaa kuume kwa Mungu Baba Mwenyezi; Toka huko atakuja kuwahukumu wazima na wafu. Nasadiki kwa Roho Mtakatifu, Kanisa Takatifu Katoliki, ushirika wa watakatifu, maondoleo ya dhambi, ufufuko wa miili na uzima wa milele. Amina."},
+            {n: "6. Nasadiki", t: "Nasadiki kwa Mungu Baba Mwenyezi, Muumba mbingu na dunia, Na kwa Yesu Kristo, Mwana wa pekee, Bwana envi, aliye tungwa kwa uwezo wa Roho Mtakatifu, Akazaliwa na Bikira Maria, Akateswa kwa mamlaka ya Ponsyo Pilato, akasulubiwa, akafa, akazikwa, Akashukia kuzimu, siku ya tatu akafufuka katika wafu, Akapaa Mbinguni, Amekaa kuume kwa Mungu Baba Mwenyezi; Toka huko atakuja kuwahukumu wazima na wafu. Nasadiki kwa Roho Mtakatifu, Kanisa Takatifu Katoliki, ushirika wa watakatifu, maondoleo ya dhambi, ufufuko wa miili na uzima wa milele. Amina."},
             {n: "7. Sala ya Imani", t: "Mungu wangu, nasadiki maneno yote yanayosadiki, yanayofundisha Kanisa Katoliki la Roma: Kwani ndiwe uliyetufumbulia hayo, wala hudanganyi wala hudanganyiki. Amina."},
             {n: "8. Sala ya Matumaini", t: "Mungu wangu, natumaini kwako nitapewa kwa njia ya Yesu Kristo, neema zako hapa duniani na utukufu mbinguni, kwani ndiwe uliyeagana hayo nasi, nawe mwamini. Amina."},
             {n: "9. Sala ya Mapendo", t: "Mungu wangu, nakupenda zaidi ya chochote; kwani ndiwe mwema, ndiwe mwenye kupendeza. Nampenda na jirani yangu kama nafsi yangu kwa ajili yako. Amina."},
@@ -218,3 +277,4 @@
     </script>
 </body>
 </html>
+

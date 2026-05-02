@@ -7,42 +7,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --maroon: #801313;
-            --white: #ffffff;
-            --bg-light: #f4f4f4;
-            --text-dark: #333;
-            --text-gray: #777;
-        }
-
+        :root { --maroon: #801313; --white: #ffffff; --bg-light: #f4f4f4; --text-dark: #333; --text-gray: #777; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-light); padding-bottom: 90px; overflow-x: hidden; }
+        body { background-color: var(--bg-light); padding-bottom: 90px; }
 
         /* Header */
-        .header {
-            background-color: var(--maroon);
-            color: white;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+        .header { background-color: var(--maroon); color: white; padding: 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
         .menu-toggle { font-size: 20px; cursor: pointer; }
 
-        /* Sidebar Style */
-        .sidebar {
-            position: fixed; top: 0; left: -280px;
-            width: 280px; height: 100%; background: var(--white);
-            z-index: 2000; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 5px 0 15px rgba(0,0,0,0.1);
-        }
+        /* Sidebar Iliyoboreshwa */
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--white); z-index: 2000; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 5px 0 15px rgba(0,0,0,0.1); }
         .sidebar.active { left: 0; }
-        .sidebar-header { background: var(--maroon); color: white; padding: 40px 20px; text-align: center; }
-        .sidebar-menu { padding: 20px; }
+        .sidebar-header { background: var(--maroon); color: white; padding: 30px 20px; text-align: center; }
+        
+        /* Picha ya Profile kwenye Sidebar */
+        .sidebar-profile-img { width: 80px; height: 80px; border-radius: 50%; background: #eee; margin: 0 auto 10px; border: 3px solid rgba(255,255,255,0.3); overflow: hidden; }
+        .sidebar-profile-img img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .sidebar-menu { padding: 15px; }
         .side-item { display: flex; align-items: center; gap: 15px; padding: 15px; color: var(--text-dark); text-decoration: none; font-weight: 600; border-radius: 10px; margin-bottom: 5px; }
+        .side-item:active { background: #f0f0f0; }
 
         /* Overlay */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 1500; }
@@ -52,23 +36,9 @@
         .welcome-section { padding: 25px 20px; }
         .welcome-section h2 { font-size: 22px; color: var(--text-dark); }
 
-        /* Dashboard Grid */
-        .grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            padding: 0 20px;
-        }
-        .menu-card {
-            background: var(--white);
-            padding: 25px 15px;
-            border-radius: 20px;
-            text-align: center;
-            text-decoration: none;
-            color: var(--text-dark);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: 0.2s;
-        }
+        /* Grid Layout (Panga Vitu Katikati) */
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
+        .menu-card { background: var(--white); padding: 25px 15px; border-radius: 20px; text-align: center; text-decoration: none; color: var(--text-dark); box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: 0.2s; }
         .menu-card:active { transform: scale(0.95); }
         .menu-card i { font-size: 30px; margin-bottom: 10px; display: block; }
         .menu-card span { font-size: 13px; font-weight: 700; text-transform: uppercase; }
@@ -76,16 +46,12 @@
         /* Rangi za Icon */
         .c-biblia { color: #5c7cfa; }
         .c-mazungumzo { color: #20c997; }
+        .c-settings { color: #868e96; }
         .c-matangazo { color: #fd7e14; }
         .c-michango { color: #e64980; }
-        .c-profile { color: #40c057; }
 
-        /* Bottom Nav - Vitu 4 tu */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: white;
-            display: flex; justify-content: space-around; padding: 12px 0;
-            border-top: 1px solid #eee; z-index: 1000;
-        }
+        /* Bottom Nav (Vitu 4) */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 1000; }
         .nav-item { text-decoration: none; color: var(--text-gray); font-size: 10px; text-align: center; }
         .nav-item i { font-size: 20px; margin-bottom: 4px; }
         .nav-item.active { color: var(--maroon); font-weight: 700; }
@@ -95,12 +61,16 @@
 
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h3 id="sideName">Viwawa App</h3>
-            <p>Mapendo Daima</p>
+            <div class="sidebar-profile-img">
+                <img id="sideProfilePic" src="https://via.placeholder.com/80" alt="Profile">
+            </div>
+            <h3 id="sideName">Boniventure Makasa</h3>
+            <p style="font-size: 12px; opacity: 0.9;">Mapendo Daima</p>
         </div>
         <div class="sidebar-menu">
             <a href="profile.html" class="side-item"><i class="fa-solid fa-user"></i> Wasifu</a>
-            <a href="#" class="side-item"><i class="fa-solid fa-gear"></i> Mipangilio</a>
+            <a href="about.html" class="side-item"><i class="fa-solid fa-circle-info"></i> Kuhusu App</a>
+            <hr style="margin: 10px 0; opacity: 0.1;">
             <a href="#" class="side-item" style="color: var(--maroon);"><i class="fa-solid fa-power-off"></i> Ondoka</a>
         </div>
     </div>
@@ -126,33 +96,25 @@
             <i class="fa-solid fa-comments c-mazungumzo"></i>
             <span>Mazungumzo</span>
         </a>
+        <a href="settings.html" class="menu-card">
+            <i class="fa-solid fa-gear c-settings"></i>
+            <span>Mipangilio</span>
+        </a>
         <a href="matangazo.html" class="menu-card">
             <i class="fa-solid fa-bullhorn c-matangazo"></i>
             <span>Matangazo</span>
         </a>
-        <a href="michango.html" class="menu-card">
+        <a href="michango.html" class="menu-card" style="grid-column: span 2;">
             <i class="fa-solid fa-wallet c-michango"></i>
-            <span>Michango</span>
-        </a>
-        <a href="profile.html" class="menu-card" style="grid-column: span 2;">
-            <i class="fa-solid fa-user-gear c-profile"></i>
-            <span>Wasifu na Mipangilio</span>
+            <span>Michango na Malipo</span>
         </a>
     </div>
 
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active">
-            <i class="fa-solid fa-house"></i><br>NYUMBANI
-        </a>
-        <a href="biblia.html" class="nav-item">
-            <i class="fa-solid fa-book-bible"></i><br>BIBLIA
-        </a>
-        <a href="michango.html" class="nav-item">
-            <i class="fa-solid fa-wallet"></i><br>MICHANGO
-        </a>
-        <a href="profile.html" class="nav-item">
-            <i class="fa-solid fa-user"></i><br>WASIFU
-        </a>
+        <a href="index.html" class="nav-item active"><i class="fa-solid fa-house"></i><br>NYUMBANI</a>
+        <a href="biblia.html" class="nav-item"><i class="fa-solid fa-book-bible"></i><br>BIBLIA</a>
+        <a href="michango.html" class="nav-item"><i class="fa-solid fa-wallet"></i><br>MICHANGO</a>
+        <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i><br>WASIFU</a>
     </nav>
 
     <script>
@@ -162,10 +124,16 @@
         }
 
         window.onload = function() {
+            // Inachukua data kutoka kwenye wasifu uliohifadhiwa
             const data = JSON.parse(localStorage.getItem('viwawa_profile'));
-            if(data && data.name) {
-                document.getElementById('userName').innerText = data.name.split(' ')[0];
-                document.getElementById('sideName').innerText = data.name;
+            if(data) {
+                if(data.name) {
+                    document.getElementById('userName').innerText = data.name.split(' ')[0];
+                    document.getElementById('sideName').innerText = data.name;
+                }
+                if(data.image) {
+                    document.getElementById('sideProfilePic').src = data.image;
+                }
             }
         };
     </script>

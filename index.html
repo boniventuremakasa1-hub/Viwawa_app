@@ -3,124 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIWAWA Digital</title>
+    <title>Viwawa App - Mapendo</title>
     <style>
-        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; color: #1c1e21; }
-        .container { max-width: 600px; margin: auto; }
+        :root { --primary: #1b4332; --accent: #9d174d; --bg: #f8f9fa; --purple: #4a148c; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding: 15px; color: #333; line-height: 1.6; }
+        .header { margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .viwawa-title { font-size: 26px; font-weight: bold; color: var(--primary); margin: 0; }
+        .mapendo-title { font-size: 22px; font-weight: bold; color: var(--accent); margin: 0; }
+        .greeting { font-size: 13px; color: #666; margin-top: 4px; }
         
-        /* MSTARI WA SIKU */
-        .verse-section { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px; text-align: center; border-top: 8px solid #226bcc; }
-        .label { color: #226bcc; font-weight: bold; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 15px; }
-        #verse-text { font-size: 1.4em; font-weight: 700; color: #000; display: block; margin-bottom: 8px; line-height: 1.3; font-style: italic; }
-        #verse-ref { color: #226bcc; font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 20px; }
-        #tafakari-box { background: #f9f9f9; padding: 15px; border-radius: 12px; font-size: 1.1em; color: #333; line-height: 1.6; border-left: 4px solid #226bcc; text-align: left; }
+        .card { background: white; border-radius: 12px; padding: 18px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .badge { display: inline-block; padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; color: white; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-neno { background-color: #2d6a4f; }
+        .badge-sala { background-color: #5e35b1; }
+        
+        .mstari-text { font-size: 17px; font-weight: bold; color: #111; margin-bottom: 4px; border-left: 3px solid #2d6a4f; padding-left: 10px; }
+        .chanzo-text { font-size: 13px; color: #777; margin-bottom: 12px; display: block; font-style: italic; }
+        
+        .tafakari-box { background-color: #f0fdf4; padding: 12px; border-radius: 8px; border: 1px solid #dcfce7; }
+        .tafakari-box strong { color: var(--primary); display: block; margin-bottom: 5px; font-size: 14px; }
+        .tafakari-box p { margin: 0; font-size: 14px; color: #444; }
+        
+        .sala-section { text-align: center; padding: 5px 0 15px 0; }
+        .quote-sala { font-size: 15px; font-weight: 500; font-style: italic; color: #333; margin-bottom: 5px; }
+        .ref-sala { font-weight: bold; font-size: 14px; color: var(--purple); }
+        
+        .btn-fungua { background-color: var(--purple); color: white; border: none; width: 100%; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
 
-        /* SALA ZETU (KITUFE) */
-        .sala-toggle-btn { background: #226bcc; color: white; padding: 35px 15px; border-radius: 20px; text-align: center; cursor: pointer; margin-bottom: 25px; box-shadow: 0 6px 20px rgba(34, 107, 204, 0.4); border: none; width: 100%; display: block; }
-        .sala-toggle-btn:active { transform: scale(0.98); }
-        .sala-toggle-btn h1 { margin: 0; font-size: 2.8em; font-weight: 900; letter-spacing: 2px; }
-        .sala-toggle-btn p { margin: 12px 0 0; font-size: 1.1em; line-height: 1.4; opacity: 0.9; }
-
-        /* LIST YA SALA (ZIMEJIFICHA) */
-        #sala-list { display: none; padding-bottom: 40px; }
-        .sala-card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .sala-card h3 { color: #226bcc; margin: 0 0 10px 0; font-size: 1.3em; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .sala-card p { margin: 0; line-height: 1.7; font-size: 16px; color: #333; white-space: pre-line; }
+        #sala-list { display: none; margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 10px; }
+        .sala-item { padding: 12px; border-bottom: 1px solid #f0f0f0; }
+        .sala-name { color: var(--purple); font-weight: bold; display: block; margin-bottom: 4px; font-size: 15px; border-left: 3px solid var(--purple); padding-left: 8px; }
+        .sala-text { font-size: 13.5px; color: #555; white-space: pre-line; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="verse-section">
-        <span class="label">Mstari wa Siku</span>
-        <span id="verse-text">Pakia...</span>
-        <span id="verse-ref">...</span>
-        <div id="tafakari-box">...</div>
+    <div class="header">
+        <div class="viwawa-title">Viwawa app</div>
+        <div class="mapendo-title">Mapendo...</div>
+        <div class="greeting">Karibu tembea katika upendo wa Mungu leo.</div>
     </div>
 
-    <div class="sala-toggle-btn" onclick="togglePrayers()">
-        <h1>SALA ZETU</h1>
-        <p>"Furahini siku zote; Ombeni bila kukoma; Shukuruni kwa kila jambo" <br><strong>(1Thes. 5:16-18)</strong></p>
+    <div class="card">
+        <div class="badge badge-neno">Neno la Siku</div>
+        <div class="mstari-text" id="mstari-leo"></div>
+        <span class="chanzo-text" id="chanzo-leo"></span>
+        <div class="tafakari-box">
+            <strong>Tafakari ya Leo:</strong>
+            <p id="maelezo-leo"></p>
+        </div>
     </div>
 
-    <div id="sala-list">
-        <div class="sala-card"><h3>1. Ishara ya Msalaba</h3><p>Kwa jina la Baba na la Mwana na la Roho Mtakatifu. Amina.</p></div>
-        <div class="sala-card"><h3>2. Sala ya Asubuhi</h3><p>Ee Baba yetu Mungu mkuu, Umenilinda usiku huu, Nakushukuru kwa Moyo, Ee Baba, Mwana, na Roho. Nilinde tena siku hii, Niache dhambi, nikutii. Naomba sana, Baba wee, Baraka yako nipokee. Bikira safi, Ee Maria, nisipotee nisimamie, Mlinzi mkuu Malaika wee. Kwa Mungu wetu niombee. Nitake, nitende mema tu, na mwisho nije kwako juu. Amina.</p></div>
-        <div class="sala-card"><h3>3. Nia Njema</h3><p>Kumheshimu Mungu wangu namtolea roho yangu, nifanye kazi nipumzike, Amri zake tu nishike. Wazo, neno, tendo lote namtolea Mungu pote, Roho, mwili, chote changu, Pendo na uzima wangu, Mungu wangu nitampenda, wala dhambi sitatenda. Jina lako nasifia, utakalo hutimia, kwa utii navumilia, teso na matata pia. Nipe Bwana, neema zako niongeze sifa yako. Amina.</p></div>
-        <div class="sala-card"><h3>4. Sala ya Matoleo</h3><p>Ee Yesu, kwa mikono ya Bikira Maria, na kwa muungano na sadaka yako kuu, ninakutolea sala, matendo, masumbuko na furaha zangu zote za leo. Ee Yesu, ufalme wako utufikie.</p></div>
-        <div class="sala-card"><h3>5. Baba Yetu</h3><p>Baba yetu uliye mbinguni, jina lako litukuzwe, Ufalme wako ufike, utakalo lifanyike duniani kama mbinguni. Utupe leo mkate wetu wa kila siku. Utusamehe makosa yetu, kama tunavyowasamehe na sisi waliotukosea. Usitutie katika kishawishi, lakini utuopoe maovuni. Amina.</p></div>
-        <div class="sala-card"><h3>6. Salamu Maria</h3><p>Salamu Maria, umejaa neema, Bwana yu nawe, umebarikiwa kuliko wanawake wote, na Yesu, mzao wa tumbo lako, amebarikiwa. Maria Mtakatifu, Mama wa Mungu, utuombee sisi wakosefu, sasa na saa ya kufa kwetu. Amina.</p></div>
-        <div class="sala-card"><h3>7. Kanuni ya Imani</h3><p>Nasadiki kwa Mungu Baba Mwenyezi, Muumba mbingu na dunia, Na kwa Yesu Kristo, Mwana wa pekee, Bwana wetu, aliye tungwa kwa uwezo wa Roho Mtakatifu, Akazaliwa na Bikira Maria, Akateswa kwa mamlaka ya Ponsyo Pilato, akasulubiwa, akafa, akazikwa, Akashukia kuzimu, siku ya tatu akafufuka katika wafu, Akapaa Mbinguni, Amekaa kuume kwa Mungu Baba Mwenyezi; Toka huko atakuja kuwahukumu wazima na wafu. Nasadiki kwa Roho Mtakatifu, Kanisa Takatifu Katoliki, ushirika wa watakatifu, maondoleo ya dhambi, ufufuko wa miili na uzima wa milele. Amina.</p></div>
-        <div class="sala-card"><h3>8. Sala ya Kutubu</h3><p>Mungu wangu, nimetubu sana dhambi zangu, kwani ndiwe mwema, ndiwe mwenye kupendeza, wachukizwa na dhambi. Basi sitaki kukosa tena, nitafanya kitubio, naomba neema yako nipate kurudi. Amina.</p></div>
-        <div class="sala-card"><h3>9. Malaika wa Bwana</h3><p>Malaika wa Bwana alimpasha habari Maria. Naye akapata mimba kwa uwezo wa Roho Mtakatifu. (Salamu, Maria...)
-        Ndimi mtumishi wa Bwana. Nitendewe ulivyonena. (Salamu, Maria...)
-        Neno la Mungu akatwaa mwili. Akakaa kwetu. (Salamu, Maria...)
-        Utuombee, mzazi mtakatifu wa Mungu. Tujalie ahadi za Kristu.
-        <strong>Tuombe:</strong> Tunakuomba Ee Bwana utie neema yako mioyoni mwetu, ili sisi tuliojua kwa maelezo ya malaika kwamba mwanao amejifanya mtu kwa mateso na msalaba wake tufikishwe kwenye utukufu na ufufuko. Kwa njia ya Kristu Bwana wetu. Amina.</p></div>
-        <div class="sala-card"><h3>10. Sala ya Kazi</h3><p>Uje Roho Mtakatifu uzienee nyoyo za waamini wako, uwatie mapendo yako. Peleka Roho wako, vitaumbwa upya, na nchi zitageuka.
-        <strong>Tuombe:</strong> Ee Mungu uliyefundisha nyoyo wa waamini wako ukiwaletea mwanga wa Roho Mtakatifu, tunaomba tuongozwe na huyo Roho, tupende yaliyo mema, tupate daima faraja zake. Kwa njia ya Kristo, Bwana wetu. Amina.</p></div>
-    </div>
-</div>
-
-<script>
-    const mistariData = [
-        {m: "Mimi ndimi Bwana nikuponyaye.", r: "Kutoka 15:26", t: "Mungu haitoi dawa, Yeye mwenyewe ndiye Dawa. Unapokuwa ndani yake, asili yake ya uponyaji inatawala mwili wako."},
-        {m: "Mwanangu, sikiliza maneno yangu... Maana ni uhai.", r: "Mithali 4:20-22", t: "Neno la Mungu ni dawa ya kiroho. Likikaa moyoni mwako, linatengeneza mfumo wa ulinzi ambao udhaifu hauwezi kupenya."},
-        {m: "Mpendwa, naomba ufanikiwe na kuwa na afya yako.", r: "3 Yohana 1:2", t: "Mungu hapendi uwe tajiri mgonjwa; anataka ufurahie baraka zake ukiwa na afya timamu na roho iliyostawi."},
-        {m: "Roho aliyemfufua Yesu... ataihuisha na miili yenu.", r: "Warumi 8:11", t: "Nguvu ile ile iliyovunja kuta za kuzimu iko ndani yako sasa, ikihuisha kila kiungo kilichokuwa kimechoka."},
-        {m: "Hakika ameyachukua masikitiko yetu... tumepona.", r: "Isaya 53:4-5", t: "Kristo alibeba kila maumivu msalabani; kile unachohisi sasa ni mabaki ya adui yaliyoshindwa. Simama katika ushindi."},
-        {m: "Kwa kupigwa kwake mlishaponywa.", r: "1 Petro 2:24", t: "Usikubali ugonjwa, maana msalabani ulilipiwa deni lote la afya yako mara moja na kwa wakati wote."},
-        {m: "Ee Bwana, Mungu wangu, nalikulilia, nawe ukaniponya.", r: "Zaburi 30:2", t: "Mungu hasiti kusikia kilio chako; unapoita kwa imani, mkono wake unanyooka kukugusa na kurejesha uzima."},
-        {m: "Abarikwe Bwana... atakaye kuponya magonjwa yako yote.", r: "Zaburi 103:2-3", t: "Mungu anasafisha roho yako na kurejesha uzima wa mwili wako kwa wakati mmoja. Msamaha wake ni uponyaji wako."},
-        {m: "Nitaleta afya na uponyaji, nami nitawaponya.", r: "Yeremia 33:6", t: "Hata pale sayansi ilipofika mwisho, mkono wa Mungu unaanzia hapo. Anakuahidi wingi wa amani na afya ya kudumu."},
-        {m: "Nayaweza mambo yote katika yeye anitiaye nguvu.", r: "Wafilipi 4:13", t: "Usiangalie udhaifu wako, angalia nguvu ya Kristo iliyo ndani yako inayokuwezesha kufanya makubwa na kushinda yote."},
-        {m: "Mungu hakutupa roho ya uoga, bali ya nguvu.", r: "2 Timotheo 1:7", t: "Hofu ni gereza la akili, lakini nguvu ya Mungu ni ufunguo wa uhuru. Tembea kama mshindi mwenye mamlaka leo."},
-        {m: "Usiogope, maana mimi niko pamoja nawe.", r: "Isaya 41:10", t: "Upweke ni udanganyifu. Mungu yuko karibu nawe zaidi ya hewa unayovuta, akikutia nguvu na kukulinda kila saa."},
-        {m: "Bwana ni nuru yangu na wokovu wangu, nimwogope nani?", r: "Zaburi 27:1", t: "Mungu akiwa upande wako, hakuna hali wala adui anayeweza kukutetemesha. Jifunze kupumzika ndani ya ulinzi wake."},
-        {m: "Uwe hodari na moyo wa ushujaa; usihofu.", r: "Yoshua 1:9", t: "Agizo la Mungu leo ni kuwa jasiri; popote uendako, uwepo wake unakufuata kama mlinzi asiyelala."},
-        {m: "Wamngojeao Bwana watapata nguvu mpya.", r: "Isaya 40:31", t: "Subira kwa Mungu huleta nguvu mpya. Utashinda uchovu na kupanda viwango vya juu kama tai bila kuzimia moyo."},
-        {m: "Furaha ya Bwana ndiyo nguvu yenu.", r: "Nehemia 8:10", t: "Linda furaha yako kama silaha; ni injini inayokusukuma kuvuka kila kizuizi na kila dhoruba ya maisha."},
-        {m: "Bwana ni mchungaji wangu, sitapungukiwa.", r: "Zaburi 23:1", t: "Uwe na amani; Mungu anajua unachohitaji na atakuongoza penye majani mabichi na maji matulivu ya baraka."},
-        {m: "Kila silaha itakayofanyika juu yako haitafanikiwa.", r: "Isaya 54:17", t: "Hakuna mtego wa adui wala maneno mabaya yatakayopata kibali cha kukudhuru. Mungu ni mlinzi wako imara daima."},
-        {m: "Tunashinda, na zaidi ya kushinda, kwa yeye aliyetupenda.", r: "Warumi 8:37", t: "Wewe si mshindi wa kawaida, wewe ni mshindi mkuu! Upendo wa Mungu unageuza dhoruba kuwa daraja la mafanikio yako."},
-        {m: "Amani nawaachieni... msifadhaike mioyoni.", r: "Yohana 14:27", t: "Amani ya Mungu inatuliza moyo wako hata katikati ya dhoruba kuu. Pokea utulivu huu unaopita ufahamu wote."},
-        {m: "Mungu wangu atawajazeni kila mnachokihitaji.", r: "Wafilipi 4:19", t: "Mungu si fukara; utajiri wake ni dhamana ya hitaji lako la leo. Tegemea ziada katika fedha, hekima na fursa."},
-        {m: "Najua mawazo ninayowawazia... ni ya amani.", r: "Yeremia 29:11", t: "Hatima yako imeandikwa na Mungu mwenyewe. Tulia ukijua kuwa mwisho wa safari yako ni wa matumaini na ushindi."},
-        {m: "Ombeni nanyi mtapewa; tafuteni nanyi mtaona.", r: "Mathayo 7:7", t: "Milango ya mbinguni iko wazi kwa ajili yako; usichoke kuomba, majibu ya imani yako yako njiani yanakuja."},
-        {m: "Atakushibisha mema ujanani mwako.", r: "Zaburi 103:5", t: "Mungu anahuisha nguvu zako na kurejesha uchangamfu; utafanya kazi zako kwa nguvu mpya na ari ya kipekee leo."},
-        {m: "Maana kwa Mungu hakuna neno lisilowezekana.", r: "Luka 1:37", t: "Ondoa neno 'haiwezekani' kwenye kamusi yako. Mungu anayemiliki ulimwengu yuko kazini kwa ajili yako sasa hivi."},
-        {m: "Mungu ni mwaminifu... atafanya mlango wa kutokea.", r: "1 Wakorintho 10:13", t: "Kila jaribu lina mwisho wake; Mungu tayari ameshafungua mlango wa ushindi upande wa pili. Usikate tamaa."},
-        {m: "Bwana atakulinda na maovu yote, atailinda nafsi yako.", r: "Zaburi 121:7", t: "Unapotoka na kuingia, jeshi la malaika limepiga kambi kukuzunguka. Unatembea katika nuru ya ulinzi wake imara."},
-        {m: "Yeye huwaponya waliovunjika moyo.", r: "Zaburi 147:3", t: "Mungu anajali hata maumivu yasiyoonekana. Kama moyo umejeruhiwa, Yeye ni tabibu anayeganga na kurejesha furaha."},
-        {m: "Ukarimu wake ni wa maisha yote... asubuhi huwa na furaha.", r: "Zaburi 30:5", t: "Hata kama jana ilikuwa ngumu, asubuhi ya leo inakuja na kicheko na ushindi mpya. Giza limepita, nuru imeingia."},
-        {m: "Nitakurudishia afya, nami nitakuponya jeraha zako.", r: "Yeremia 30:17", t: "Maumivu uliyopitia hayatakuwa mwisho wako. Mungu anakuja na urejesho wa kila kitu adui alichojaribu kuharibu."}
-    ];
-
-    function updateVerse() {
-        const d = new Date();
-        const start = new Date(d.getFullYear(), 0, 0);
-        const diff = d - start;
-        const oneDay = 1000 * 60 * 60 * 24;
-        const dayOfYear = Math.floor(diff / oneDay);
-        const index = dayOfYear % mistariData.length;
+    <div class="card">
+        <div class="badge badge-sala">Sala Zetu</div>
+        <div class="sala-section">
+            <div class="quote-sala">"Furahini siku zote; Ombeni bila kukoma; Shukuruni kwa kila jambo"</div>
+            <div class="ref-sala">(1Thes. 5:16-18)</div>
+        </div>
         
-        document.getElementById('verse-text').innerText = '"' + mistariData[index].m + '"';
-        document.getElementById('verse-ref').innerText = mistariData[index].r;
-        document.getElementById('tafakari-box').innerText = "Tafakari: " + mistariData[index].t;
-    }
+        <button class="btn-fungua" onclick="toggleSala()">
+            Fungua sala <span>&rarr;</span>
+        </button>
 
-    function togglePrayers() {
-        const list = document.getElementById('sala-list');
-        if (list.style.display === "block") {
-            list.style.display = "none";
-        } else {
-            list.style.display = "block";
-            window.scrollBy({ top: 250, behavior: 'smooth' });
+        <div id="sala-list"></div>
+    </div>
+
+    <script>
+        const dataTafakari = [
+            { m: "Mimi ndimi njia, na kweli, na uzima...", c: "Yohana 14:6", t: "Mungu ndiye mwongozo wetu wa kila siku. Tunapoita njia yake, tunapata amani na nuru yake inaangazia giza letu." },
+            { m: "Bwana ndiye mchungaji wangu, sitapungukiwa na kitu.", c: "Zaburi 23:1", t: "Mungu ni mlinzi wetu mkuu. Katika kila hitaji la maisha yetu, yeye hutoa faraja na kutosheleza nafsi zetu." },
+            { m: "Niyayaweza mambo yote katika yeye anititiaye nguvu.", c: "Wafilipi 4:13", t: "Nguvu ya kupambana na changamoto haitoki kwetu wenyewe, bali kwa Kristo." },
+            { m: "Upendo huvumilia, upendo hufadhili...", c: "1 Wakorintho 13:4", t: "Upendo wa kweli unajali wengine. Leo, jaribu kuonyesha fadhila kwa mtu aliye karibu nawe." },
+            { m: "Maana Mungu aliupenda ulimwengu kiasi hiki...", c: "Yohana 3:16", t: "Upendo wa Mungu hauna kikomo. Alimtoa mwanawe wa pekee kwa ajili yetu." },
+            { m: "Nanyi mtaifahamu kweli, nayo hiyo kweli itawaweka huru.", c: "Yohana 8:32", t: "Kuishi katika neno la Mungu ni kuishi katika uhuru wa kweli." },
+            { m: "Bwana ni nuru yangu na wokovu wangu, nimwogope nani?", c: "Zaburi 27:1", t: "Mungu anapotuangazia, giza la hofu linatoweka. Katika yeye tunapata usalama." },
+            { m: "Ombeni, nanyi mtapewa; tafuteni, nanyi mtaona...", c: "Mathayo 7:7", t: "Mungu ni Baba mwema anayesikiliza sauti zetu. Usichoke kusema naye katika sala." },
+            { m: "Amani nawaachieni; amani yangu nawapa.", c: "Yohana 14:27", t: "Amani ya Kristo ni ya milele na inatuliza mioyo iliyofadhaika." },
+            { m: "Lakini tunda la Roho ni upendo, furaha, amani...", c: "Wagalatia 5:22", t: "Roho Mtakatifu anapofanya kazi ndani yetu, anazalisha matunda yaliyo mema." },
+            { m: "Njoni kwangu, ninyi nyote msumbukao na kulemewa na mizigo.", c: "Mathayo 11:28", t: "Yesu anatualika tupumzike kwake. Toa mizigo yako yote ya moyo na uikabidhi kwake." },
+            { m: "Heri wenye moyo safi, maana hao watamwona Mungu.", c: "Mathayo 5:8", t: "Usafi wa moyo unaleta ukaribu na Muumba wetu. Jitahidi kuweka nia zako kuwa safi." },
+            { m: "Moyo wa mtu huifikiri njia yake, bali Bwana huiongoza hatua yake.", c: "Mithali 16:9", t: "Tunaweza kupanga mengi, lakini mwongozo wa mwisho unatoka kwa Mungu." },
+            { m: "Neno lako ni taa ya miguu yangu, na nuru ya njia yangu.", c: "Zaburi 119:105", t: "Neno la Biblia ni dira ya maisha yetu. Linatuonyesha wapi pa kukanyaga." },
+            { m: "Wamtumainio Bwana watapata nguvu mpya.", c: "Isaya 40:31", t: "Kumtumaini Mungu kunatupa uwezo wa kupaa kama tai hata katika magumu." },
+            { m: "Upendo na uwe bila unafiki; chukieni yaliyo maovu.", c: "Warumi 12:9", t: "Kuishi kama Mkristo ni kupenda kwa dhati na kusimamia ukweli wakati wote." },
+            { m: "Kwa maana mliokolewa kwa neema, kwa njia ya imani.", c: "Waefeso 2:8", t: "Wokovu wetu ni zawadi ya bure kutoka kwa Mungu. Furahia neema hii." },
+            { m: "Jaribu halikuwapata ninyi, isipokuwa lililo kawaida ya wanadamu.", c: "1 Wakorintho 10:13", t: "Mungu ni mwaminifu; hataacha ujaribiwe kupita unavyoweza." },
+            { m: "Sikuogopi mabaya; kwa maana wewe upo pamoja nami.", c: "Zaburi 23:4", t: "Hata katika bonde la uvuli wa mauti, uwepo wa Mungu ni ulinzi wetu." },
+            { m: "Tafuteni kwanza ufalme wake, na haki yake...", c: "Mathayo 6:33", t: "Weka mambo ya Mungu mbele, na mahitaji yako mengine yataongezwa." },
+            { m: "Kila neno la Mungu limehakikishwa; yeye ni ngao yao.", c: "Mithali 30:5", t: "Ahadi za Mungu hazidanganyi. Unapojificha kwake, unakuwa salama." },
+            { m: "Hata sasa, asema Bwana, nirudieni mimi kwa mioyo yenu yote.", c: "Yoeli 2:12", t: "Daima kuna nafasi ya kurudi kwa Mungu. Upendo wake unatusubiri." },
+            { m: "Sauti ya Bwana iko juu ya maji; Mungu wa utukufu hupiga radi.", c: "Zaburi 29:3", t: "Mungu wetu ni mkuu na mwenye nguvu ya kutuliza dhoruba za maisha." },
+            { m: "Sisi ni kazi yake, tuliumbwa katika Kristo Yesu.", c: "Waefeso 2:10", t: "Wewe ni kazi ya kipekee ya Mungu. Alikuumba kwa kusudi maalum." },
+            { m: "Msijisumbue kwa neno lo lote; bali katika kila neno...", c: "Wafilipi 4:6", t: "Badala ya kuwa na wasiwasi, geuza kila jambo kuwa sala." },
+            { m: "Kutembea kwa imani, wala si kwa kuona.", c: "2 Wakorintho 5:7", t: "Imani ni kuamini kile ambacho bado hatujakiona kwa macho." },
+            { m: "Lakini ninyi ni mzao mteule, ukuhani wa kifalme.", c: "1 Petro 2:9", t: "Tambua thamani yako ndani ya Kristo. Wewe ni mteule uliyetolewa gizani." },
+            { m: "Bwana aliye nanyi ni mkuu kuliko yule aliye ulimwenguni.", c: "1 Yohana 4:4", t: "Usiogope changamoto. Nguvu iliyo ndani yako ni kubwa kuliko tatizo lolote." },
+            { m: "Katika kila jambo shukuruni; maana hayo ni mapenzi ya Mungu.", c: "1 Thes. 5:18", t: "Shukrani hufungua milango ya baraka zaidi katika maisha yetu." },
+            { m: "Nitamhimidi Bwana kila wakati, sifa zake zi kinywani mwangu.", c: "Zaburi 34:1", t: "Fanya sifa kwa Mungu kuwa mtindo wa maisha yako kila siku." }
+        ];
+
+        const sala21 = [
+            { n: "1. Sala ya Asubuhi", t: "Ee Baba yetu Mungu mkuu, Umenilinda usiku huu, Nakushukuru kwa Moyo, Ee Baba, Mwana, na Roho. Nilinde tena siku hii, Niache dhambi, nikutii. Naomba sana, Baba wee, Baraka yako nipokee. Bikira safi, Ee Maria, nisipotee nisimamie, Mlinzi mkuu Malaika wee, Kwa Mungu wetu niombee. Nitake, nitende mema tu, na mwisho nije kwako juu. Amina." },
+            { n: "2. Nia Njema", t: "Kumheshimu Mungu wangu namtolea roho yangu, nifanye kazi nipumzike, Amri zake tu nishike. Wazo, neno, tendo lote namtolea Mungu pote, Roho, mwili, chote changu, Pendo na uzima wangu, Mungu wangu nitampenda, wala dhambi sitatenda. Jina lako nasifia, utakalo hutimia, kwa utii navumilia, teso na matata pia. Nipe Bwana, neema zako niongeze sifa yako. Amina." },
+            { n: "3. Baba Yetu", t: "Baba yetu uliye mbinguni, jina lako litukuzwe, Ufalme wako ufike, utakalo lifanyike duniani kama mbinguni. Utupe leo mkate wetu wa kila siku. Utusamehe makosa yetu, kama tunavyowasamehe na sisi waliotukosea. Usitutie katika kishawishi, lakini utuopoe maovuni. Amina." },
+            { n: "4. Salamu Maria", t: "Salamu Maria, umejaa neema, Bwana yu nawe, umebarikiwa kuliko wanawake wote, na Yesu, mzao wa tumbo lako, amebarikiwa. Maria Mtakatifu, Mama wa Mungu, utuombee sisi wakosefu, sasa na saa ya kufa kwetu. Amina." },
+            { n: "5. Atukuzwe", t: "Atukuzwe Baba na Mwana na Roho Mtakatifu. Kama mwanzo na sasa na siku zote na milele. Amina." },
+            { n: "6. Kanuni ya Imani (Nasadiki)", t: "Nasadiki kwa Mungu Baba Mwenyezi, Muumba mbingu na dunia, Na kwa Yesu Kristo, Mwana wa pekee, Bwana wetu, aliye tungwa kwa uwezo wa Roho Mtakatifu, Akazaliwa na Bikira Maria, Akateswa kwa mamlaka ya Ponsyo Pilato, akasulubiwa, akafa, akazikwa, Akashukia kuzimu, siku ya tatu akafufuka katika wafu, Akapaa Mbinguni, Amekaa kuume kwa Mungu Baba Mwenyezi; Toka huko atakuja kuwahukumu wazima na wafu. Nasadiki kwa Roho Mtakatifu, Kanisa Takatifu Katoliki, ushirika wa watakatifu, maondoleo ya dhambi, ufufuko wa miili na uzima wa milele. Amina." },
+            { n: "7. Sala ya Imani", t: "Mungu wangu, nasadiki maneno yote yanayosadiki, yanayofundisha Kanisa Katoliki la Roma: Kwani ndiwe uliyetufumbulia hayo, wala hudanganyi wala hudanganyiki. Amina." },
+            { n: "8. Sala ya Matumaini", t: "Mungu wangu, natumaini kwako nitapewa kwa njia ya Yesu Kristo, neema zako hapa duniani na utukufu mbinguni, kwani ndiwe uliyeagana hayo nasi, nawe mwamini. Amina." },
+            { n: "9. Sala ya Mapendo", t: "Mungu wangu, nakupenda zaidi ya chochote; kwani ndiwe mwema, ndiwe mwenye kupendeza. Nampenda na jirani yangu kama nafsi yangu kwa ajili yako. Amina." },
+            { n: "10. Sala ya Kutubu", t: "Mungu wangu, nimetubu sana dhambi zangu, kwani ndiwe mwema, ndiwe mwenye kupendeza, wachukizwa na dhambi. Basi sitaki kukosa tena, nitafanya kitubio, naomba neema yako nipate kurudi. Amina." },
+            { n: "11. Sala kwa Malaika Mlinzi", t: "Malaika Mlinzi wangu, unilinde katika hatari zote za roho na mwili. Amina." },
+            { n: "12. Malaika wa Bwana (Angelus)", t: "Malaika wa Bwana alimpasha habari Maria. Naye akapata mimba kwa uwezo wa Roho Mtakatifu. (Salamu Maria...)\nNdimi mtumishi wa Bwana. Nitendewe ulivyonena. (Salamu Maria...)\nNeno la Mungu akatwaa mwili. Akakaa kwetu. (Salamu Maria...)\nUtuombee, mzazi mtakatifu wa Mungu. Tujalie ahadi za Kristu." },
+            { n: "13. Malkia wa Mbingu", t: "Malkia wa mbingu furahi, Aleluya. Kwani uliyestahili kumchukua, Aleluya. Amefufuka alivyosema, Aleluya. Utuombee kwa Mungu, Aleluya." },
+            { n: "14. Sala Kabla ya Kula", t: "Unibariki, Mungu wangu, mimi na chakula changu, ulichonipa nipate nguvu za kukutumikia vyema. Amina." },
+            { n: "15. Sala Baada ya Kula", t: "Nakushukuru Mungu wangu, kwa chakula ulichonipa, Nimepata nguvu za kukutumikia vyema. Amina." },
+            { n: "16. Sala Kabla ya Mafundisho", t: "Roho mkuu, mfariji mwema, Mwenye kila kitu chema, Uje kutuangazia. Na imara kututia, tuyasikie mafundisho, Tuyashike mpaka mwisho. Amina." },
+            { n: "17. Sala Baada ya Mafundisho", t: "Twakushukuru, ee Mungu Mwenyezi, sababu ya mema yako yote. Unayeishi na kutawala, ee Mungu milele. Amina." },
+            { n: "18. Sala Kabla ya Kazi", t: "Uje Roho Mtakatifu uzienee nyoyo za waamini wako, uwatie mapendo yako. Peleka Roho wako, vitaumbwa upya, na nchi zitageuka. Amina." },
+            { n: "19. Sala ya Matoleo", t: "Ee Yesu, kwa mikono ya Bikira Maria, na kwa muungano na sadaka yako kuu, ninakutolea sala, matendo, masumbuko na furaha zangu zote za leo. Ee Yesu, ufalme wako utufikie." },
+            { n: "20. Tunakimbilia", t: "Tunakimbilia ulinzi wako, mzazi Mtakatifu wa Mungu, Usitunyime tukiomba katika shida zetu, utuokoe siku zote kila tuingiapo hatarini, ee Bikira mtukufu mwenye baraka. Amina." },
+            { n: "21. Sala ya Viwawa", t: "Ee Yesu, mlinzi wa vijana, utujalie moyo wa mapendo, bidii katika kazi na uaminifu katika utume wetu ndani ya kanisa. Viwawa - Safi! Amina." }
+        ];
+
+        const d = new Date();
+        const index = (d.getDate() - 1) % dataTafakari.length;
+        const leo = dataTafakari[index];
+
+        document.getElementById('mstari-leo').innerText = `"${leo.m}"`;
+        document.getElementById('chanzo-leo').innerText = leo.c;
+        document.getElementById('maelezo-leo').innerText = leo.t;
+
+        const listDiv = document.getElementById('sala-list');
+        sala21.forEach(s => {
+            let container = document.createElement('div');
+            container.className = 'sala-item';
+            container.innerHTML = `<span class="sala-name">${s.n}</span><div class="sala-text">${s.t}</div>`;
+            listDiv.appendChild(container);
+        });
+
+        function toggleSala() {
+            const x = document.getElementById("sala-list");
+            x.style.display = (x.style.display === "block") ? "none" : "block";
         }
-    }
-
-    updateVerse();
-</script>
-
+    </script>
 </body>
 </html>

@@ -20,14 +20,27 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: var(--white); padding-bottom: 100px; }
 
-        /* Header Section */
+        /* Header Section na Mshale wa Kurudi */
         .profile-header {
             background-color: var(--maroon);
-            padding: 40px 20px;
+            padding: 20px 20px 40px; /* Nimepunguza padding ya juu kutoa nafasi ya mshale */
             text-align: center;
             color: var(--white);
             border-radius: 0 0 30px 30px;
             position: relative;
+        }
+
+        .back-nav {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            cursor: pointer;
         }
 
         .img-container {
@@ -154,6 +167,10 @@
 <body>
 
     <div class="profile-header">
+        <div class="back-nav">
+            <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        </div>
+        
         <div class="img-container" onclick="document.getElementById('imageUpload').click()">
             <img src="https://via.placeholder.com/150" alt="User" class="profile-img" id="profileDisplay">
             <div class="cam-btn"><i class="fa-solid fa-camera"></i></div>
@@ -221,10 +238,10 @@
         <a href="index.html" class="nav-item">
             <i class="fa-solid fa-house"></i>NYUMBANI
         </a>
-        <a href="#" class="nav-item">
+        <a href="biblia.html" class="nav-item">
             <i class="fa-solid fa-book-bible"></i>BIBLIA
         </a>
-        <a href="#" class="nav-item">
+        <a href="michango.html" class="nav-item">
             <i class="fa-solid fa-wallet"></i>MICHANGO
         </a>
         <a href="#" class="nav-item">
@@ -236,7 +253,6 @@
     </nav>
 
     <script>
-        // Pakia picha na ionekane papo hapo
         document.getElementById('imageUpload').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -249,7 +265,6 @@
             }
         });
 
-        // Hifadhi data kwenye LocalStorage
         function saveData() {
             const data = {
                 name: document.getElementById('fullName').value,
@@ -265,7 +280,6 @@
             alert("Mabadiliko yamehifadhiwa!");
         }
 
-        // Pakia data iliyohifadhiwa ukurasa ukifunguliwa
         window.onload = function() {
             const savedData = JSON.parse(localStorage.getItem('viwawa_profile'));
             const savedPic = localStorage.getItem('profilePic');
@@ -287,4 +301,3 @@
     </script>
 </body>
 </html>
-

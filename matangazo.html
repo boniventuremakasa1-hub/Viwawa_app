@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matangazo - Viwawa App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --maroon: #801313;
+            --bg-light: #f4f4f4;
+            --text-dark: #333;
+            --text-gray: #777;
+            --yellow: #ffc107;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-light); padding-bottom: 100px; }
+
+        /* Header */
+        .header {
+            background-color: var(--maroon);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header h1 { font-size: 18px; font-weight: 700; text-transform: uppercase; }
+
+        /* Tab Switcher */
+        .tabs {
+            display: flex;
+            background: white;
+            padding: 10px 20px;
+            gap: 10px;
+            overflow-x: auto;
+            border-bottom: 1px solid #eee;
+        }
+        .tab-btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-gray);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            background: var(--maroon);
+            color: white;
+            border-color: var(--maroon);
+        }
+
+        /* Announcement Cards */
+        .content { padding: 20px; }
+        .announcement-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .icon-box {
+            background: #fff4e6;
+            color: var(--yellow);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .card-title { font-weight: 700; font-size: 16px; color: var(--text-dark); }
+        .card-desc { font-size: 14px; color: var(--text-gray); line-height: 1.5; margin-bottom: 15px; }
+        
+        .read-more-btn {
+            background: #f8f8f8;
+            color: var(--maroon);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+
+        .card-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        /* Admin Action Button */
+        .add-btn {
+            position: fixed;
+            bottom: 85px;
+            right: 20px;
+            background: var(--maroon);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 5px 15px rgba(128, 19, 19, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            z-index: 999;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: white;
+            display: flex; justify-content: space-around; padding: 12px 0;
+            border-top: 1px solid #eee; z-index: 1000;
+        }
+        .nav-item { text-decoration: none; color: var(--text-gray); font-size: 10px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-item.active { color: var(--maroon); font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <i class="fa-solid fa-bars"></i>
+        <h1>MATANGAZO</h1>
+        <i class="fa-regular fa-bell"></i>
+    </div>
+
+    <div class="tabs">
+        <div class="tab-btn active">Yote</div>
+        <div class="tab-btn">Muhimu</div>
+        <div class="tab-btn">Matukio</div>
+    </div>
+
+    <div class="content">
+        <div class="announcement-card">
+            <div class="card-header">
+                <div class="icon-box"><i class="fa-solid fa-bell"></i></div>
+                <div class="card-title">Misa ya Vijana Jumapili</div>
+            </div>
+            <p class="card-desc">Tunawakumbusha vijana wote kuhudhuria misa ya vijana itakayofanyika saa 2 asubuhi. Tafadhali zingatia muda...</p>
+            <button class="read-more-btn">SOMA ZAIDI</button>
+            <div class="card-footer">
+                <span><i class="fa-regular fa-clock"></i> Leo, 08:30 AM</span>
+                <span>BY: BONIVENTURE</span>
+            </div>
+        </div>
+
+        <div class="announcement-card">
+            <div class="card-header">
+                <div class="icon-box" style="background: #fff0f6; color: #f06595;"><i class="fa-solid fa-wallet"></i></div>
+                <div class="card-title">Zoezi la Michango</div>
+            </div>
+            <p class="card-desc">Zoezi la kukusanya michango ya kambi linaendelea. Kila mwanachama anapaswa kukamilisha ahadi yake kabla ya Ijumaa.</p>
+            <button class="read-more-btn">SOMA ZAIDI</button>
+            <div class="card-footer">
+                <span><i class="fa-regular fa-clock"></i> Jana, 14:20 PM</span>
+                <span>BY: ADMIN</span>
+            </div>
+        </div>
+    </div>
+
+    <a href="#" class="add-btn">
+        <i class="fa-solid fa-plus"></i> TANGAZO
+    </a>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i>NYUMBANI
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-book-bible"></i>BIBLIA
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-wallet"></i>MICHANGO
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-regular fa-comments"></i>MAZUNGUMZO
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fa-solid fa-user"></i>WASIFU
+        </a>
+    </nav>
+
+    <script>
+        // Simple logic ya kubadilisha Tabs
+        const tabs = document.querySelectorAll('.tab-btn');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -25,7 +25,6 @@
             flex-direction: column; 
         }
 
-        /* Header iliyofanyiwa marekebisho ya nafasi */
         .chat-header { 
             background: var(--navy-blue); 
             color: white; 
@@ -38,113 +37,33 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
-        .back-btn {
-            padding: 8px 12px 8px 5px; /* Eneo kubwa la kugusa ili isiingiliane na picha */
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-        }
+        .back-btn { padding: 8px 12px 8px 5px; cursor: pointer; font-size: 18px; display: flex; align-items: center; }
         
-        .group-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px; /* Inatenganisha picha na maandishi */
-            cursor: pointer;
-        }
-
-        .group-img { 
-            width: 38px; 
-            height: 38px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            background: #eee;
-        }
-
+        .group-profile { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .group-img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; background: #eee; }
         .title-area h3 { font-size: 16px; font-weight: 600; }
         .title-area p { font-size: 11px; opacity: 0.8; }
 
-        /* Messages */
-        .messages-container { 
-            flex: 1; 
-            padding: 15px; 
-            overflow-y: auto; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px;
-        }
-
+        .messages-container { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
         .message-row { display: flex; align-items: flex-start; gap: 8px; max-width: 85%; }
         .message-row.sent { align-self: flex-end; flex-direction: row-reverse; }
 
-        .user-sms-img { 
-            width: 30px; 
-            height: 30px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            flex-shrink: 0; 
-            margin-top: 5px;
-        }
-
-        .bubble { 
-            padding: 8px 12px; 
-            border-radius: 12px; 
-            font-size: 14.5px; 
-            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-            position: relative;
-        }
-
+        .user-sms-img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 5px; }
+        .bubble { padding: 8px 12px; border-radius: 12px; font-size: 14.5px; box-shadow: 0 1px 1px rgba(0,0,0,0.1); position: relative; }
         .received .bubble { background: var(--received-bubble); border-top-left-radius: 0; }
         .sent .bubble { background: var(--sent-bubble); border-top-right-radius: 0; }
 
         .u-name { font-size: 11.5px; font-weight: 700; color: #d91e18; margin-bottom: 3px; display: block; }
         .sent .u-name { color: var(--navy-blue); text-align: right; }
-
         .msg-footer { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 4px; }
         .time { font-size: 10px; color: var(--text-sub); }
         .ticks { font-size: 13px; color: #53bdeb; }
 
-        /* Footer Input */
-        .chat-footer {
-            background: #f0f0f0;
-            padding: 8px 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .input-wrapper {
-            flex: 1;
-            background: white;
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            padding: 5px 15px;
-            min-height: 42px;
-        }
-
-        #msgInput {
-            flex: 1;
-            border: none;
-            outline: none;
-            font-size: 15px;
-            padding: 5px;
-        }
-
+        .chat-footer { background: #f0f0f0; padding: 8px 10px; display: flex; align-items: center; gap: 8px; }
+        .input-wrapper { flex: 1; background: white; border-radius: 25px; display: flex; align-items: center; padding: 5px 15px; min-height: 42px; }
+        #msgInput { flex: 1; border: none; outline: none; font-size: 15px; padding: 5px; }
         .icon-btn { color: var(--text-sub); font-size: 20px; cursor: pointer; }
-
-        .send-btn { 
-            background: var(--navy-blue); 
-            color: white; 
-            width: 45px; 
-            height: 45px; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            border: none;
-            cursor: pointer;
-        }
+        .send-btn { background: var(--navy-blue); color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -163,31 +82,7 @@
     </div>
 
     <div class="messages-container" id="chatBox">
-        
-        <div class="message-row received">
-            <img src="https://i.pravatar.cc/100?u=1" class="user-sms-img">
-            <div class="bubble">
-                <span class="u-name">Maria</span>
-                Tumsifu Yesu Kristo vijana!
-                <div class="msg-footer">
-                    <span class="time">10:00 AM</span>
-                </div>
-            </div>
         </div>
-
-        <div class="message-row sent">
-            <img id="myPic" src="https://via.placeholder.com/100" class="user-sms-img">
-            <div class="bubble">
-                <span class="u-name">Wewe</span>
-                Milele Amina! Karibuni kwenye kikao.
-                <div class="msg-footer">
-                    <span class="time">10:07 AM</span>
-                    <span class="ticks"><i class="fa-solid fa-check-double"></i></span>
-                </div>
-            </div>
-        </div>
-
-    </div>
 
     <div class="chat-footer">
         <i class="fa-solid fa-plus icon-btn"></i>
@@ -195,44 +90,67 @@
             <input type="text" id="msgInput" placeholder="Andika ujumbe...">
             <i class="fa-regular fa-face-smile icon-btn"></i>
         </div>
-        <button class="send-btn" onclick="send()"><i class="fa-solid fa-paper-plane"></i></button>
+        <button class="send-btn" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wDd-8A",
+            authDomain: "viwawa-app.firebaseapp.com",
+            databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com",
+            projectId: "viwawa-app",
+            storageBucket: "viwawa-app.firebasestorage.app",
+            messagingSenderId: "523436472007",
+            appId: "1:523436472007:web:dda010d18fd00ea60070e2",
+            measurementId: "G-KCF8BFTMBW"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const messagesRef = ref(db, 'messages');
+
         const chatBox = document.getElementById('chatBox');
         const msgInput = document.getElementById('msgInput');
+        const sendBtn = document.getElementById('sendBtn');
 
-        function send() {
-            if(msgInput.value.trim() !== "") {
+        sendBtn.onclick = () => {
+            const text = msgInput.value.trim();
+            if (text !== "") {
                 const now = new Date();
                 const time = now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes();
-                const myImg = document.getElementById('myPic').src;
-                
-                const m = `
-                <div class="message-row sent">
-                    <img src="${myImg}" class="user-sms-img">
+                push(messagesRef, {
+                    sender: "Wewe",
+                    message: text,
+                    time: time,
+                    profilePic: "https://via.placeholder.com/100" 
+                });
+                msgInput.value = "";
+            }
+        };
+
+        onChildAdded(messagesRef, (snapshot) => {
+            const data = snapshot.val();
+            const isSent = data.sender === "Wewe";
+            const messageHtml = `
+                <div class="message-row ${isSent ? 'sent' : 'received'}">
+                    <img src="${data.profilePic || 'https://via.placeholder.com/100'}" class="user-sms-img">
                     <div class="bubble">
-                        <span class="u-name">Wewe</span>
-                        ${msgInput.value}
+                        <span class="u-name">${data.sender}</span>
+                        ${data.message}
                         <div class="msg-footer">
-                            <span class="time">${time}</span>
-                            <span class="ticks"><i class="fa-solid fa-check-double"></i></span>
+                            <span class="time">${data.time}</span>
+                            ${isSent ? '<span class="ticks"><i class="fa-solid fa-check-double"></i></span>' : ''}
                         </div>
                     </div>
                 </div>`;
-                
-                chatBox.innerHTML += m;
-                msgInput.value = "";
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }
-        }
-
-        // Enter key to send
-        msgInput.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                send();
-            }
+            chatBox.innerHTML += messageHtml;
+            chatBox.scrollTop = chatBox.scrollHeight;
         });
+
+        msgInput.onkeypress = (e) => { if (e.key === "Enter") sendBtn.click(); };
     </script>
 </body>
 </html>

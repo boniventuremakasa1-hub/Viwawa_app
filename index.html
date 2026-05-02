@@ -2,30 +2,66 @@
 <html lang="sw">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viwawa App - Nyumbani</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VIWAWA - Nyumbani</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --maroon: #801313; --white: #ffffff; --bg-light: #f4f4f4; --text-dark: #333; --text-gray: #777; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-light); padding-bottom: 90px; }
+        body { background-color: var(--bg-light); padding-bottom: 90px; overflow-x: hidden; }
 
         /* Header */
-        .header { background-color: var(--maroon); color: white; padding: 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
-        .menu-toggle { font-size: 20px; cursor: pointer; }
+        .header { 
+            background-color: var(--maroon); 
+            color: white; 
+            padding: 15px 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header i { font-size: 20px; cursor: pointer; }
 
-        /* Sidebar Iliyoboreshwa */
-        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--white); z-index: 2000; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 5px 0 15px rgba(0,0,0,0.1); }
+        /* Sidebar */
+        .sidebar { 
+            position: fixed; 
+            top: 0; 
+            left: -280px; 
+            width: 280px; 
+            height: 100%; 
+            background: var(--white); 
+            z-index: 2000; 
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            box-shadow: 5px 0 15px rgba(0,0,0,0.1); 
+        }
         .sidebar.active { left: 0; }
         .sidebar-header { background: var(--maroon); color: white; padding: 30px 20px; text-align: center; }
-        
-        /* Picha ya Profile kwenye Sidebar */
-        .sidebar-profile-img { width: 80px; height: 80px; border-radius: 50%; background: #eee; margin: 0 auto 10px; border: 3px solid rgba(255,255,255,0.3); overflow: hidden; }
+        .sidebar-profile-img { 
+            width: 85px; 
+            height: 85px; 
+            border-radius: 50%; 
+            background: #eee; 
+            margin: 0 auto 12px; 
+            border: 3px solid rgba(255,255,255,0.3); 
+            overflow: hidden; 
+        }
         .sidebar-profile-img img { width: 100%; height: 100%; object-fit: cover; }
-        
         .sidebar-menu { padding: 15px; }
-        .side-item { display: flex; align-items: center; gap: 15px; padding: 15px; color: var(--text-dark); text-decoration: none; font-weight: 600; border-radius: 10px; margin-bottom: 5px; }
+        .side-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            padding: 14px 15px; 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            border-radius: 10px; 
+            margin-bottom: 5px; 
+        }
         .side-item:active { background: #f0f0f0; }
 
         /* Overlay */
@@ -36,23 +72,47 @@
         .welcome-section { padding: 25px 20px; }
         .welcome-section h2 { font-size: 22px; color: var(--text-dark); }
 
-        /* Grid Layout (Panga Vitu Katikati) */
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .menu-card { background: var(--white); padding: 25px 15px; border-radius: 20px; text-align: center; text-decoration: none; color: var(--text-dark); box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: 0.2s; }
+        /* Grid Layout - Maboresho ya Mipangilio hapa */
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            padding: 0 20px; 
+        }
+        .menu-card { 
+            background: var(--white); 
+            padding: 25px 15px; 
+            border-radius: 20px; 
+            text-align: center; 
+            text-decoration: none; 
+            color: var(--text-dark); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+            transition: 0.2s; 
+        }
         .menu-card:active { transform: scale(0.95); }
-        .menu-card i { font-size: 30px; margin-bottom: 10px; display: block; }
-        .menu-card span { font-size: 13px; font-weight: 700; text-transform: uppercase; }
+        .menu-card i { font-size: 32px; margin-bottom: 12px; display: block; }
+        .menu-card span { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Rangi za Icon */
+        /* Icon Colors */
         .c-biblia { color: #5c7cfa; }
         .c-mazungumzo { color: #20c997; }
-        .c-settings { color: #868e96; }
+        .c-settings { color: #636e72; } /* Rangi ya mipangilio */
         .c-matangazo { color: #fd7e14; }
         .c-michango { color: #e64980; }
 
-        /* Bottom Nav (Vitu 4) */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 1000; }
-        .nav-item { text-decoration: none; color: var(--text-gray); font-size: 10px; text-align: center; }
+        /* Bottom Nav */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            background: white; 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 12px 0; 
+            border-top: 1px solid #eee; 
+            z-index: 1000; 
+        }
+        .nav-item { text-decoration: none; color: var(--text-gray); font-size: 10px; text-align: center; flex: 1; }
         .nav-item i { font-size: 20px; margin-bottom: 4px; }
         .nav-item.active { color: var(--maroon); font-weight: 700; }
     </style>
@@ -62,23 +122,23 @@
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-profile-img">
-                <img id="sideProfilePic" src="https://via.placeholder.com/80" alt="Profile">
+                <img id="sideProfilePic" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile">
             </div>
-            <h3 id="sideName">Boniventure Makasa</h3>
+            <h3 id="sideName">Mwanachama</h3>
             <p style="font-size: 12px; opacity: 0.9;">Mapendo Daima</p>
         </div>
         <div class="sidebar-menu">
             <a href="profile.html" class="side-item"><i class="fa-solid fa-user"></i> Wasifu</a>
             <a href="about.html" class="side-item"><i class="fa-solid fa-circle-info"></i> Kuhusu App</a>
             <hr style="margin: 10px 0; opacity: 0.1;">
-            <a href="#" class="side-item" style="color: var(--maroon);"><i class="fa-solid fa-power-off"></i> Ondoka</a>
+            <a href="#" class="side-item" style="color: var(--maroon);" onclick="logout()"><i class="fa-solid fa-power-off"></i> Ondoka</a>
         </div>
     </div>
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
     <div class="header">
-        <i class="fa-solid fa-bars menu-toggle" onclick="toggleSidebar()"></i>
-        <h1 style="font-size: 18px;">VIWAWA</h1>
+        <i class="fa-solid fa-bars" onclick="toggleSidebar()"></i>
+        <h1 style="font-size: 18px; font-weight: 700;">VIWAWA</h1>
         <i class="fa-regular fa-bell"></i>
     </div>
 
@@ -96,6 +156,7 @@
             <i class="fa-solid fa-comments c-mazungumzo"></i>
             <span>Mazungumzo</span>
         </a>
+
         <a href="settings.html" class="menu-card">
             <i class="fa-solid fa-gear c-settings"></i>
             <span>Mipangilio</span>
@@ -104,6 +165,7 @@
             <i class="fa-solid fa-bullhorn c-matangazo"></i>
             <span>Matangazo</span>
         </a>
+
         <a href="michango.html" class="menu-card" style="grid-column: span 2;">
             <i class="fa-solid fa-wallet c-michango"></i>
             <span>Michango na Malipo</span>
@@ -118,17 +180,28 @@
     </nav>
 
     <script>
+        // Kufungua/Kufunga Sidebar
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
         }
 
+        // Kufuta data na kutoka
+        function logout() {
+            if(confirm("Je, unataka kuondoka kwenye App?")) {
+                localStorage.removeItem('viwawa_profile');
+                window.location.href = "login.html";
+            }
+        }
+
+        // Kupakia data za mtumiaji
         window.onload = function() {
-            // Inachukua data kutoka kwenye wasifu uliohifadhiwa
             const data = JSON.parse(localStorage.getItem('viwawa_profile'));
             if(data) {
                 if(data.name) {
+                    // Inaonyesha jina la kwanza tu kwenye salamu
                     document.getElementById('userName').innerText = data.name.split(' ')[0];
+                    // Inaonyesha jina kamili kwenye sidebar
                     document.getElementById('sideName').innerText = data.name;
                 }
                 if(data.image) {

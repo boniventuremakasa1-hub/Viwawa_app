@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mipangilio - VIWAWA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --maroon: #801313; --bg: #f4f4f4; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: 0.2s; }
+        body { background-color: var(--bg); color: #333; padding-bottom: 30px; }
+
+        /* Header */
+        .header { background: var(--maroon); color: white; padding: 15px 20px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; z-index: 100; }
+        .header a { color: white; text-decoration: none; font-size: 20px; }
+
+        /* User Brief */
+        .settings-user { background: white; padding: 20px; display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .user-avatar { width: 55px; height: 55px; border-radius: 50%; background: #eee; overflow: hidden; }
+        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Settings Group */
+        .settings-group { background: white; margin-bottom: 15px; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+        .group-title { padding: 10px 20px; font-size: 11px; font-weight: 700; color: var(--maroon); text-transform: uppercase; background: #fafafa; }
+        
+        .setting-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; text-decoration: none; color: #333; border-bottom: 1px solid #f5f5f5; cursor: pointer; }
+        .setting-content { display: flex; align-items: center; gap: 15px; }
+        .setting-content i { font-size: 18px; width: 25px; color: var(--maroon); text-align: center; }
+        .setting-text h4 { font-size: 14px; font-weight: 600; }
+        .setting-text p { font-size: 12px; color: #888; }
+
+        /* Switches & Selectors */
+        .switch { position: relative; display: inline-block; width: 38px; height: 18px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; border-radius: 50%; transition: 0.3s; }
+        input:checked + .slider { background-color: var(--maroon); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        select { border: none; background: transparent; font-size: 13px; font-weight: 600; color: var(--maroon); outline: none; cursor: pointer; }
+
+        /* Msaada Overlay */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1000; padding: 20px; }
+        .modal-content { background: white; border-radius: 20px; padding: 25px; max-height: 80vh; overflow-y: auto; }
+        .modal-content h2 { color: var(--maroon); margin-bottom: 15px; }
+        .modal-content p { font-size: 14px; color: #555; margin-bottom: 10px; }
+        .close-modal { display: block; width: 100%; background: var(--maroon); color: white; border: none; padding: 12px; border-radius: 10px; margin-top: 15px; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i></a>
+        <h2 id="txt_title">Mipangilio</h2>
+    </div>
+
+    <div class="settings-user" onclick="window.location.href='profile.html'">
+        <div class="user-avatar"><img id="userImg" src="https://via.placeholder.com/55"></div>
+        <div class="user-info">
+            <h2 id="sideName">Mwanachama</h2>
+            <p id="txt_edit_profile">Gusa kubadili wasifu</p>
+        </div>
+    </div>
+
+    <div class="group-title" id="txt_personal">Binafsi</div>
+    <div class="settings-group">
+        <div class="setting-item">
+            <div class="setting-content">
+                <i class="fa-solid fa-user-gear"></i>
+                <div class="setting-text">
+                    <h4 id="txt_account">Akaunti</h4>
+                    <p id="txt_account_sub">Namba ya simu na usalama</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:#ccc"></i>
+        </div>
+    </div>
+
+    <div class="group-title" id="txt_app_settings">Mipangilio ya App</div>
+    <div class="settings-group">
+        <div class="setting-item">
+            <div class="setting-content">
+                <i class="fa-solid fa-language"></i>
+                <div class="setting-text">
+                    <h4 id="txt_lang">Lugha (Language)</h4>
+                    <p id="txt_lang_sub">Chagua lugha unayopenda</p>
+                </div>
+            </div>
+            <select id="langSelect" onchange="changeLanguage()">
+                <option value="sw">Kiswahili</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <div class="setting-content">
+                <i class="fa-solid fa-palette"></i>
+                <div class="setting-text">
+                    <h4 id="txt_appearance">Muonekano</h4>
+                    <p id="txt_appearance_sub">Mode ya usiku (Dark Mode)</p>
+                </div>
+            </div>
+            <label class="switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="setting-item">
+            <div class="setting-content">
+                <i class="fa-solid fa-bell"></i>
+                <div class="setting-text">
+                    <h4 id="txt_notif">Notification</h4>
+                    <p id="txt_notif_sub">Sauti na meseji</p>
+                </div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="group-title" id="txt_data_group">Data</div>
+    <div class="settings-group">
+        <div class="setting-item">
+            <div class="setting-content">
+                <i class="fa-solid fa-cloud-arrow-down"></i>
+                <div class="setting-text">
+                    <h4 id="txt_data">Kuhifadhi Data</h4>
+                    <p id="txt_data_sub">Auto-download na matumizi</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:#ccc"></i>
+        </div>
+    </div>
+
+    <div class="group-title" id="txt_more">Ziada</div>
+    <div class="settings-group">
+        <div class="setting-item" onclick="openHelp()">
+            <div class="setting-content">
+                <i class="fa-solid fa-circle-question"></i>
+                <div class="setting-text">
+                    <h4 id="txt_help">Msaada</h4>
+                    <p id="txt_help_sub">Maswali na mwongozo wa App</p>
+                </div>
+            </div>
+        </div>
+        <div class="setting-item" style="color: #d32f2f;" onclick="logout()">
+            <div class="setting-content">
+                <i class="fa-solid fa-right-from-bracket" style="color: #d32f2f;"></i>
+                <div class="setting-text">
+                    <h4 id="txt_logout">Ondoka (Log Out)</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <h2 id="h_help_title">Msaada wa App</h2>
+            <div id="help_body">
+                <p><strong>1. Biblia:</strong> Unaweza kusoma Biblia bila internet baada ya kuifungua mara ya kwanza.</p>
+                <p><strong>2. Mazungumzo:</strong> Tuma ujumbe, picha, na voice notes kwa wanachama wengine wa kundi.</p>
+                <p><strong>3. Michango:</strong> Unaweza kuona kiasi unachodaiwa na kulipia kupitia mitandao ya simu.</p>
+                <p><strong>4. Wasifu:</strong> Badilisha picha yako ili utambulike kwenye kundi.</p>
+            </div>
+            <button class="close-modal" onclick="closeHelp()">Funga</button>
+        </div>
+    </div>
+
+    <script>
+        // Data ya Lugha
+        const translations = {
+            sw: {
+                title: "Mipangilio", personal: "Binafsi", account: "Akaunti", account_sub: "Namba ya simu na usalama",
+                app: "Mipangilio ya App", lang: "Lugha (Language)", lang_sub: "Chagua lugha", appearance: "Muonekano",
+                appearance_sub: "Mode ya usiku", notif: "Notification", notif_sub: "Sauti na meseji",
+                data_group: "Data", data: "Kuhifadhi Data", data_sub: "Auto-download",
+                more: "Ziada", help: "Msaada", help_sub: "Maswali na mwongozo", logout: "Ondoka (Log Out)",
+                edit_profile: "Gusa kubadili wasifu", help_title: "Msaada wa App"
+            },
+            en: {
+                title: "Settings", personal: "Personal", account: "Account", account_sub: "Phone number and security",
+                app: "App Settings", lang: "Language", lang_sub: "Choose your language", appearance: "Appearance",
+                appearance_sub: "Dark mode", notif: "Notifications", notif_sub: "Sound and messages",
+                data_group: "Data", data: "Data Usage", data_sub: "Auto-download",
+                more: "More", help: "Help", help_sub: "Questions and app guide", logout: "Log Out",
+                edit_profile: "Tap to edit profile", help_title: "App Help Guide"
+            }
+        };
+
+        function changeLanguage() {
+            const l = document.getElementById('langSelect').value;
+            const t = translations[l];
+            document.getElementById('txt_title').innerText = t.title;
+            document.getElementById('txt_personal').innerText = t.personal;
+            document.getElementById('txt_account').innerText = t.account;
+            document.getElementById('txt_account_sub').innerText = t.account_sub;
+            document.getElementById('txt_app_settings').innerText = t.app;
+            document.getElementById('txt_lang').innerText = t.lang;
+            document.getElementById('txt_lang_sub').innerText = t.lang_sub;
+            document.getElementById('txt_appearance').innerText = t.appearance;
+            document.getElementById('txt_appearance_sub').innerText = t.appearance_sub;
+            document.getElementById('txt_notif').innerText = t.notif;
+            document.getElementById('txt_notif_sub').innerText = t.notif_sub;
+            document.getElementById('txt_data_group').innerText = t.data_group;
+            document.getElementById('txt_data').innerText = t.data;
+            document.getElementById('txt_data_sub').innerText = t.data_sub;
+            document.getElementById('txt_more').innerText = t.more;
+            document.getElementById('txt_help').innerText = t.help;
+            document.getElementById('txt_help_sub').innerText = t.help_sub;
+            document.getElementById('txt_logout').innerText = t.logout;
+            document.getElementById('txt_edit_profile').innerText = t.edit_profile;
+            document.getElementById('h_help_title').innerText = t.help_title;
+        }
+
+        function openHelp() { document.getElementById('helpModal').style.display = 'block'; }
+        function closeHelp() { document.getElementById('helpModal').style.display = 'none'; }
+        function logout() { if(confirm("Unataka kuondoka?")) window.location.href="login.html"; }
+
+        window.onload = function() {
+            const data = JSON.parse(localStorage.getItem('viwawa_profile'));
+            if(data) {
+                if(data.name) document.getElementById('sideName').innerText = data.name;
+                if(data.image) document.getElementById('userImg').src = data.image;
+            }
+        };
+    </script>
+</body>
+</html>
+

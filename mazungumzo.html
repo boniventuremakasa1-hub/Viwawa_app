@@ -3,33 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mazungumzo - VIWAWA</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Viwawa chat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --maroon: #801313; --bg-chat: #e5ddd5; --white: #ffffff; --msg-in: #ffffff; --msg-out: #dcf8c6; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        :root { --maroon: #801313; --bg-chat: #efe7dd; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
         
         body { background-color: var(--bg-chat); height: 100vh; display: flex; flex-direction: column; }
 
-        /* Header */
+        /* Header - Viwawa chat */
         .chat-header { 
             background: var(--maroon); 
             color: white; 
             padding: 10px 15px; 
             display: flex; 
             align-items: center; 
-            gap: 10px; 
+            gap: 12px; 
             position: sticky; 
             top: 0; 
             z-index: 1000;
         }
-        .chat-header a { color: white; text-decoration: none; font-size: 18px; }
-        .group-img { width: 40px; height: 40px; border-radius: 50%; background: #eee; }
-        .group-info h3 { font-size: 16px; }
+        .chat-header a { color: white; text-decoration: none; }
+        .group-info h3 { font-size: 17px; }
         .group-info p { font-size: 11px; opacity: 0.8; }
 
-        /* Area ya Meseji */
+        /* Chat Messages */
         .messages-container { 
             flex: 1; 
             padding: 15px; 
@@ -37,63 +35,60 @@
             display: flex; 
             flex-direction: column; 
             gap: 10px;
-            padding-bottom: 80px; /* Nafasi ya kutosha chini */
+            padding-bottom: 100px; /* Nafasi ya kutosha juu ya input */
         }
 
-        .message { max-width: 75%; padding: 8px 12px; border-radius: 10px; font-size: 14px; position: relative; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .received { align-self: flex-start; background: var(--msg-in); border-top-left-radius: 0; }
-        .sent { align-self: flex-end; background: var(--msg-out); border-top-right-radius: 0; }
+        .message { max-width: 75%; padding: 8px 12px; border-radius: 10px; font-size: 14px; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+        .received { align-self: flex-start; background: white; border-top-left-radius: 0; }
+        .sent { align-self: flex-end; background: #dcf8c6; border-top-right-radius: 0; }
         
-        .user-name { font-size: 11px; font-weight: 700; color: var(--maroon); display: block; margin-bottom: 2px; }
-        .time { font-size: 10px; color: #888; display: block; text-align: right; margin-top: 4px; }
+        .u-name { font-size: 11px; font-weight: bold; color: var(--maroon); margin-bottom: 2px; display: block; }
+        .time { font-size: 10px; color: #888; text-align: right; display: block; margin-top: 4px; }
 
-        /* Input Area (Imepunguzwa Ukubwa) */
-        .chat-input-area { 
-            position: fixed; 
-            bottom: 0; 
-            width: 100%; 
-            background: #f0f0f0; 
-            padding: 8px 10px; 
-            display: flex; 
-            align-items: flex-end; 
-            gap: 8px; 
+        /* Bottom Input Area - Fixed for Keyboard */
+        .chat-footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #f0f0f0;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1100;
         }
 
-        .input-box { 
-            flex: 1; 
-            background: white; 
-            border-radius: 25px; 
-            display: flex; 
-            align-items: flex-end; 
-            padding: 5px 12px; 
-            min-height: 40px;
+        .input-wrapper {
+            flex: 1;
+            background: white;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            padding: 2px 12px;
+            height: 40px; /* Length fupi kama ulivyoomba */
         }
 
-        .input-box textarea { 
-            flex: 1; 
-            border: none; 
-            outline: none; 
-            padding: 8px 5px; 
-            font-size: 15px; 
-            resize: none; 
-            max-height: 100px; 
-            background: transparent;
-        }
+        .plus-btn { color: var(--maroon); font-size: 20px; cursor: pointer; padding-right: 5px; }
 
-        .input-box i { color: #888; padding: 10px; cursor: pointer; }
+        #msgInput {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            padding: 5px;
+        }
 
         .send-btn { 
             background: var(--maroon); 
             color: white; 
-            width: 42px; 
-            height: 42px; 
+            width: 40px; 
+            height: 40px; 
             border-radius: 50%; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            border: none; 
-            font-size: 18px; 
-            cursor: pointer;
+            border: none;
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -101,77 +96,62 @@
 
     <div class="chat-header">
         <a href="index.html"><i class="fa-solid fa-arrow-left"></i></a>
-        <div class="group-img"><img src="https://via.placeholder.com/40" style="width:100%; border-radius:50%;"></div>
         <div class="group-info">
-            <h3>VIWAWA PAROKIA</h3>
-            <p>Washiriki 124, Mtandaoni</p>
+            <h3>Viwawa chat</h3>
+            <p>Maria, Thadeo, Mzee, Wewe...</p>
         </div>
     </div>
 
     <div class="messages-container" id="chatBox">
         <div class="message received">
-            <span class="user-name">Dominick</span>
-            Tumsifu Yesu Kristo wapendwa!
-            <span class="time">10:05 AM</span>
+            <span class="u-name">Maria</span>
+            Tumsifu Yesu Kristo vijana!
+            <span class="time">10:00 AM</span>
         </div>
-        
         <div class="message sent">
             Milele Amina! Karibuni kwenye kikao.
             <span class="time">10:07 AM</span>
         </div>
-
         <div class="message received">
-            <span class="user-name">Sr. Maria</span>
-            Naomba tujue muda wa sala ya jioni utakuwa saa ngapi leo?
+            <span class="u-name">Sr. Maria</span>
+            Naomba tujue muda wa sala ya jioni?
             <span class="time">10:15 AM</span>
         </div>
     </div>
 
-    <div class="chat-input-area">
-        <div class="input-box">
-            <i class="fa-regular fa-face-smile"></i>
-            <textarea id="msgInput" rows="1" placeholder="Andika ujumbe..." oninput="autoGrow(this)"></textarea>
-            <i class="fa-solid fa-paperclip"></i>
-            <i class="fa-solid fa-camera"></i>
+    <div class="chat-footer" id="footer">
+        <div class="input-wrapper">
+            <i class="fa-solid fa-plus plus-btn" onclick="alert('Chagua faili...')"></i>
+            <input type="text" id="msgInput" placeholder="Andika ujumbe..." onfocus="adjustView()">
         </div>
-        <button class="send-btn" onclick="sendMsg()"><i class="fa-solid fa-paper-plane"></i></button>
+        <button class="send-btn" onclick="send()"><i class="fa-solid fa-paper-plane"></i></button>
     </div>
 
     <script>
-        // Inafanya sehemu ya kuandikia ikue kulingana na maandishi
-        function autoGrow(element) {
-            element.style.height = "5px";
-            element.style.height = (element.scrollHeight) + "px";
+        const chatBox = document.getElementById('chatBox');
+        const msgInput = document.getElementById('msgInput');
+
+        // Hii inahakikisha input haifichwi na keyboard
+        function adjustView() {
+            setTimeout(() => {
+                document.getElementById('footer').scrollIntoView(false);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 300);
         }
 
-        // Kutuma meseji
-        function sendMsg() {
-            const input = document.getElementById('msgInput');
-            const chatBox = document.getElementById('chatBox');
-            
-            if(input.value.trim() !== "") {
+        function send() {
+            if(msgInput.value.trim() !== "") {
                 const now = new Date();
-                const timeStr = now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes() + (now.getHours() >= 12 ? " PM" : " AM");
-
-                const newMsg = `
-                    <div class="message sent">
-                        ${input.value}
-                        <span class="time">${timeStr}</span>
-                    </div>
-                `;
+                const time = now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes();
                 
-                chatBox.innerHTML += newMsg;
-                input.value = "";
-                input.style.height = "auto"; // Inarudisha urefu wa kawaida baada ya kutuma
-                chatBox.scrollTop = chatBox.scrollHeight; // Inashusha scroll chini
+                const m = `<div class="message sent">${msgInput.value}<span class="time">${time}</span></div>`;
+                chatBox.innerHTML += m;
+                msgInput.value = "";
+                chatBox.scrollTop = chatBox.scrollHeight;
             }
         }
 
-        // Inahakikisha inashuka chini kabisa ikifunguka
-        window.onload = function() {
-            const chatBox = document.getElementById('chatBox');
-            chatBox.scrollTop = chatBox.scrollHeight;
-        };
+        window.onload = () => { chatBox.scrollTop = chatBox.scrollHeight; };
     </script>
 </body>
 </html>

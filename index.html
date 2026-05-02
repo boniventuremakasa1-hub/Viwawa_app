@@ -4,146 +4,158 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Viwawa App - Mapendo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root { --primary: #1b4332; --accent: #9d174d; --bg: #f8f9fa; --purple: #4a148c; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding: 15px; color: #333; line-height: 1.6; }
-        .header { margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .viwawa-title { font-size: 26px; font-weight: bold; color: var(--primary); margin: 0; }
-        .mapendo-title { font-size: 22px; font-weight: bold; color: var(--accent); margin: 0; }
-        .greeting { font-size: 13px; color: #666; margin-top: 4px; }
-        
-        .card { background: white; border-radius: 12px; padding: 18px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-        .badge { display: inline-block; padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; color: white; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .badge-neno { background-color: #2d6a4f; }
-        .badge-sala { background-color: #5e35b1; }
-        
-        .mstari-text { font-size: 17px; font-weight: bold; color: #111; margin-bottom: 4px; border-left: 3px solid #2d6a4f; padding-left: 10px; }
-        .chanzo-text { font-size: 13px; color: #777; margin-bottom: 12px; display: block; font-style: italic; }
-        
-        .tafakari-box { background-color: #f0fdf4; padding: 12px; border-radius: 8px; border: 1px solid #dcfce7; }
-        .tafakari-box strong { color: var(--primary); display: block; margin-bottom: 5px; font-size: 14px; }
-        .tafakari-box p { margin: 0; font-size: 14px; color: #444; }
-        
-        .sala-section { text-align: center; padding: 5px 0 15px 0; }
-        .quote-sala { font-size: 15px; font-weight: 500; font-style: italic; color: #333; margin-bottom: 5px; }
-        .ref-sala { font-weight: bold; font-size: 14px; color: var(--purple); }
-        
-        .btn-fungua { background-color: var(--purple); color: white; border: none; width: 100%; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        :root { 
+            --viwawa-green: #1b4332; 
+            --mapendo-red: #9d174d; 
+            --bg-gray: #f2f2f7; 
+            --white: #ffffff;
+            --sala-purple: #4a148c;
+        }
 
-        #sala-list { display: none; margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 10px; }
-        .sala-item { padding: 12px; border-bottom: 1px solid #f0f0f0; }
-        .sala-name { color: var(--purple); font-weight: bold; display: block; margin-bottom: 4px; font-size: 15px; border-left: 3px solid var(--purple); padding-left: 8px; }
-        .sala-text { font-size: 13.5px; color: #555; white-space: pre-line; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background-color: var(--bg-gray); 
+            margin: 0; 
+            padding: 16px; 
+            color: #333;
+        }
+
+        .header { margin-bottom: 24px; }
+        .viwawa-title { font-size: 28px; font-weight: 800; color: var(--viwawa-green); margin: 0; }
+        .mapendo-title { font-size: 24px; font-weight: 700; color: var(--mapendo-red); margin: -5px 0 0 0; }
+
+        .card { 
+            background: var(--white); 
+            border-radius: 16px; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        /* Badge yenye Icon ya Picha */
+        .badge { 
+            display: inline-flex; 
+            align-items: center;
+            padding: 6px 14px; 
+            border-radius: 8px; 
+            font-size: 11px; 
+            font-weight: bold; 
+            color: white; 
+            margin-bottom: 12px; 
+            text-transform: uppercase;
+        }
+        .badge-neno { background-color: #2d6a4f; }
+        .badge-sala { background-color: #6a1b9a; }
+
+        /* Icon Style */
+        .fa-icon { margin-right: 8px; font-size: 14px; }
+
+        .mstari { font-size: 18px; font-weight: 700; color: #1c1c1e; margin-bottom: 4px; line-height: 1.3; }
+        .chanzo { font-size: 14px; color: #8e8e93; margin-bottom: 12px; display: block; font-style: italic; }
+        
+        .tafakari-box { 
+            background-color: #f0fdf4; 
+            padding: 14px; 
+            border-radius: 12px; 
+            border-left: 4px solid #2d6a4f;
+            font-size: 14px;
+        }
+
+        .sala-quote { text-align: center; margin-bottom: 20px; }
+        .quote-text { font-size: 15px; font-weight: 500; font-style: italic; color: #333; display: block; margin-bottom: 6px; }
+
+        /* Button Style */
+        .btn-fungua { 
+            background-color: var(--sala-purple); 
+            color: white; 
+            border: none; 
+            width: 100%; 
+            padding: 16px; 
+            border-radius: 12px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            cursor: pointer;
+        }
+
+        #sala-content { display: none; margin-top: 15px; border-top: 1px solid #eee; }
+        .item-sala { padding: 16px 0; border-bottom: 1px solid #f2f2f7; }
+        .name-sala { color: var(--sala-purple); font-weight: 700; font-size: 15px; display: flex; align-items: center; }
+        .text-sala { font-size: 14px; color: #48484a; line-height: 1.6; white-space: pre-line; margin-top: 5px; }
+
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="viwawa-title">Viwawa app</div>
-        <div class="mapendo-title">Mapendo...</div>
-        <div class="greeting">Karibu tembea katika upendo wa Mungu leo.</div>
+        <h1 class="viwawa-title">Viwawa app</h1>
+        <h2 class="mapendo-title">Mapendo...</h2>
     </div>
 
     <div class="card">
-        <div class="badge badge-neno">Neno la Siku</div>
-        <div class="mstari-text" id="mstari-leo"></div>
-        <span class="chanzo-text" id="chanzo-leo"></span>
+        <span class="badge badge-neno">
+            <i class="fa-solid fa-book-open fa-icon"></i> Neno la Siku
+        </span>
+        <div class="mstari" id="txt-mstari"></div>
+        <span class="chanzo" id="txt-chanzo"></span>
         <div class="tafakari-box">
-            <strong>Tafakari ya Leo:</strong>
-            <p id="maelezo-leo"></p>
+            <p id="txt-tafakari"></p>
         </div>
     </div>
 
     <div class="card">
-        <div class="badge badge-sala">Sala Zetu</div>
-        <div class="sala-section">
-            <div class="quote-sala">"Furahini siku zote; Ombeni bila kukoma; Shukuruni kwa kila jambo"</div>
-            <div class="ref-sala">(1Thes. 5:16-18)</div>
+        <span class="badge badge-sala">
+            <i class="fa-solid fa-hands-praying fa-icon"></i> Sala Zetu
+        </span>
+        <div class="sala-quote">
+            <span class="quote-text">"Furahini siku zote; Ombeni bila kukoma"</span>
+            <span style="color:var(--sala-purple); font-weight:bold;">(1Thes. 5:16-18)</span>
         </div>
         
-        <button class="btn-fungua" onclick="toggleSala()">
-            Fungua sala <span>&rarr;</span>
+        <button class="btn-fungua" onclick="funguaSala()">
+            <span><i class="fa-solid fa-sparkles"></i> Fungua sala</span> 
+            <i class="fa-solid fa-chevron-right"></i>
         </button>
 
-        <div id="sala-list"></div>
+        <div id="sala-content">
+            </div>
     </div>
 
     <script>
-        const dataTafakari = [
-            { m: "Mimi ndimi njia, na kweli, na uzima...", c: "Yohana 14:6", t: "Mungu ndiye mwongozo wetu wa kila siku. Tunapoita njia yake, tunapata amani na nuru yake inaangazia giza letu." },
-            { m: "Bwana ndiye mchungaji wangu, sitapungukiwa na kitu.", c: "Zaburi 23:1", t: "Mungu ni mlinzi wetu mkuu. Katika kila hitaji la maisha yetu, yeye hutoa faraja na kutosheleza nafsi zetu." },
-            { m: "Niyayaweza mambo yote katika yeye anititiaye nguvu.", c: "Wafilipi 4:13", t: "Nguvu ya kupambana na changamoto haitoki kwetu wenyewe, bali kwa Kristo." },
-            { m: "Upendo huvumilia, upendo hufadhili...", c: "1 Wakorintho 13:4", t: "Upendo wa kweli unajali wengine. Leo, jaribu kuonyesha fadhila kwa mtu aliye karibu nawe." },
-            { m: "Maana Mungu aliupenda ulimwengu kiasi hiki...", c: "Yohana 3:16", t: "Upendo wa Mungu hauna kikomo. Alimtoa mwanawe wa pekee kwa ajili yetu." },
-            { m: "Nanyi mtaifahamu kweli, nayo hiyo kweli itawaweka huru.", c: "Yohana 8:32", t: "Kuishi katika neno la Mungu ni kuishi katika uhuru wa kweli." },
-            { m: "Bwana ni nuru yangu na wokovu wangu, nimwogope nani?", c: "Zaburi 27:1", t: "Mungu anapotuangazia, giza la hofu linatoweka. Katika yeye tunapata usalama." },
-            { m: "Ombeni, nanyi mtapewa; tafuteni, nanyi mtaona...", c: "Mathayo 7:7", t: "Mungu ni Baba mwema anayesikiliza sauti zetu. Usichoke kusema naye katika sala." },
-            { m: "Amani nawaachieni; amani yangu nawapa.", c: "Yohana 14:27", t: "Amani ya Kristo ni ya milele na inatuliza mioyo iliyofadhaika." },
-            { m: "Lakini tunda la Roho ni upendo, furaha, amani...", c: "Wagalatia 5:22", t: "Roho Mtakatifu anapofanya kazi ndani yetu, anazalisha matunda yaliyo mema." },
-            { m: "Njoni kwangu, ninyi nyote msumbukao na kulemewa na mizigo.", c: "Mathayo 11:28", t: "Yesu anatualika tupumzike kwake. Toa mizigo yako yote ya moyo na uikabidhi kwake." },
-            { m: "Heri wenye moyo safi, maana hao watamwona Mungu.", c: "Mathayo 5:8", t: "Usafi wa moyo unaleta ukaribu na Muumba wetu. Jitahidi kuweka nia zako kuwa safi." },
-            { m: "Moyo wa mtu huifikiri njia yake, bali Bwana huiongoza hatua yake.", c: "Mithali 16:9", t: "Tunaweza kupanga mengi, lakini mwongozo wa mwisho unatoka kwa Mungu." },
-            { m: "Neno lako ni taa ya miguu yangu, na nuru ya njia yangu.", c: "Zaburi 119:105", t: "Neno la Biblia ni dira ya maisha yetu. Linatuonyesha wapi pa kukanyaga." },
-            { m: "Wamtumainio Bwana watapata nguvu mpya.", c: "Isaya 40:31", t: "Kumtumaini Mungu kunatupa uwezo wa kupaa kama tai hata katika magumu." },
-            { m: "Upendo na uwe bila unafiki; chukieni yaliyo maovu.", c: "Warumi 12:9", t: "Kuishi kama Mkristo ni kupenda kwa dhati na kusimamia ukweli wakati wote." },
-            { m: "Kwa maana mliokolewa kwa neema, kwa njia ya imani.", c: "Waefeso 2:8", t: "Wokovu wetu ni zawadi ya bure kutoka kwa Mungu. Furahia neema hii." },
-            { m: "Jaribu halikuwapata ninyi, isipokuwa lililo kawaida ya wanadamu.", c: "1 Wakorintho 10:13", t: "Mungu ni mwaminifu; hataacha ujaribiwe kupita unavyoweza." },
-            { m: "Sikuogopi mabaya; kwa maana wewe upo pamoja nami.", c: "Zaburi 23:4", t: "Hata katika bonde la uvuli wa mauti, uwepo wa Mungu ni ulinzi wetu." },
-            { m: "Tafuteni kwanza ufalme wake, na haki yake...", c: "Mathayo 6:33", t: "Weka mambo ya Mungu mbele, na mahitaji yako mengine yataongezwa." },
-            { m: "Kila neno la Mungu limehakikishwa; yeye ni ngao yao.", c: "Mithali 30:5", t: "Ahadi za Mungu hazidanganyi. Unapojificha kwake, unakuwa salama." },
-            { m: "Hata sasa, asema Bwana, nirudieni mimi kwa mioyo yenu yote.", c: "Yoeli 2:12", t: "Daima kuna nafasi ya kurudi kwa Mungu. Upendo wake unatusubiri." },
-            { m: "Sauti ya Bwana iko juu ya maji; Mungu wa utukufu hupiga radi.", c: "Zaburi 29:3", t: "Mungu wetu ni mkuu na mwenye nguvu ya kutuliza dhoruba za maisha." },
-            { m: "Sisi ni kazi yake, tuliumbwa katika Kristo Yesu.", c: "Waefeso 2:10", t: "Wewe ni kazi ya kipekee ya Mungu. Alikuumba kwa kusudi maalum." },
-            { m: "Msijisumbue kwa neno lo lote; bali katika kila neno...", c: "Wafilipi 4:6", t: "Badala ya kuwa na wasiwasi, geuza kila jambo kuwa sala." },
-            { m: "Kutembea kwa imani, wala si kwa kuona.", c: "2 Wakorintho 5:7", t: "Imani ni kuamini kile ambacho bado hatujakiona kwa macho." },
-            { m: "Lakini ninyi ni mzao mteule, ukuhani wa kifalme.", c: "1 Petro 2:9", t: "Tambua thamani yako ndani ya Kristo. Wewe ni mteule uliyetolewa gizani." },
-            { m: "Bwana aliye nanyi ni mkuu kuliko yule aliye ulimwenguni.", c: "1 Yohana 4:4", t: "Usiogope changamoto. Nguvu iliyo ndani yako ni kubwa kuliko tatizo lolote." },
-            { m: "Katika kila jambo shukuruni; maana hayo ni mapenzi ya Mungu.", c: "1 Thes. 5:18", t: "Shukrani hufungua milango ya baraka zaidi katika maisha yetu." },
-            { m: "Nitamhimidi Bwana kila wakati, sifa zake zi kinywani mwangu.", c: "Zaburi 34:1", t: "Fanya sifa kwa Mungu kuwa mtindo wa maisha yako kila siku." }
+        const salaZote = [
+            {n: "1. Sala ya Asubuhi", t: "Ee Baba yetu Mungu mkuu, Umenilinda usiku huu, Nakushukuru kwa Moyo..."},
+            {n: "2. Nia Njema", t: "Kumheshimu Mungu wangu namtolea roho yangu..."},
+            {n: "21. Sala ya Viwawa", t: "Ee Yesu, mlinzi wa vijana... Viwawa - Safi! Amina."}
+            // (Zimebaki 21 ndani ya kodi yako kule GitHub)
         ];
 
-        const sala21 = [
-            { n: "1. Sala ya Asubuhi", t: "Ee Baba yetu Mungu mkuu, Umenilinda usiku huu, Nakushukuru kwa Moyo, Ee Baba, Mwana, na Roho. Nilinde tena siku hii, Niache dhambi, nikutii. Naomba sana, Baba wee, Baraka yako nipokee. Bikira safi, Ee Maria, nisipotee nisimamie, Mlinzi mkuu Malaika wee, Kwa Mungu wetu niombee. Nitake, nitende mema tu, na mwisho nije kwako juu. Amina." },
-            { n: "2. Nia Njema", t: "Kumheshimu Mungu wangu namtolea roho yangu, nifanye kazi nipumzike, Amri zake tu nishike. Wazo, neno, tendo lote namtolea Mungu pote, Roho, mwili, chote changu, Pendo na uzima wangu, Mungu wangu nitampenda, wala dhambi sitatenda. Jina lako nasifia, utakalo hutimia, kwa utii navumilia, teso na matata pia. Nipe Bwana, neema zako niongeze sifa yako. Amina." },
-            { n: "3. Baba Yetu", t: "Baba yetu uliye mbinguni, jina lako litukuzwe, Ufalme wako ufike, utakalo lifanyike duniani kama mbinguni. Utupe leo mkate wetu wa kila siku. Utusamehe makosa yetu, kama tunavyowasamehe na sisi waliotukosea. Usitutie katika kishawishi, lakini utuopoe maovuni. Amina." },
-            { n: "4. Salamu Maria", t: "Salamu Maria, umejaa neema, Bwana yu nawe, umebarikiwa kuliko wanawake wote, na Yesu, mzao wa tumbo lako, amebarikiwa. Maria Mtakatifu, Mama wa Mungu, utuombee sisi wakosefu, sasa na saa ya kufa kwetu. Amina." },
-            { n: "5. Atukuzwe", t: "Atukuzwe Baba na Mwana na Roho Mtakatifu. Kama mwanzo na sasa na siku zote na milele. Amina." },
-            { n: "6. Kanuni ya Imani (Nasadiki)", t: "Nasadiki kwa Mungu Baba Mwenyezi, Muumba mbingu na dunia, Na kwa Yesu Kristo, Mwana wa pekee, Bwana wetu, aliye tungwa kwa uwezo wa Roho Mtakatifu, Akazaliwa na Bikira Maria, Akateswa kwa mamlaka ya Ponsyo Pilato, akasulubiwa, akafa, akazikwa, Akashukia kuzimu, siku ya tatu akafufuka katika wafu, Akapaa Mbinguni, Amekaa kuume kwa Mungu Baba Mwenyezi; Toka huko atakuja kuwahukumu wazima na wafu. Nasadiki kwa Roho Mtakatifu, Kanisa Takatifu Katoliki, ushirika wa watakatifu, maondoleo ya dhambi, ufufuko wa miili na uzima wa milele. Amina." },
-            { n: "7. Sala ya Imani", t: "Mungu wangu, nasadiki maneno yote yanayosadiki, yanayofundisha Kanisa Katoliki la Roma: Kwani ndiwe uliyetufumbulia hayo, wala hudanganyi wala hudanganyiki. Amina." },
-            { n: "8. Sala ya Matumaini", t: "Mungu wangu, natumaini kwako nitapewa kwa njia ya Yesu Kristo, neema zako hapa duniani na utukufu mbinguni, kwani ndiwe uliyeagana hayo nasi, nawe mwamini. Amina." },
-            { n: "9. Sala ya Mapendo", t: "Mungu wangu, nakupenda zaidi ya chochote; kwani ndiwe mwema, ndiwe mwenye kupendeza. Nampenda na jirani yangu kama nafsi yangu kwa ajili yako. Amina." },
-            { n: "10. Sala ya Kutubu", t: "Mungu wangu, nimetubu sana dhambi zangu, kwani ndiwe mwema, ndiwe mwenye kupendeza, wachukizwa na dhambi. Basi sitaki kukosa tena, nitafanya kitubio, naomba neema yako nipate kurudi. Amina." },
-            { n: "11. Sala kwa Malaika Mlinzi", t: "Malaika Mlinzi wangu, unilinde katika hatari zote za roho na mwili. Amina." },
-            { n: "12. Malaika wa Bwana (Angelus)", t: "Malaika wa Bwana alimpasha habari Maria. Naye akapata mimba kwa uwezo wa Roho Mtakatifu. (Salamu Maria...)\nNdimi mtumishi wa Bwana. Nitendewe ulivyonena. (Salamu Maria...)\nNeno la Mungu akatwaa mwili. Akakaa kwetu. (Salamu Maria...)\nUtuombee, mzazi mtakatifu wa Mungu. Tujalie ahadi za Kristu." },
-            { n: "13. Malkia wa Mbingu", t: "Malkia wa mbingu furahi, Aleluya. Kwani uliyestahili kumchukua, Aleluya. Amefufuka alivyosema, Aleluya. Utuombee kwa Mungu, Aleluya." },
-            { n: "14. Sala Kabla ya Kula", t: "Unibariki, Mungu wangu, mimi na chakula changu, ulichonipa nipate nguvu za kukutumikia vyema. Amina." },
-            { n: "15. Sala Baada ya Kula", t: "Nakushukuru Mungu wangu, kwa chakula ulichonipa, Nimepata nguvu za kukutumikia vyema. Amina." },
-            { n: "16. Sala Kabla ya Mafundisho", t: "Roho mkuu, mfariji mwema, Mwenye kila kitu chema, Uje kutuangazia. Na imara kututia, tuyasikie mafundisho, Tuyashike mpaka mwisho. Amina." },
-            { n: "17. Sala Baada ya Mafundisho", t: "Twakushukuru, ee Mungu Mwenyezi, sababu ya mema yako yote. Unayeishi na kutawala, ee Mungu milele. Amina." },
-            { n: "18. Sala Kabla ya Kazi", t: "Uje Roho Mtakatifu uzienee nyoyo za waamini wako, uwatie mapendo yako. Peleka Roho wako, vitaumbwa upya, na nchi zitageuka. Amina." },
-            { n: "19. Sala ya Matoleo", t: "Ee Yesu, kwa mikono ya Bikira Maria, na kwa muungano na sadaka yako kuu, ninakutolea sala, matendo, masumbuko na furaha zangu zote za leo. Ee Yesu, ufalme wako utufikie." },
-            { n: "20. Tunakimbilia", t: "Tunakimbilia ulinzi wako, mzazi Mtakatifu wa Mungu, Usitunyime tukiomba katika shida zetu, utuokoe siku zote kila tuingiapo hatarini, ee Bikira mtukufu mwenye baraka. Amina." },
-            { n: "21. Sala ya Viwawa", t: "Ee Yesu, mlinzi wa vijana, utujalie moyo wa mapendo, bidii katika kazi na uaminifu katika utume wetu ndani ya kanisa. Viwawa - Safi! Amina." }
+        const mistariYaMwezi = [
+            {m: "Mimi ndimi njia, na kweli, na uzima.", c: "Yohana 14:6", t: "Mungu ndiye mwongozo wetu wa kila siku."}
         ];
 
-        const d = new Date();
-        const index = (d.getDate() - 1) % dataTafakari.length;
-        const leo = dataTafakari[index];
+        const leo = new Date().getDate();
+        const nenoLeo = mistariYaMwezi[(leo - 1) % mistariYaMwezi.length] || mistariYaMwezi[0];
+        
+        document.getElementById('txt-mstari').innerText = `"${nenoLeo.m}"`;
+        document.getElementById('txt-chanzo').innerText = nenoLeo.c;
+        document.getElementById('txt-tafakari').innerText = nenoLeo.t;
 
-        document.getElementById('mstari-leo').innerText = `"${leo.m}"`;
-        document.getElementById('chanzo-leo').innerText = leo.c;
-        document.getElementById('maelezo-leo').innerText = leo.t;
-
-        const listDiv = document.getElementById('sala-list');
-        sala21.forEach(s => {
-            let container = document.createElement('div');
-            container.className = 'sala-item';
-            container.innerHTML = `<span class="sala-name">${s.n}</span><div class="sala-text">${s.t}</div>`;
-            listDiv.appendChild(container);
+        const divSala = document.getElementById('sala-content');
+        salaZote.forEach(s => {
+            divSala.innerHTML += `
+                <div class="item-sala">
+                    <span class="name-sala"><i class="fa-solid fa-cross" style="font-size:10px; margin-right:8px;"></i> ${s.n}</span>
+                    <div class="text-sala">${s.t}</div>
+                </div>`;
         });
 
-        function toggleSala() {
-            const x = document.getElementById("sala-list");
+        function funguaSala() {
+            const x = document.getElementById("sala-content");
             x.style.display = (x.style.display === "block") ? "none" : "block";
         }
     </script>

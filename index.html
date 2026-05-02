@@ -32,7 +32,6 @@
             top: 0;
             z-index: 1000;
         }
-
         .top-bar h1 { font-size: 18px; font-weight: 700; }
 
         /* Welcome Section */
@@ -48,7 +47,7 @@
             padding: 0 20px;
         }
 
-        /* Link Wrapper for Cards */
+        /* Card Link Style */
         .card-link { text-decoration: none; color: inherit; display: block; }
 
         .menu-card {
@@ -63,6 +62,7 @@
             align-items: center;
             justify-content: center;
             transition: transform 0.2s;
+            height: 100%;
         }
 
         .menu-card:active { transform: scale(0.95); }
@@ -80,7 +80,7 @@
 
         .menu-card span { font-size: 14px; font-weight: 600; color: var(--text-dark); }
 
-        /* Colors for Icons */
+        /* Icon Colors */
         .icon-matangazo { background-color: #fff4e6; color: #ff922b; }
         .icon-biblia { background-color: #f8ecec; color: var(--maroon); }
         .icon-michango { background-color: #fff0f6; color: #f06595; }
@@ -88,7 +88,7 @@
         .icon-wasifu { background-color: #e7f5ff; color: #339af0; }
         .icon-mpangilio { background-color: #ebfbee; color: #51cf66; }
 
-        /* Imani Yetu Card */
+        /* Imani Card */
         .imani-card {
             background-color: var(--maroon);
             margin: 25px 20px;
@@ -97,7 +97,6 @@
             color: var(--white);
             text-align: center;
         }
-
         .imani-card p { font-style: italic; font-size: 15px; line-height: 1.5; }
 
         /* Bottom Navigation */
@@ -106,15 +105,12 @@
             display: flex; justify-content: space-around; padding: 12px 0;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05); border-top: 1px solid #eee;
         }
-
         .nav-item {
             display: flex; flex-direction: column; align-items: center;
             text-decoration: none; color: var(--text-gray); font-size: 10px; font-weight: 600;
         }
-
         .nav-item i { font-size: 20px; margin-bottom: 4px; }
         .nav-item.active { color: var(--maroon); }
-        .nav-item.active::after { content: '•'; font-size: 12px; margin-top: -2px; }
     </style>
 </head>
 <body>
@@ -131,25 +127,34 @@
     </div>
 
     <div class="grid-container">
-        <div class="menu-card">
-            <div class="icon-box icon-matangazo"><i class="fa-regular fa-bell"></i></div>
-            <span>Matangazo</span>
-        </div>
         
-        <div class="menu-card">
-            <div class="icon-box icon-biblia"><i class="fa-solid fa-book-open"></i></div>
-            <span>Biblia</span>
-        </div>
+        <a href="matangazo.html" class="card-link">
+            <div class="menu-card">
+                <div class="icon-box icon-matangazo"><i class="fa-regular fa-bell"></i></div>
+                <span>Matangazo</span>
+            </div>
+        </a>
 
-        <div class="menu-card">
-            <div class="icon-box icon-michango"><i class="fa-solid fa-wallet"></i></div>
-            <span>Michango</span>
-        </div>
+        <a href="#" class="card-link">
+            <div class="menu-card">
+                <div class="icon-box icon-biblia"><i class="fa-solid fa-book-open"></i></div>
+                <span>Biblia</span>
+            </div>
+        </a>
 
-        <div class="menu-card">
-            <div class="icon-box icon-mazungumzo"><i class="fa-regular fa-comment-dots"></i></div>
-            <span>Mazungumzo</span>
-        </div>
+        <a href="#" class="card-link">
+            <div class="menu-card">
+                <div class="icon-box icon-michango"><i class="fa-solid fa-wallet"></i></div>
+                <span>Michango</span>
+            </div>
+        </a>
+
+        <a href="#" class="card-link">
+            <div class="menu-card">
+                <div class="icon-box icon-mazungumzo"><i class="fa-regular fa-comment-dots"></i></div>
+                <span>Mazungumzo</span>
+            </div>
+        </a>
 
         <a href="profile.html" class="card-link">
             <div class="menu-card">
@@ -158,10 +163,12 @@
             </div>
         </a>
 
-        <div class="menu-card">
-            <div class="icon-box icon-mpangilio"><i class="fa-solid fa-gear"></i></div>
-            <span>Mpangilio</span>
-        </div>
+        <a href="#" class="card-link">
+            <div class="menu-card">
+                <div class="icon-box icon-mpangilio"><i class="fa-solid fa-gear"></i></div>
+                <span>Mpangilio</span>
+            </div>
+        </a>
     </div>
 
     <div class="imani-card">
@@ -177,13 +184,13 @@
             <i class="fa-solid fa-book-bible"></i>
             BIBLIA
         </a>
-        <a href="#" class="nav-item">
-            <i class="fa-solid fa-wallet"></i>
-            MICHANGO
+        <a href="matangazo.html" class="nav-item">
+            <i class="fa-solid fa-bullhorn"></i>
+            HABARI
         </a>
         <a href="#" class="nav-item">
             <i class="fa-regular fa-comments"></i>
-            MAZUNGUMZO
+            CHAT
         </a>
         <a href="profile.html" class="nav-item">
             <i class="fa-regular fa-user"></i>
@@ -192,7 +199,7 @@
     </nav>
 
     <script>
-        // Kuchukua jina kutoka LocalStorage kama lipo
+        // Kuchukua jina kutoka LocalStorage ili liisomeke "Karibu Boniventure"
         window.onload = function() {
             const savedData = JSON.parse(localStorage.getItem('viwawa_profile'));
             if (savedData && savedData.name) {

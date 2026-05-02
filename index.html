@@ -72,7 +72,7 @@
         .welcome-section { padding: 25px 20px; }
         .welcome-section h2 { font-size: 22px; color: var(--text-dark); }
 
-        /* Grid Layout - Maboresho ya Mipangilio hapa */
+        /* Grid Layout - 6 Tabs kamilifu */
         .grid-container { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
@@ -95,10 +95,11 @@
 
         /* Icon Colors */
         .c-biblia { color: #5c7cfa; }
-        .c-mazungumzo { color: #20c997; }
-        .c-settings { color: #636e72; } /* Rangi ya mipangilio */
-        .c-matangazo { color: #fd7e14; }
+        .c-chat { color: #20c997; }
+        .c-sala { color: #6c5ce7; }
         .c-michango { color: #e64980; }
+        .c-matangazo { color: #fd7e14; }
+        .c-settings { color: #636e72; }
 
         /* Bottom Nav */
         .bottom-nav { 
@@ -122,13 +123,14 @@
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-profile-img">
-                <img id="sideProfilePic" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile">
+                <img id="sideProfilePic" src="https://via.placeholder.com/85" alt="Profile">
             </div>
             <h3 id="sideName">Mwanachama</h3>
             <p style="font-size: 12px; opacity: 0.9;">Mapendo Daima</p>
         </div>
         <div class="sidebar-menu">
             <a href="profile.html" class="side-item"><i class="fa-solid fa-user"></i> Wasifu</a>
+            <a href="settings.html" class="side-item"><i class="fa-solid fa-gear"></i> Mipangilio</a>
             <a href="about.html" class="side-item"><i class="fa-solid fa-circle-info"></i> Kuhusu App</a>
             <hr style="margin: 10px 0; opacity: 0.1;">
             <a href="#" class="side-item" style="color: var(--maroon);" onclick="logout()"><i class="fa-solid fa-power-off"></i> Ondoka</a>
@@ -153,55 +155,52 @@
             <span>Biblia</span>
         </a>
         <a href="mazungumzo.html" class="menu-card">
-            <i class="fa-solid fa-comments c-mazungumzo"></i>
-            <span>Mazungumzo</span>
+            <i class="fa-solid fa-comments c-chat"></i>
+            <span>Viwawa Chat</span>
         </a>
-
-        <a href="settings.html" class="menu-card">
-            <i class="fa-solid fa-gear c-settings"></i>
-            <span>Mipangilio</span>
+        <a href="sala.html" class="menu-card">
+            <i class="fa-solid fa-hands-praying c-sala"></i>
+            <span>Sala Zetu</span>
+        </a>
+        <a href="michango.html" class="menu-card">
+            <i class="fa-solid fa-wallet c-michango"></i>
+            <span>Michango</span>
         </a>
         <a href="matangazo.html" class="menu-card">
             <i class="fa-solid fa-bullhorn c-matangazo"></i>
             <span>Matangazo</span>
         </a>
-
-        <a href="michango.html" class="menu-card" style="grid-column: span 2;">
-            <i class="fa-solid fa-wallet c-michango"></i>
-            <span>Michango na Malipo</span>
+        <a href="settings.html" class="menu-card">
+            <i class="fa-solid fa-gear c-settings"></i>
+            <span>Mipangilio</span>
         </a>
     </div>
 
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active"><i class="fa-solid fa-house"></i><br>NYUMBANI</a>
-        <a href="biblia.html" class="nav-item"><i class="fa-solid fa-book-bible"></i><br>BIBLIA</a>
-        <a href="michango.html" class="nav-item"><i class="fa-solid fa-wallet"></i><br>MICHANGO</a>
-        <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i><br>WASIFU</a>
+        <a href="index.html" class="nav-item active"><i class="fa-solid fa-house"></i><br>HOME</a>
+        <a href="sala.html" class="nav-item"><i class="fa-solid fa-hands-praying"></i><br>SALA</a>
+        <a href="mazungumzo.html" class="nav-item"><i class="fa-solid fa-comments"></i><br>CHAT</a>
+        <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i><br>PROFILE</a>
     </nav>
 
     <script>
-        // Kufungua/Kufunga Sidebar
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        // Kufuta data na kutoka
         function logout() {
-            if(confirm("Je, unataka kuondoka kwenye App?")) {
+            if(confirm("Je, unataka kuondoka?")) {
                 localStorage.removeItem('viwawa_profile');
                 window.location.href = "login.html";
             }
         }
 
-        // Kupakia data za mtumiaji
         window.onload = function() {
             const data = JSON.parse(localStorage.getItem('viwawa_profile'));
             if(data) {
                 if(data.name) {
-                    // Inaonyesha jina la kwanza tu kwenye salamu
                     document.getElementById('userName').innerText = data.name.split(' ')[0];
-                    // Inaonyesha jina kamili kwenye sidebar
                     document.getElementById('sideName').innerText = data.name;
                 }
                 if(data.image) {

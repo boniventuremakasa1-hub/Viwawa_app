@@ -3,187 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sala 20 za Msingi - VIWAWA</title>
+    <title>SALA ZETU</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --navy: #072e54; --gold: #d4af37; --bg: #e5ddd5; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg); background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
-        
-        .header { background: var(--navy); color: white; padding: 20px; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--gold); text-align: center; }
-        .search-area { padding: 15px; background: rgba(255, 255, 255, 0.9); position: sticky; top: 75px; z-index: 999; }
-        .search-box { display: flex; align-items: center; background: white; padding: 10px 18px; border-radius: 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .search-box input { flex: 1; border: none; outline: none; font-size: 16px; margin-left: 10px; }
+        :root { 
+            --primary: #800000; /* Maroon ya asili */
+            --bg: #f9f9f9;
+        }
 
-        .container { padding: 15px; }
-        .prayer-card { background: white; border-radius: 15px; padding: 20px; margin-bottom: 15px; border-top: 4px solid var(--navy); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .prayer-card h2 { color: var(--navy); font-size: 18px; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .prayer-text { font-size: 15px; line-height: 1.7; color: #333; white-space: pre-line; }
-        .tag { display: inline-block; margin-top: 10px; font-size: 10px; font-weight: bold; color: var(--gold); text-transform: uppercase; }
-        #noResult { text-align: center; padding: 40px; display: none; color: var(--navy); background: white; border-radius: 15px; margin: 15px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body { background-color: var(--bg); }
+
+        /* Header ya Sala Zetu */
+        .app-bar {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .app-bar h1 { font-size: 19px; font-weight: bold; }
+
+        /* Sehemu ya Search ya Asili */
+        .search-area {
+            background: white;
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .search-bar {
+            background: #f1f1f1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            font-size: 16px;
+            padding-left: 10px;
+        }
+
+        /* Container ya Sala */
+        .prayer-list { padding: 15px; }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--primary);
+        }
+
+        .card h2 {
+            color: var(--primary);
+            font-size: 17px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .card p {
+            font-size: 15.5px;
+            line-height: 1.7;
+            color: #333;
+            white-space: pre-line;
+        }
+
+        #empty { text-align: center; padding: 40px; color: #888; display: none; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1 style="font-size: 18px;">SALA 20 ZA MSINGI</h1>
-</div>
-
-<div class="search-area">
-    <div class="search-box">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="findInput" onkeyup="search()" placeholder="Tafuta sala hapa...">
-    </div>
-</div>
-
-<div class="container" id="allPrayers">
-    <div class="prayer-card">
-        <h2>1. Ishara ya Msalaba</h2>
-        <div class="prayer-text">Kwa jina la Baba, na la Mwana, na la Roho Mtakatifu. Amina.</div>
+    <div class="app-bar">
+        <div class="back-btn" onclick="history.back()">
+            <i class="fa-solid fa-arrow-left"></i>
+        </div>
+        <h1>SALA ZETU</h1>
     </div>
 
-    <div class="prayer-card">
-        <h2>2. Baba Yetu</h2>
-        <div class="prayer-text">Baba Yetu uliye mbinguni, jina lako litukuzwe; ufalme wako ufike; utakalo lifanyike duniani kama mbinguni. Utupe leo mkate wetu wa kila siku; utusamehe makosa yetu, kama tunavyowasamehe na sisi waliotukosea; usitutie katika kishawishi, lakini utuopoe maovuni. Amina.</div>
+    <div class="search-area">
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass" style="color: #666;"></i>
+            <input type="text" id="searchInput" onkeyup="search()" placeholder="Tafuta hapa...">
+        </div>
     </div>
 
-    <div class="prayer-card">
-        <h2>3. Salamu Maria</h2>
-        <div class="prayer-text">Salamu Maria, umejaa neema, Bwana yu nawe; umebarikiwa kuliko wanawake wote, na Yesu mzao wa tumbo lako amebarikiwa. Maria Mtakatifu, Mama wa Mungu, utuombee sisi wakosefu, sasa na saa ya kufa kwetu. Amina.</div>
+    <div class="prayer-list" id="pBox">
+        <div class="card">
+            <h2>1. ISHARA YA MSALABA</h2>
+            <p>Kwa jina la Baba, na la Mwana, na la Roho Mtakatifu. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>2. BABA YETU</h2>
+            <p>Baba Yetu uliye mbinguni, jina lako litukuzwe; ufalme wako ufike; utakalo lifanyike duniani kama mbinguni. Utupe leo mkate wetu wa kila siku; utusamehe makosa yetu, kama tunavyowasamehe na sisi waliotukosea; usitutie katika kishawishi, lakini utuopoe maovuni. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>3. SALAMU MARIA</h2>
+            <p>Salamu Maria, umejaa neema, Bwana yu nawe; umebarikiwa kuliko wanawake wote, na Yesu mzao wa tumbo lako amebarikiwa. Maria Mtakatifu, Mama wa Mungu, utuombee sisi wakosefu, sasa na saa ya kufa kwetu. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>4. ATUKUZWE BABA</h2>
+            <p>Atukuzwe Baba, na Mwana, na Roho Mtakatifu. Kama mwanzo, na sasa, na siku zote na milele. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>5. NASADIKI</h2>
+            <p>Nasadiki kwa Mungu Baba mwenyezi, muumba wa mbingu na dunia. Na kwa Yesu Kristo Mwana wake wa pekee Bwana wetu; aliyetungwa kwa uwezo wa Roho Mtakatifu, akazaliwa na Bikira Maria; akateswa kwa mamlaka ya Ponsyo Pilato, akasulubiwa, akafa, akazikwa; akashukia kuzimu; siku ya tatu akafufuka katika wafu; akapaa mbinguni, ameketi kuume kwa Mungu Baba mwenyezi; kutoka huko atakuja kuwahukumu wazima na wafu. Nasadiki kwa Roho Mtakatifu, Kanisa takatifu Katoliki, ushirika wa watakatifu, maondoleo ya dhambi, ufufuko wa miili na uzima wa milele. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>6. AMRI KUMI ZA MUNGU</h2>
+            <p>1. Usiabudu miungu migeni. 2. Usitaje bure jina la Mungu. 3. Takasa siku ya Bwana. 4. Waheshimu baba na mama. 5. Usiue. 6. Usizini. 7. Usiibe. 8. Usiseme uongo. 9. Usitamani mwanamke asiye mke wako. 10. Usitamani mali ya mtu mwingine.</p>
+        </div>
+
+        <div class="card">
+            <h2>7. AMRI TANO ZA KANISA</h2>
+            <p>1. Hudhuria Misa Takatifu dominika na sikukuu zilizoamriwa. 2. Funga wakati uliowekwa. 3. Ungama dhambi zako angalau mara moja kwa mwaka. 4. Pokea Ekaristi Takatifu wakati wa Pasaka. 5. Saidia Kanisa kwa zaka na sadaka.</p>
+        </div>
+
+        <div class="card">
+            <h2>8. SALA YA TOBA</h2>
+            <p>Ee Mungu wangu, najuta sana kwa niliyokukosea, kwani wewe ni mwema na unastahili kupendwa na watu wote. Nachukia dhambi zangu zote, nakusudia kwa msaada wa neema yako nisitende dhambi tena, na nikimbie nafasi za dhambi. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>9. MALAIKA WA BWANA</h2>
+            <p>Malaika wa Bwana alimpasha Maria habari. Akapata mimba kwa uwezo wa Roho Mtakatifu. (Salamu Maria...)
+            Mimi ni mjakazi wa Bwana. Nitendewe ulivyosema. (Salamu Maria...)
+            Naye Neno akatwaa mwili. Akakaa kwetu. (Salamu Maria...)</p>
+        </div>
+
+        <div class="card">
+            <h2>10. SALAMU MALKIA</h2>
+            <p>Salamu Malkia, Mama mwenye huruma, uzima, utamu na matumaini yetu, salamu. Tunakulilia sisi wana wa Eva tuliopotelea huku duniani. Tunakulia tukilalamika na kulia katika bonde hili la machozi. Haya basi, mwombezi wetu, utuangalie kwa macho yako ya huruma. Na baada ya ugeni huu, utuonyeshe Yesu, mzao mbarikiwa wa tumbo lako. Ee mpole, ee mwema, ee Bikira Maria mpenzi. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>11. EE YESU WANGU</h2>
+            <p>Ee Yesu wangu, utusamehe dhambi zetu, utuepushe na moto wa milele, uongoze roho zote mbinguni, hasa zile zinazohitaji zaidi huruma yako. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>12. SALA YA MAPENDO</h2>
+            <p>Ee Mungu wangu, nakupenda kwa moyo wote kuliko vitu vyote, kwani wewe ni mwema na unastahili kupendwa. Kwa ajili yako nampenda jirani yangu kama nafsi yangu. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>13. SALA YA MATUMAINI</h2>
+            <p>Ee Mungu wangu, natumaini nitapata kwa wema wako na kwa ahadi zako, maondoleo ya dhambi zangu, msaada wa neema yako na uzima wa milele. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>14. SALA YA IMANI</h2>
+            <p>Ee Mungu wangu, nasadiki maneno yote liliyofundisha Kanisa lako takatifu, kwani wewe ndiye uliyelifunulia, na wewe ni kweli isiyoweza kudanganyika. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>15. KUMBUKA (MEMORARE)</h2>
+            <p>Kumbuka, ee Bikira Maria mpenzi, haijasikika bado hata mara moja kwamba ulimwacha yeyote aliyekimbilia ulinzi wako, akiomba msaada wako na kutaka maombezi yako. Kwa matumaini hayo mimi nakukimbilia, ee Mama, Bikira wa mabikira, nakuja kwako, nasimama mbele yako mimi mkosefu nikilalamika. Ee Mama wa Neno, usidharau maneno yangu, bali uyasikie kwa huruma na kuyapokea. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>16. MALAIKA MLINZI</h2>
+            <p>Malaika mlinzi wangu, unilinde katika hatari zote za mwili na roho, leo na siku zote za maisha yangu. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>17. SALA YA ASUBUHI</h2>
+            <p>Ee Mungu, nakushukuru kwa kunilinda usiku wa leo. Nakutolea mawazo, maneno na matendo yangu yote ya leo, nisaidie nisikukosee tena. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>18. SALA YA JIONI</h2>
+            <p>Ee Mungu, nakushukuru kwa mapaji yote uliyonijalia leo. Unisamehe makosa niliyofanya, na unilinde usiku huu nisipatwe na jambo baya. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>19. MTAKATIFU MIKABELI</h2>
+            <p>Mtakatifu Mikaeli Malaika Mkuu, utulinde katika vita, uwe kinga yetu katika uovu na mitego ya shetani. Mungu amkemee tunakuomba kwa unyenyekevu; nawe kiongozi wa majeshi ya mbinguni, kwa nguvu ya Mungu, uwaangushie kuzimu shetani na pepo wabaya wote. Amina.</p>
+        </div>
+
+        <div class="card">
+            <h2>20. KIKIRIA MARIA MTAKATIFU</h2>
+            <p>Maria Mtakatifu, Mama wa Mungu, utuombee sisi wakosefu sasa na saa ya kufa kwetu. Amina.</p>
+        </div>
     </div>
 
-    <div class="prayer-card">
-        <h2>4. Atukuzwe Baba</h2>
-        <div class="prayer-text">Atukuzwe Baba, na Mwana, na Roho Mtakatifu. Kama mwanzo, na sasa, na siku zote na milele. Amina.</div>
-    </div>
+    <div id="empty">Sala haijapatikana...</div>
 
-    <div class="prayer-card">
-        <h2>5. Nasadiki (Imani ya Mitume)</h2>
-        <div class="prayer-text">Nasadiki kwa Mungu Baba mwenyezi, muumba wa mbingu na dunia. Na kwa Yesu Kristo Mwana wake wa pekee Bwana wetu; aliyetungwa kwa uwezo wa Roho Mtakatifu, akazaliwa na Bikira Maria; akateswa kwa mamlaka ya Ponsyo Pilato, akasulubiwa, akafa, akazikwa; akashukia kuzimu; siku ya tatu akafufuka katika wafu; akapaa mbinguni, ameketi kuume kwa Mungu Baba mwenyezi; kutoka huko atakuja kuwahukumu wazima na wafu. Nasadiki kwa Roho Mtakatifu, Kanisa takatifu Katoliki, ushirika wa watakatifu, maondoleo ya dhambi, ufufuko wa miili na uzima wa milele. Amina.</div>
-    </div>
+    <script>
+        function search() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('card');
+            let found = false;
 
-    <div class="prayer-card">
-        <h2>6. Amri Kumi za Mungu</h2>
-        <div class="prayer-text">1. Usiabudu miungu migeni.
-        2. Usitaje bure jina la Mungu.
-        3. Takasa siku ya Bwana.
-        4. Waheshimu baba na mama.
-        5. Usiue.
-        6. Usizini.
-        7. Usiibe.
-        8. Usiseme uongo.
-        9. Usitamani mwanamke asiye mke wako.
-        10. Usitamani mali ya mtu mwingine.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>7. Amri tano za Kanisa</h2>
-        <div class="prayer-text">1. Hudhuria Misa Takatifu dominika na sikukuu zilizoamriwa.
-        2. Funga wakati uliowekwa.
-        3. Ungama dhambi zako angalau mara moja kwa mwaka.
-        4. Pokea Ekaristi Takatifu wakati wa Pasaka.
-        5. Saidia Kanisa kwa zaka na sadaka.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>8. Sala ya Toba</h2>
-        <div class="prayer-text">Ee Mungu wangu, najuta sana kwa niliyokukosea, kwani wewe ni mwema na unastahili kupendwa na watu wote. Nachukia dhambi zangu zote, nakusudia kwa msaada wa neema yako nisitende dhambi tena, na nikimbie nafasi za dhambi. Amina.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>9. Malaika wa Bwana (Angelus)</h2>
-        <div class="prayer-text">M: Malaika wa Bwana alimpasha Maria habari.
-        W: Akapata mimba kwa uwezo wa Roho Mtakatifu. (Salamu Maria...)
-        M: Mimi ni mjakazi wa Bwana.
-        W: Nitendewe ulivyosema. (Salamu Maria...)
-        M: Naye Neno akatwaa mwili.
-        W: Akakaa kwetu. (Salamu Maria...)
-        M: Utuombee, mzazi Mtakatifu wa Mungu.
-        W: Tujaliwe ahadi za Kristo.
-        Tusali: Ee Bwana, tunakuomba utie neema yako mioyoni mwetu, ili sisi tuliojua kwa maelezo ya Malaika kwamba Kristo Mwanao amejifanya mtu, kwa mateso na msalaba wake tufikishwe kwenye utukufu wa ufufuko. Kwa Kristo Bwana wetu. Amina.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>10. Malkia wa Mbingu (Regina Caeli)</h2>
-        <div class="prayer-text">Malkia wa Mbingu, furahi, Aleluya; Kwani uliyestahili kumchukua, Aleluya; Amefufuka kama alivyosema, Aleluya; Utuombee kwa Mungu, Aleluya.
-        M: Furahi na ushangilie, ee Bikira Maria, Aleluya.
-        W: Kwani kweli Bwana amefufuka, Aleluya.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>11. Salamu Malkia (Salve Regina)</h2>
-        <div class="prayer-text">Salamu Malkia, Mama mwenye huruma, uzima, utamu na matumaini yetu, salamu. Tunakulilia sisi wana wa Eva tuliopotelea huku duniani. Tunakulia tukilalamika na kulia katika bonde hili la machozi. Haya basi, mwombezi wetu, utuangalie kwa macho yako ya huruma. Na baada ya ugeni huu, utuonyeshe Yesu, mzao mbarikiwa wa tumbo lako. Ee mpole, ee mwema, ee Bikira Maria mpenzi. Amina.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>12. Ee Yesu Wangu (Sala ya Fatimah)</h2>
-        <div class="prayer-text">Ee Yesu wangu, utusamehe dhambi zetu, utuepushe na moto wa milele, uongoze roho zote mbinguni, hasa zile zinazohitaji zaidi huruma yako. Amina.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>13. Sala ya Mapendo</h2>
-        <div class="prayer-text">Ee Mungu wangu, nakupenda kwa moyo wote kuliko vitu vyote, kwani wewe ni mwema na unastahili kupendwa. Kwa ajili yako nampenda jirani yangu kama nafsi yangu. Amina.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>14. Sala ya Matumaini</h2>
-        <div class="prayer-text">Ee Mungu wangu, natumaini nitapata kwa wema wako na kwa ahadi zako, maondoleo ya dhambi zangu, msaada wa neema yako na uzima wa milele. Amina.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>15. Sala ya Imani</h2>
-        <div class="prayer-text">Ee Mungu wangu, nasadiki maneno yote liliyofundisha Kanisa lako takatifu, kwani wewe ndiye uliyelifunulia, na wewe ni kweli isiyoweza kudanganyika. Amina.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>16. Kumbuka (Memorare)</h2>
-        <div class="prayer-text">Kumbuka, ee Bikira Maria mpenzi, haijasikika bado hata mara moja kwamba ulimwacha yeyote aliyekimbilia ulinzi wako, akiomba msaada wako na kutaka maombezi yako. Kwa matumaini hayo mimi nakukimbilia, ee Mama, Bikira wa mabikira, nakuja kwako, nasimama mbele yako mimi mkosefu nikilalamika. Ee Mama wa Neno, usidharau maneno yangu, bali uyasikie kwa huruma na kuyapokea. Amina.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>17. Malaika Mlinzi</h2>
-        <div class="prayer-text">Malaika mlinzi wangu, unilinde katika hatari zote za mwili na roho, leo na siku zote za maisha yangu. Amina.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>18. Sala ya Asubuhi</h2>
-        <div class="prayer-text">Ee Mungu, nakushukuru kwa kunilinda usiku wa leo. Nakutolea mawazo, maneno na matendo yangu yote ya leo, nisaidie nisikukosee tena. Amina.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>19. Sala ya Jioni</h2>
-        <div class="prayer-text">Ee Mungu, nakushukuru kwa mapaji yote uliyonijalia leo. Unisamehe makosa niliyofanya, na unilinde usiku huu nisipatwe na jambo baya. Amina.</div>
-    </div>
-
-    <div class="prayer-card">
-        <h2>20. Mtakatifu Mikaeli Malaika Mkuu</h2>
-        <div class="prayer-text">Mtakatifu Mikaeli Malaika Mkuu, utulinde katika vita, uwe kinga yetu katika uovu na mitego ya shetani. Mungu amkemee tunakuomba kwa unyenyekevu; nawe kiongozi wa majeshi ya mbinguni, kwa nguvu ya Mungu, uwaangushie kuzimu shetani na pepo wabaya wote wanaozunguka duniani wakitafuta kupoteza roho za watu. Amina.</div>
-    </div>
-</div>
-
-<div id="noResult">
-    <i class="fa-solid fa-circle-question" style="font-size: 50px; opacity: 0.3;"></i>
-    <p style="margin-top: 15px;">Sala hiyo haipo hapa, jaribu neno lingine.</p>
-</div>
-
-<script>
-    function search() {
-        let filter = document.getElementById('findInput').value.toLowerCase();
-        let cards = document.getElementsByClassName('prayer-card');
-        let foundCount = 0;
-        for (let i = 0; i < cards.length; i++) {
-            let text = cards[i].innerText.toLowerCase();
-            if (text.includes(filter)) {
-                cards[i].style.display = "";
-                foundCount++;
-            } else {
-                cards[i].style.display = "none";
+            for (let i = 0; i < cards.length; i++) {
+                if (cards[i].innerText.toLowerCase().includes(input)) {
+                    cards[i].style.display = "block";
+                    found = true;
+                } else {
+                    cards[i].style.display = "none";
+                }
             }
+            document.getElementById('empty').style.display = found ? "none" : "block";
         }
-        document.getElementById('noResult').style.display = (foundCount > 0) ? "none" : "block";
-    }
-</script>
-
+    </script>
 </body>
 </html>
-

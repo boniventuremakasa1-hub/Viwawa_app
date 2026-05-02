@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usimamizi wa Michango - Viwawa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --maroon: #801313;
+            --bg: #f8f9fa;
+            --white: #ffffff;
+            --text: #333;
+            --gray: #757575;
+            --success: #28a745;
+            --danger: #dc3545;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); padding-bottom: 80px; color: var(--text); }
+
+        /* Header */
+        .header {
+            background: var(--maroon);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .header h1 { font-size: 18px; font-weight: 700; }
+        .back-btn { cursor: pointer; display: none; } /* Itaonekana tu tukiwa ndani ya majina */
+
+        /* Main Menu Cards */
+        .menu-container { padding: 20px; }
+        .category-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+        .card-info { display: flex; align-items: center; gap: 15px; }
+        .card-icon { 
+            width: 45px; height: 45px; border-radius: 10px; 
+            display: flex; align-items: center; justify-content: center; font-size: 20px;
+        }
+        .icon-ada { background: #fff0f0; color: var(--maroon); }
+        .icon-mingine { background: #e7f5ff; color: #339af0; }
+
+        /* Members List & Details */
+        .page-content { display: none; padding: 20px; }
+        .member-item {
+            background: white; padding: 15px; border-radius: 10px;
+            margin-bottom: 10px; display: flex; justify-content: space-between;
+            align-items: center; border-left: 4px solid var(--maroon);
+            cursor: pointer;
+        }
+
+        /* Horizontal Table Row (Ulalo) */
+        .data-row {
+            background: white; padding: 12px; border-bottom: 1px solid #eee;
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 13px;
+        }
+        .row-left { flex: 2; font-weight: 600; }
+        .row-center { flex: 1; text-align: center; }
+        .row-right { flex: 1; text-align: right; font-weight: 700; color: var(--success); }
+
+        .tiki { color: var(--success); font-size: 18px; }
+        .kosa { color: var(--danger); font-size: 18px; }
+
+        /* Admin Action Button */
+        .admin-fab {
+            position: fixed; bottom: 90px; right: 20px;
+            background: var(--maroon); color: white;
+            width: 120px; height: 45px; border-radius: 25px;
+            display: flex; align-items: center; justify-content: center;
+            gap: 8px; font-weight: 700; font-size: 13px;
+            box-shadow: 0 4px 15px rgba(128, 19, 19, 0.4);
+            text-decoration: none;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: white;
+            display: flex; justify-content: space-around; padding: 12px 0;
+            border-top: 1px solid #eee;
+        }
+        .nav-item { text-decoration: none; color: var(--gray); font-size: 10px; text-align: center; }
+        .nav-item.active { color: var(--maroon); font-weight: 700; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="header" id="mainHeader">
+        <i class="fa-solid fa-arrow-left back-btn" id="backBtn" onclick="goBack()"></i>
+        <h1 id="headerTitle">MICHANGO</h1>
+    </div>
+
+    <div id="mainCategories" class="menu-container">
+        <div class="category-card" onclick="showMembers('ada')">
+            <div class="card-info">
+                <div class="card-icon icon-ada"><i class="fa-solid fa-calendar-check"></i></div>
+                <div>
+                    <h3 style="font-size: 15px;">Ada ya Mwezi</h3>
+                    <p style="font-size: 11px; color: var(--gray);">Januari - Desemba</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color: #ccc;"></i>
+        </div>
+
+        <div class="category-card" onclick="showMembers('mingine')">
+            <div class="card-info">
+                <div class="card-icon icon-mingine"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                <div>
+                    <h3 style="font-size: 15px;">Michango Mingine</h3>
+                    <p style="font-size: 11px; color: var(--gray);">Kambi, Ujenzi, Sherehe n.k</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color: #ccc;"></i>
+        </div>
+    </div>
+
+    <div id="membersPage" class="page-content">
+        <h2 style="font-size: 14px; margin-bottom: 15px; color: var(--gray);">Chagua Mwanachama:</h2>
+        <div class="member-item" onclick="showPersonalDetails('Boniventure Makasa')">
+            <span>Boniventure Makasa</span>
+            <i class="fa-solid fa-chevron-right"></i>
+        </div>
+        <div class="member-item" onclick="showPersonalDetails('Maria Joseph')">
+            <span>Maria Joseph</span>
+            <i class="fa-solid fa-chevron-right"></i>
+        </div>
+        <div class="member-item" onclick="showPersonalDetails('John Peter')">
+            <span>John Peter</span>
+            <i class="fa-solid fa-chevron-right"></i>
+        </div>
+    </div>
+
+    <div id="detailsPage" class="page-content">
+        <div id="detailsTitle" style="background: #eee; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: 700; font-size: 14px; text-align: center;">
+            -
+        </div>
+        
+        <div id="dataRows">
+            </div>
+    </div>
+
+    <a href="#" class="admin-fab">
+        <i class="fa-solid fa-plus-circle"></i> REKODI
+    </a>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i>NYUMBANI
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-book-bible"></i>BIBLIA
+        </a>
+        <a href="michango.html" class="nav-item active">
+            <i class="fa-solid fa-wallet"></i>MICHANGO
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fa-solid fa-user"></i>WASIFU
+        </a>
+    </nav>
+
+    <script>
+        let currentMode = ''; // 'ada' au 'mingine'
+
+        function showMembers(mode) {
+            currentMode = mode;
+            document.getElementById('mainCategories').style.display = 'none';
+            document.getElementById('membersPage').style.display = 'block';
+            document.getElementById('backBtn').style.display = 'block';
+            document.getElementById('headerTitle').innerText = mode === 'ada' ? 'ADA YA MWEZI' : 'MICHANGO MINGINE';
+        }
+
+        function showPersonalDetails(name) {
+            document.getElementById('membersPage').style.display = 'none';
+            document.getElementById('detailsPage').style.display = 'block';
+            document.getElementById('detailsTitle').innerText = name;
+            
+            const dataRows = document.getElementById('dataRows');
+            dataRows.innerHTML = ''; // Safisha kwanza
+
+            if(currentMode === 'ada') {
+                // Orodha ya Miezi
+                const miezi = ['Januari', 'Februari', 'Machi', 'Aprili', 'Mei'];
+                miezi.forEach(mwezi => {
+                    dataRows.innerHTML += `
+                        <div class="data-row">
+                            <div class="row-left">${mwezi}</div>
+                            <div class="row-center"><i class="fa-solid fa-circle-check tiki"></i></div>
+                            <div class="row-right">500/=</div>
+                        </div>
+                    `;
+                });
+                // Mfano wa mwezi ambao haijalipwa
+                dataRows.innerHTML += `
+                    <div class="data-row">
+                        <div class="row-left">Juni</div>
+                        <div class="row-center"><i class="fa-solid fa-circle-xmark kosa"></i></div>
+                        <div class="row-right" style="color:var(--danger)">0/=</div>
+                    </div>
+                `;
+            } else {
+                // Orodha ya Michango Mingine
+                const michango = [
+                    {aina: 'Mchango wa Kambi', hali: 'tiki', kiasi: '5,000'},
+                    {aina: 'Ujenzi wa Ofisi', hali: 'kosa', kiasi: '0'},
+                    {aina: 'Sherehe ya Viwawa', hali: 'tiki', kiasi: '2,000'}
+                ];
+                michango.forEach(item => {
+                    dataRows.innerHTML += `
+                        <div class="data-row">
+                            <div class="row-left">${item.aina}</div>
+                            <div class="row-center">
+                                <i class="fa-solid ${item.hali === 'tiki' ? 'fa-circle-check tiki' : 'fa-circle-xmark kosa'}"></i>
+                            </div>
+                            <div class="row-right" style="${item.hali === 'kosa' ? 'color:var(--danger)' : ''}">${item.kiasi}/=</div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function goBack() {
+            if (document.getElementById('detailsPage').style.display === 'block') {
+                document.getElementById('detailsPage').style.display = 'none';
+                document.getElementById('membersPage').style.display = 'block';
+            } else {
+                document.getElementById('membersPage').style.display = 'none';
+                document.getElementById('mainCategories').style.display = 'block';
+                document.getElementById('backBtn').style.display = 'none';
+                document.getElementById('headerTitle').innerText = 'MICHANGO';
+            }
+        }
+    </script>
+</body>
+</html>
+

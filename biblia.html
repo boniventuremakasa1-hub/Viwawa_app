@@ -58,22 +58,22 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Tunavuta data kutoka Collection: huduma, Document: biblia
+        // MUHIMU: Tunatumia majina yako ya Kiswahili hapa
         db.collection("huduma").doc("biblia").onSnapshot((doc) => {
             if (doc.exists) {
                 const data = doc.data();
-                // Hapa tunatumia yale majina mapya uliyoweka kule Firebase
-                document.getElementById('v-title').innerText = data.reference || "Mathayo 5:14";
-                document.getElementById('v-scripture').innerText = data.bible_verse || "";
-                document.getElementById('v-reflection').innerText = data.reflection || "";
+                // Hapa tunasoma majina ya Kiswahili moja kwa moja kutoka Firebase yako
+                document.getElementById('v-title').innerText = data.mstari || "Mstari haupo";
+                document.getElementById('v-scripture').innerText = data.maandiko || "Maandiko hayajapatikana";
+                document.getElementById('v-reflection').innerText = data.tafakari || "Tafakari haijapatikana";
 
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('word-card').style.display = 'block';
             } else {
-                document.getElementById('msg').innerText = "Neno halijapatikana. Hakikisha Collection ni 'huduma' na Document ni 'biblia'.";
+                document.getElementById('msg').innerText = "Kosa: Hakikisha 'Collection' ni 'huduma' na 'Document' ni 'biblia' (herufi ndogo).";
             }
         }, (error) => {
-            document.getElementById('msg').innerText = "Hitilafu ya mtandao au Rules za Firebase.";
+            document.getElementById('msg').innerText = "Hitilafu ya Firebase: " + error.message;
         });
     </script>
 </body>

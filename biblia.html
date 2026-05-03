@@ -6,23 +6,23 @@
     <title>Neno la Leo - Viwawa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <style>
         :root { --maroon: #801313; --bg: #f8f9fa; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background-color: var(--bg); color: #333; }
-        .header { background: var(--maroon); color: white; padding: 20px; display: flex; align-items: center; gap: 15px; }
+        .header { background: var(--maroon); color: white; padding: 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .header h1 { font-size: 18px; text-transform: uppercase; }
-        .container { padding: 15px; }
-        .word-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 5px solid var(--maroon); display: none; }
-        .verse-ref { color: var(--maroon); font-size: 22px; font-weight: bold; margin-bottom: 10px; display: block; }
-        .scripture-box { background: #fff9f9; padding: 15px; border-radius: 8px; font-style: italic; font-size: 17px; margin-bottom: 20px; border: 1px dashed #ddd; }
-        .reflection-title { font-weight: bold; color: var(--maroon); margin-bottom: 10px; font-size: 18px; }
-        .reflection-body { font-size: 16px; text-align: justify; white-space: pre-line; }
-        .loader { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; text-align: center; padding: 20px; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--maroon); border-radius: 50%; animation: spin 1s linear infinite; }
+        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
+        .word-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-left: 6px solid var(--maroon); display: none; margin-top: 10px; }
+        .verse-ref { color: var(--maroon); font-size: 24px; font-weight: 800; margin-bottom: 15px; display: block; }
+        .scripture-box { background: #fff9f9; padding: 18px; border-radius: 12px; font-style: italic; font-size: 18px; margin-bottom: 25px; border: 1px dashed #eecaca; }
+        .reflection-title { font-size: 19px; font-weight: 700; color: var(--maroon); margin-bottom: 12px; border-bottom: 2px solid #f0f0f0; padding-bottom: 5px; }
+        .reflection-body { font-size: 16.5px; text-align: justify; white-space: pre-line; }
+        .loader { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; text-align: center; }
+        .spinner { width: 45px; height: 45px; border: 5px solid #f3f3f3; border-top: 5px solid var(--maroon); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
@@ -30,13 +30,13 @@
 
     <div class="header">
         <a href="index.html" style="color:white; font-size:20px; text-decoration:none;"><i class="fa-solid fa-arrow-left"></i></a>
-        <h1>Neno la Leo</h1>
+        <h1>NENO LA LEO</h1>
     </div>
 
     <div class="container">
         <div id="loader" class="loader">
             <div class="spinner"></div>
-            <p style="margin-top:10px; color:var(--maroon);">Inatafuta neno...</p>
+            <p id="status-msg" style="margin-top:15px; color:var(--maroon); font-weight:600;">Inatafuta neno...</p>
         </div>
 
         <div id="word-card" class="word-card">
@@ -48,6 +48,7 @@
     </div>
 
     <script>
+        // Hizi config nimezitoa kwenye picha yako ya 19:43
         const firebaseConfig = {
             apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
             authDomain: "viwawa-app.firebaseapp.com",
@@ -59,36 +60,26 @@
             measurementId: "G-KCF8BFTMBW"
         };
 
+        // Anzisha Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Kazi ya kuonyesha data kwenye screen
-        function onyeshaData(doc) {
+        // Jaribu kuvuta data
+        db.collection("huduma").doc("biblia").get().then((doc) => {
             if (doc.exists) {
                 const data = doc.data();
-                document.getElementById('v-title').innerText = data.mstari || "Mathayo 5:14-16";
-                document.getElementById('v-scripture').innerText = data.maandiko || "";
-                document.getElementById('v-reflection').innerText = data.tafakari || "";
+                document.getElementById('v-title').innerText = data.mstari || "Neno la Mungu";
+                document.getElementById('v-scripture').innerText = data.maandiko || "Haukuweka maandiko";
+                document.getElementById('v-reflection').innerText = data.tafakari || "Haukuweka tafakari";
 
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('word-card').style.display = 'block';
-                return true;
-            }
-            return false;
-        }
-
-        // Tunajaribu kutafuta kwenye 'huduma' (kama ulivyoandika kadi ya pili)
-        db.collection("huduma").doc("biblia").get().then((doc) => {
-            if (!onyeshaData(doc)) {
-                // Kama haipo 'huduma', tunajaribu 'huduna' (kama ulivyoandika kadi ya kwanza)
-                return db.collection("huduna").doc("biblia").get();
-            }
-        }).then((doc2) => {
-            if (doc2 && !onyeshaData(doc2)) {
-                document.getElementById('loader').innerHTML = "<p>Neno halijapatikana kule Firebase. <br><br> Hakikisha Collection inaitwa <b>huduma</b> na Document inaitwa <b>biblia</b></p>";
+            } else {
+                document.getElementById('status-msg').innerHTML = "Hitilafu: Data haijapatikana.<br><small>Hakikisha jina ni <b>huduma</b> na <b>biblia</b></small>";
             }
         }).catch((error) => {
-            document.getElementById('loader').innerHTML = "<p>Hitilafu ya mtandao.</p>";
+            console.error("Kosa la kuunganisha:", error);
+            document.getElementById('status-msg').innerText = "Imeshindwa kuunganisha na Firebase. Tafadhali angalia Internet yako au Rules za Firebase.";
         });
     </script>
 </body>

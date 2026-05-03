@@ -16,11 +16,10 @@
             --bg: #f8f9fa;
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
         body { background-color: var(--bg); color: #333; line-height: 1.6; }
 
-        /* Header inayofanana na Michango na Home */
         .header {
             background: var(--maroon);
             color: white;
@@ -29,73 +28,77 @@
             align-items: center;
             gap: 15px;
             position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .header h1 { font-size: 18px; font-weight: 700; text-transform: uppercase; }
-        .back-btn { color: white; text-decoration: none; font-size: 20px; }
+        .header h1 { font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .back-btn { color: white; text-decoration: none; font-size: 20px; cursor: pointer; }
 
-        .container { padding: 15px; }
+        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
 
-        /* Kadi ya Neno */
         .word-card {
             background: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border-left: 5px solid var(--maroon); /* Inafanana na list ya wanachama */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 6px solid var(--maroon);
             margin-top: 5px;
         }
 
         .verse-ref {
             color: var(--maroon);
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 12px;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 15px;
             display: block;
         }
 
         .scripture-box {
-            background: #fffafa;
-            padding: 15px;
-            border-radius: 10px;
+            background: #fff9f9;
+            padding: 18px;
+            border-radius: 12px;
             font-style: italic;
-            font-size: 17px;
+            font-size: 18px;
             color: #444;
-            margin-bottom: 20px;
-            border: 1px dashed #ddd;
+            margin-bottom: 25px;
+            border: 1px dashed #eecaca;
+            position: relative;
         }
 
         .reflection-title {
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 700;
             color: var(--maroon);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 5px;
         }
 
         .reflection-body {
-            font-size: 16px;
+            font-size: 16.5px;
             text-align: justify;
             white-space: pre-line;
-            color: #444;
+            color: #333;
         }
 
-        /* Loading Spinner ya Maroon */
         .loader-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 60vh;
+            height: 70vh;
         }
+
         .spinner {
-            width: 40px; height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--maroon);
+            width: 45px; height: 45px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--maroon);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
@@ -103,13 +106,13 @@
 
     <div class="header">
         <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
-        <h1>NENO LA LEO</h1>
+        <h1>Neno la Leo</h1>
     </div>
 
     <div class="container">
         <div id="loader" class="loader-container">
             <div class="spinner"></div>
-            <p style="margin-top:15px; color:var(--maroon);">Inapakia...</p>
+            <p style="margin-top:15px; color:var(--maroon); font-weight: 600;">Inapakia Neno...</p>
         </div>
 
         <div id="main-content" style="display: none;">
@@ -119,7 +122,7 @@
                 <div id="scripture-text" class="scripture-box"></div>
                 
                 <div class="reflection-title">
-                    <i class="fa-solid fa-book-open-reader"></i> Tafakari ya Leo
+                    <i class="fa-solid fa-dove"></i> Tafakari ya Leo
                 </div>
                 <div id="reflection-text" class="reflection-body"></div>
             </div>
@@ -127,6 +130,7 @@
     </div>
 
     <script>
+        // Hizi ni "Funguo" zako halisi kutoka kwenye picha uliyotuma
         const firebaseConfig = {
           apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
           authDomain: "viwawa-app.firebaseapp.com",
@@ -134,23 +138,33 @@
           projectId: "viwawa-app",
           storageBucket: "viwawa-app.firebasestorage.app",
           messagingSenderId: "523436472007",
-          appId: "1:523436472007:web:dda010d18fd00ea60070e2"
+          appId: "1:523436472007:web:dda010d18fd00ea60070e2",
+          measurementId: "G-KCF8BFTMBW"
         };
 
+        // Anzisha Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Kuanza kusoma data mara moja
+        // Vuta data kutoka Cloud Firestore (Collection: huduma, Doc: biblia)
         db.collection("huduma").doc("biblia").onSnapshot((doc) => {
             if (doc.exists) {
                 const data = doc.data();
+                
+                // Jaza data (Tumetumia herufi ndogo kama zilivyo Firebase kwako)
                 document.getElementById('verse-title').innerText = data.mstari || "Neno la Mungu";
-                document.getElementById('scripture-text').innerText = data.maandiko || "";
-                document.getElementById('reflection-text').innerText = data.tafakari || "";
+                document.getElementById('scripture-text').innerText = data.maandiko || "Maandiko hayajapatikana.";
+                document.getElementById('reflection-text').innerText = data.tafakari || "Tafakari inakuja hivi punde.";
 
+                // Ficha loader na uonyeshe neno
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('main-content').style.display = 'block';
+            } else {
+                document.getElementById('loader').innerHTML = "<p>Data haijapatikana kule Firebase.</p>";
             }
+        }, (error) => {
+            console.error("Kosa: ", error);
+            document.getElementById('loader').innerHTML = "<p>Angalia Internet yako na ujaribu tena.</p>";
         });
     </script>
 </body>

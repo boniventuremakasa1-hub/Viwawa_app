@@ -10,37 +10,93 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
-        :root { --maroon: #801313; --gold: #b8860b; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: #f4f4f4; color: #333; line-height: 1.6; }
+        :root { 
+            --maroon: #801313; 
+            --gold: #b8860b; 
+            --bg: #f8f9fa;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { background-color: var(--bg); color: #333; line-height: 1.6; }
 
+        /* Header inayofanana na Michango na Home */
         .header {
             background: var(--maroon);
             color: white;
-            padding: 15px;
+            padding: 20px;
             display: flex;
             align-items: center;
             gap: 15px;
             position: sticky; top: 0; z-index: 100;
         }
-        .header h1 { font-size: 18px; }
+        .header h1 { font-size: 18px; font-weight: 700; text-transform: uppercase; }
         .back-btn { color: white; text-decoration: none; font-size: 20px; }
 
-        .content-card {
+        .container { padding: 15px; }
+
+        /* Kadi ya Neno */
+        .word-card {
             background: white;
-            margin: 15px;
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-top: 5px solid var(--gold);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--maroon); /* Inafanana na list ya wanachama */
+            margin-top: 5px;
         }
 
-        .verse-title { color: var(--maroon); font-weight: bold; font-size: 20px; margin-bottom: 10px; }
-        .scripture { font-style: italic; font-size: 17px; color: #555; margin-bottom: 20px; padding-left: 10px; border-left: 3px solid #ddd; }
-        .reflection-title { font-weight: bold; font-size: 18px; margin-top: 20px; color: var(--maroon); border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .reflection-text { margin-top: 10px; font-size: 16px; text-align: justify; white-space: pre-line; }
-        
-        .loading { text-align: center; padding: 50px; color: #888; }
+        .verse-ref {
+            color: var(--maroon);
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .scripture-box {
+            background: #fffafa;
+            padding: 15px;
+            border-radius: 10px;
+            font-style: italic;
+            font-size: 17px;
+            color: #444;
+            margin-bottom: 20px;
+            border: 1px dashed #ddd;
+        }
+
+        .reflection-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--maroon);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reflection-body {
+            font-size: 16px;
+            text-align: justify;
+            white-space: pre-line;
+            color: #444;
+        }
+
+        /* Loading Spinner ya Maroon */
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 60vh;
+        }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--maroon);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -50,17 +106,23 @@
         <h1>NENO LA LEO</h1>
     </div>
 
-    <div id="loader" class="loading">
-        <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Inapakia Neno la leo...
-    </div>
+    <div class="container">
+        <div id="loader" class="loader-container">
+            <div class="spinner"></div>
+            <p style="margin-top:15px; color:var(--maroon);">Inapakia...</p>
+        </div>
 
-    <div id="word-content" style="display: none;">
-        <div class="content-card">
-            <div id="verse-ref" class="verse-title"></div>
-            <div id="scripture-text" class="scripture"></div>
-            
-            <div class="reflection-title">Tafakari ya Leo</div>
-            <div id="reflection-body" class="reflection-text"></div>
+        <div id="main-content" style="display: none;">
+            <div class="word-card">
+                <span id="verse-title" class="verse-ref"></span>
+                
+                <div id="scripture-text" class="scripture-box"></div>
+                
+                <div class="reflection-title">
+                    <i class="fa-solid fa-book-open-reader"></i> Tafakari ya Leo
+                </div>
+                <div id="reflection-text" class="reflection-body"></div>
+            </div>
         </div>
     </div>
 
@@ -72,23 +134,22 @@
           projectId: "viwawa-app",
           storageBucket: "viwawa-app.firebasestorage.app",
           messagingSenderId: "523436472007",
-          appId: "1:523436472007:web:dda010d18fd00ea60070e2",
-          measurementId: "G-KCF8FTMBW"
+          appId: "1:523436472007:web:dda010d18fd00ea60070e2"
         };
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Kusoma data kutoka Firebase
+        // Kuanza kusoma data mara moja
         db.collection("huduma").doc("biblia").onSnapshot((doc) => {
             if (doc.exists) {
                 const data = doc.data();
-                document.getElementById('verse-ref').innerText = data.mstari || "Mstari haujapatikana";
+                document.getElementById('verse-title').innerText = data.mstari || "Neno la Mungu";
                 document.getElementById('scripture-text').innerText = data.maandiko || "";
-                document.getElementById('reflection-body').innerText = data.tafakari || "Tafakari inakuja hivi punde...";
-                
+                document.getElementById('reflection-text').innerText = data.tafakari || "";
+
                 document.getElementById('loader').style.display = 'none';
-                document.getElementById('word-content').style.display = 'block';
+                document.getElementById('main-content').style.display = 'block';
             }
         });
     </script>

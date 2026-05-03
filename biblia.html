@@ -7,6 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --maroon: #801313;
@@ -101,7 +104,9 @@
             font-size: 13px;
             color: var(--maroon);
             cursor: pointer;
+            transition: 0.3s;
         }
+        .nav-box:active { background: #ddd; transform: scale(0.95); }
     </style>
 </head>
 <body>
@@ -145,10 +150,42 @@
             <span>Soma Biblia</span>
         </div>
         <div class="bible-nav">
-            <div class="nav-box"><i class="fa-solid fa-scroll"></i> AGANO LA KALE</div>
-            <div class="nav-box"><i class="fa-solid fa-cross"></i> AGANO JIPYA</div>
+            <div class="nav-box" onclick="funguaBiblia()"><i class="fa-solid fa-scroll"></i> AGANO LA KALE</div>
+            <div class="nav-box" onclick="funguaBiblia()"><i class="fa-solid fa-cross"></i> AGANO JIPYA</div>
         </div>
     </div>
+
+    <script>
+        // Unganisha na Firebase yako
+        const firebaseConfig = {
+          apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
+          authDomain: "viwawa-app.firebaseapp.com",
+          databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com",
+          projectId: "viwawa-app",
+          storageBucket: "viwawa-app.firebasestorage.app",
+          messagingSenderId: "523436472007",
+          appId: "1:523436472007:web:dda010d18fd00ea60070e2",
+          measurementId: "G-KCF8FTMBW"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let bibleUrl = "https://www.biblia.com/"; // Link ya akiba
+
+        // Pata link kutoka Firebase automatically
+        db.collection("huduma").doc("biblia").get().then((doc) => {
+            if (doc.exists) {
+                bibleUrl = doc.data().link;
+            }
+        });
+
+        // Kazi ya kufungua Biblia
+        function funguaBiblia() {
+            window.location.href = bibleUrl;
+        }
+    </script>
 
 </body>
 </html>

@@ -58,11 +58,11 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // MUHIMU: Tunatumia majina yako ya Kiswahili hapa
+        // Tunasoma kutoka kwenye collection 'huduma' na document 'biblia'
         db.collection("huduma").doc("biblia").onSnapshot((doc) => {
             if (doc.exists) {
                 const data = doc.data();
-                // Hapa tunasoma majina ya Kiswahili moja kwa moja kutoka Firebase yako
+                // TUNATUMIA MAJINA YAKO YA KISWAHILI HAPA:
                 document.getElementById('v-title').innerText = data.mstari || "Mstari haupo";
                 document.getElementById('v-scripture').innerText = data.maandiko || "Maandiko hayajapatikana";
                 document.getElementById('v-reflection').innerText = data.tafakari || "Tafakari haijapatikana";
@@ -70,10 +70,10 @@
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('word-card').style.display = 'block';
             } else {
-                document.getElementById('msg').innerText = "Kosa: Hakikisha 'Collection' ni 'huduma' na 'Document' ni 'biblia' (herufi ndogo).";
+                document.getElementById('msg').innerText = "Neno halijapatikana kwenye Database.";
             }
         }, (error) => {
-            document.getElementById('msg').innerText = "Hitilafu ya Firebase: " + error.message;
+            document.getElementById('msg').innerText = "Hitilafu: " + error.message;
         });
     </script>
 </body>

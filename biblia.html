@@ -36,7 +36,7 @@
     <div class="container">
         <div id="loader" class="loader">
             <div class="spinner"></div>
-            <p style="margin-top:10px; color:var(--maroon);">Inapakia...</p>
+            <p style="margin-top:10px; color:var(--maroon);">Inatayarisha...</p>
         </div>
 
         <div id="word-card" class="word-card">
@@ -48,7 +48,6 @@
     </div>
 
     <script>
-        // HIZI NI CONFIG ZAKO HALISI KUTOKA KWENYE SCREENSHOT 19:43
         const firebaseConfig = {
             apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
             authDomain: "viwawa-app.firebaseapp.com",
@@ -60,27 +59,24 @@
             measurementId: "G-KCF8BFTMBW"
         };
 
-        // INIZIALIZE
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // READ DATA
+        // Tunasoma Collection "huduma" na Document "biblia"
         db.collection("huduma").doc("biblia").onSnapshot((doc) => {
             if (doc.exists) {
                 const data = doc.data();
-                document.getElementById('v-title').innerText = data.mstari || "";
-                document.getElementById('v-scripture').innerText = data.maandiko || "";
-                document.getElementById('v-reflection').innerText = data.tafakari || "";
+                // Tunahakikisha tunasoma majina sahihi ya fields
+                document.getElementById('v-title').innerText = data.mstari || "Mstari haupo";
+                document.getElementById('v-scripture').innerText = data.maandiko || "Maandiko hayapo";
+                document.getElementById('v-reflection').innerText = data.tafakari || "Tafakari haipo";
 
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('word-card').style.display = 'block';
             } else {
-                console.log("Hati (document) haipo!");
-                document.getElementById('loader').innerHTML = "<p>Neno halijapatikana.</p>";
+                // Hapa ndipo inaposema neno halijapatikana
+                document.getElementById('loader').innerHTML = "<p style='color:red;'>Hitilafu: Hakikisha Firestore ina Collection 'huduma' na Document 'biblia'</p>";
             }
-        }, (error) => {
-            console.error("Kosa: ", error);
-            document.getElementById('loader').innerHTML = "<p>Hitilafu ya mtandao.</p>";
         });
     </script>
 </body>

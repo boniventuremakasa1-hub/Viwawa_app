@@ -11,18 +11,17 @@
 
     <style>
         :root { --maroon: #801313; --bg: #f8f9fa; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
         body { background-color: var(--bg); color: #333; }
-        .header { background: var(--maroon); color: white; padding: 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .header h1 { font-size: 18px; text-transform: uppercase; }
+        .header { background: var(--maroon); color: white; padding: 20px; display: flex; align-items: center; gap: 15px; }
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
-        .word-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-left: 6px solid var(--maroon); display: none; margin-top: 10px; }
-        .verse-ref { color: var(--maroon); font-size: 24px; font-weight: 800; margin-bottom: 15px; display: block; }
-        .scripture-box { background: #fff9f9; padding: 18px; border-radius: 12px; font-style: italic; font-size: 18px; margin-bottom: 25px; border: 1px dashed #eecaca; }
-        .reflection-title { font-size: 19px; font-weight: 700; color: var(--maroon); margin-bottom: 12px; border-bottom: 2px solid #f0f0f0; padding-bottom: 5px; }
-        .reflection-body { font-size: 16.5px; text-align: justify; white-space: pre-line; }
+        .word-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 6px solid var(--maroon); display: none; }
+        .verse-ref { color: var(--maroon); font-size: 22px; font-weight: bold; margin-bottom: 10px; display: block; }
+        .scripture-box { background: #fff9f9; padding: 15px; border-radius: 8px; font-style: italic; font-size: 17px; margin-bottom: 20px; border: 1px dashed #ddd; }
+        .reflection-title { font-weight: bold; color: var(--maroon); margin-bottom: 10px; font-size: 18px; }
+        .reflection-body { font-size: 16px; text-align: justify; white-space: pre-line; line-height: 1.6; }
         .loader { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; text-align: center; }
-        .spinner { width: 45px; height: 45px; border: 5px solid #f3f3f3; border-top: 5px solid var(--maroon); border-radius: 50%; animation: spin 1s linear infinite; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--maroon); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
@@ -30,13 +29,13 @@
 
     <div class="header">
         <a href="index.html" style="color:white; font-size:20px; text-decoration:none;"><i class="fa-solid fa-arrow-left"></i></a>
-        <h1>NENO LA LEO</h1>
+        <h1 style="font-size:18px;">NENO LA LEO</h1>
     </div>
 
     <div class="container">
         <div id="loader" class="loader">
             <div class="spinner"></div>
-            <p id="status-msg" style="margin-top:15px; color:var(--maroon); font-weight:600;">Inatafuta neno...</p>
+            <p id="msg" style="margin-top:15px; color:var(--maroon);">Inapakia Neno...</p>
         </div>
 
         <div id="word-card" class="word-card">
@@ -48,38 +47,33 @@
     </div>
 
     <script>
-        // Hizi config nimezitoa kwenye picha yako ya 19:43
         const firebaseConfig = {
             apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
             authDomain: "viwawa-app.firebaseapp.com",
-            databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com",
             projectId: "viwawa-app",
             storageBucket: "viwawa-app.firebasestorage.app",
-            messagingSenderId: "523436472007",
-            appId: "1:523436472007:web:dda010d18fd00ea60070e2",
-            measurementId: "G-KCF8BFTMBW"
+            appId: "1:523436472007:web:dda010d18fd00ea60070e2"
         };
 
-        // Anzisha Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Jaribu kuvuta data
-        db.collection("huduma").doc("biblia").get().then((doc) => {
+        // Tunavuta data kutoka Collection: huduma, Document: biblia
+        db.collection("huduma").doc("biblia").onSnapshot((doc) => {
             if (doc.exists) {
                 const data = doc.data();
-                document.getElementById('v-title').innerText = data.mstari || "Neno la Mungu";
-                document.getElementById('v-scripture').innerText = data.maandiko || "Haukuweka maandiko";
-                document.getElementById('v-reflection').innerText = data.tafakari || "Haukuweka tafakari";
+                // Hapa tunatumia yale majina mapya uliyoweka kule Firebase
+                document.getElementById('v-title').innerText = data.reference || "Mathayo 5:14";
+                document.getElementById('v-scripture').innerText = data.bible_verse || "";
+                document.getElementById('v-reflection').innerText = data.reflection || "";
 
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('word-card').style.display = 'block';
             } else {
-                document.getElementById('status-msg').innerHTML = "Hitilafu: Data haijapatikana.<br><small>Hakikisha jina ni <b>huduma</b> na <b>biblia</b></small>";
+                document.getElementById('msg').innerText = "Neno halijapatikana. Hakikisha Collection ni 'huduma' na Document ni 'biblia'.";
             }
-        }).catch((error) => {
-            console.error("Kosa la kuunganisha:", error);
-            document.getElementById('status-msg').innerText = "Imeshindwa kuunganisha na Firebase. Tafadhali angalia Internet yako au Rules za Firebase.";
+        }, (error) => {
+            document.getElementById('msg').innerText = "Hitilafu ya mtandao au Rules za Firebase.";
         });
     </script>
 </body>

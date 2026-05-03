@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biblia Takatifu - Viwawa</title>
+    <title>Neno la Leo - Viwawa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
-        :root { --maroon: #801313; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        
-        body, html { height: 100%; overflow: hidden; }
+        :root { --maroon: #801313; --gold: #b8860b; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f4f4f4; color: #333; line-height: 1.6; }
 
         .header {
             background: var(--maroon);
@@ -22,28 +21,48 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            height: 60px;
+            position: sticky; top: 0; z-index: 100;
         }
-
-        .header h1 { font-size: 16px; text-transform: uppercase; }
+        .header h1 { font-size: 18px; }
         .back-btn { color: white; text-decoration: none; font-size: 20px; }
 
-        /* Hii ndio itafanya Biblia ibaki ndani ya App */
-        #bible-container {
-            width: 100%;
-            height: calc(100% - 60px); /* Inachukua nafasi yote iliyobaki */
-            border: none;
+        .content-card {
+            background: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-top: 5px solid var(--gold);
         }
+
+        .verse-title { color: var(--maroon); font-weight: bold; font-size: 20px; margin-bottom: 10px; }
+        .scripture { font-style: italic; font-size: 17px; color: #555; margin-bottom: 20px; padding-left: 10px; border-left: 3px solid #ddd; }
+        .reflection-title { font-weight: bold; font-size: 18px; margin-top: 20px; color: var(--maroon); border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .reflection-text { margin-top: 10px; font-size: 16px; text-align: justify; white-space: pre-line; }
+        
+        .loading { text-align: center; padding: 50px; color: #888; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
-        <h1>BIBLIA YA KISWAHILI</h1>
+        <h1>NENO LA LEO</h1>
     </div>
 
-    <iframe id="bible-container" src="https://www.bible.com/sw/bible/1/GEN.1.SUV"></iframe>
+    <div id="loader" class="loading">
+        <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Inapakia Neno la leo...
+    </div>
+
+    <div id="word-content" style="display: none;">
+        <div class="content-card">
+            <div id="verse-ref" class="verse-title"></div>
+            <div id="scripture-text" class="scripture"></div>
+            
+            <div class="reflection-title">Tafakari ya Leo</div>
+            <div id="reflection-body" class="reflection-text"></div>
+        </div>
+    </div>
 
     <script>
         const firebaseConfig = {
@@ -60,10 +79,16 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Hii sehemu itasoma mstari wa siku au link mpya ukibadilisha kule Firebase
-        db.collection("huduma").doc("biblia").get().then((doc) => {
-            if (doc.exists && doc.data().link) {
-                document.getElementById('bible-container').src = doc.data().link;
+        // Kusoma data kutoka Firebase
+        db.collection("huduma").doc("biblia").onSnapshot((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                document.getElementById('verse-ref').innerText = data.mstari || "Mstari haujapatikana";
+                document.getElementById('scripture-text').innerText = data.maandiko || "";
+                document.getElementById('reflection-body').innerText = data.tafakari || "Tafakari inakuja hivi punde...";
+                
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('word-content').style.display = 'block';
             }
         });
     </script>

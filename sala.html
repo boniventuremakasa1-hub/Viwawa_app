@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SALA ZETU</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
         :root { 
             --primary: #800000; /* Maroon ya asili */
             --bg: #f9f9f9;
+            --gold: #b8860b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -37,6 +42,21 @@
         }
 
         .app-bar h1 { font-size: 19px; font-weight: bold; }
+
+        /* Kitufe cha Sala ya Jumuiya (Kutoka Firebase) */
+        .jumuiya-btn {
+            background: linear-gradient(135deg, var(--primary), #a52a2a);
+            margin: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(128, 0, 0, 0.2);
+            cursor: pointer;
+            border: 2px solid var(--gold);
+        }
 
         /* Sehemu ya Search ya Asili */
         .search-area {
@@ -100,10 +120,18 @@
         <h1>SALA ZETU</h1>
     </div>
 
+    <div class="jumuiya-btn" onclick="funguaSalaJumuiya()">
+        <div>
+            <h2 style="font-size: 16px;">SALA YA JUMUIYA</h2>
+            <p style="font-size: 12px; opacity: 0.9;">Bikira Maria Malkia wa Malaika</p>
+        </div>
+        <i class="fa-solid fa-hands-praying fa-2x"></i>
+    </div>
+
     <div class="search-area">
         <div class="search-bar">
             <i class="fa-solid fa-magnifying-glass" style="color: #666;"></i>
-            <input type="text" id="searchInput" onkeyup="search()" placeholder="Tafuta hapa...">
+            <input type="text" id="searchInput" onkeyup="search()" placeholder="Tafuta sala hapa...">
         </div>
     </div>
 
@@ -147,73 +175,48 @@
             <h2>8. SALA YA TOBA</h2>
             <p>Ee Mungu wangu, najuta sana kwa niliyokukosea, kwani wewe ni mwema na unastahili kupendwa na watu wote. Nachukia dhambi zangu zote, nakusudia kwa msaada wa neema yako nisitende dhambi tena, na nikimbie nafasi za dhambi. Amina.</p>
         </div>
-
-        <div class="card">
-            <h2>9. MALAIKA WA BWANA</h2>
-            <p>Malaika wa Bwana alimpasha Maria habari. Akapata mimba kwa uwezo wa Roho Mtakatifu. (Salamu Maria...)
-            Mimi ni mjakazi wa Bwana. Nitendewe ulivyosema. (Salamu Maria...)
-            Naye Neno akatwaa mwili. Akakaa kwetu. (Salamu Maria...)</p>
-        </div>
-
-        <div class="card">
-            <h2>10. SALAMU MALKIA</h2>
-            <p>Salamu Malkia, Mama mwenye huruma, uzima, utamu na matumaini yetu, salamu. Tunakulilia sisi wana wa Eva tuliopotelea huku duniani. Tunakulia tukilalamika na kulia katika bonde hili la machozi. Haya basi, mwombezi wetu, utuangalie kwa macho yako ya huruma. Na baada ya ugeni huu, utuonyeshe Yesu, mzao mbarikiwa wa tumbo lako. Ee mpole, ee mwema, ee Bikira Maria mpenzi. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>11. EE YESU WANGU</h2>
-            <p>Ee Yesu wangu, utusamehe dhambi zetu, utuepushe na moto wa milele, uongoze roho zote mbinguni, hasa zile zinazohitaji zaidi huruma yako. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>12. SALA YA MAPENDO</h2>
-            <p>Ee Mungu wangu, nakupenda kwa moyo wote kuliko vitu vyote, kwani wewe ni mwema na unastahili kupendwa. Kwa ajili yako nampenda jirani yangu kama nafsi yangu. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>13. SALA YA MATUMAINI</h2>
-            <p>Ee Mungu wangu, natumaini nitapata kwa wema wako na kwa ahadi zako, maondoleo ya dhambi zangu, msaada wa neema yako na uzima wa milele. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>14. SALA YA IMANI</h2>
-            <p>Ee Mungu wangu, nasadiki maneno yote liliyofundisha Kanisa lako takatifu, kwani wewe ndiye uliyelifunulia, na wewe ni kweli isiyoweza kudanganyika. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>15. KUMBUKA (MEMORARE)</h2>
-            <p>Kumbuka, ee Bikira Maria mpenzi, haijasikika bado hata mara moja kwamba ulimwacha yeyote aliyekimbilia ulinzi wako, akiomba msaada wako na kutaka maombezi yako. Kwa matumaini hayo mimi nakukimbilia, ee Mama, Bikira wa mabikira, nakuja kwako, nasimama mbele yako mimi mkosefu nikilalamika. Ee Mama wa Neno, usidharau maneno yangu, bali uyasikie kwa huruma na kuyapokea. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>16. MALAIKA MLINZI</h2>
-            <p>Malaika mlinzi wangu, unilinde katika hatari zote za mwili na roho, leo na siku zote za maisha yangu. Amina.</p>
-        </div>
-
+        
         <div class="card">
             <h2>17. SALA YA ASUBUHI</h2>
             <p>Ee Mungu, nakushukuru kwa kunilinda usiku wa leo. Nakutolea mawazo, maneno na matendo yangu yote ya leo, nisaidie nisikukosee tena. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>18. SALA YA JIONI</h2>
-            <p>Ee Mungu, nakushukuru kwa mapaji yote uliyonijalia leo. Unisamehe makosa niliyofanya, na unilinde usiku huu nisipatwe na jambo baya. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>19. MTAKATIFU MIKABELI</h2>
-            <p>Mtakatifu Mikaeli Malaika Mkuu, utulinde katika vita, uwe kinga yetu katika uovu na mitego ya shetani. Mungu amkemee tunakuomba kwa unyenyekevu; nawe kiongozi wa majeshi ya mbinguni, kwa nguvu ya Mungu, uwaangushie kuzimu shetani na pepo wabaya wote. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>20. KIKIRIA MARIA MTAKATIFU</h2>
-            <p>Maria Mtakatifu, Mama wa Mungu, utuombee sisi wakosefu sasa na saa ya kufa kwetu. Amina.</p>
         </div>
     </div>
 
     <div id="empty">Sala haijapatikana...</div>
 
     <script>
+        // Unganisha na Firebase yako
+        const firebaseConfig = {
+          apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
+          authDomain: "viwawa-app.firebaseapp.com",
+          databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com",
+          projectId: "viwawa-app",
+          storageBucket: "viwawa-app.firebasestorage.app",
+          messagingSenderId: "523436472007",
+          appId: "1:523436472007:web:dda010d18fd00ea60070e2",
+          measurementId: "G-KCF8FTMBW"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let jumuiyaUrl = "#";
+
+        // Pata link ya Sala ya Jumuiya kutoka Firebase
+        db.collection("huduma").doc("sala").get().then((doc) => {
+            if (doc.exists) {
+                jumuiyaUrl = doc.data().link;
+            }
+        });
+
+        function funguaSalaJumuiya() {
+            if(jumuiyaUrl !== "#") {
+                window.location.href = jumuiyaUrl;
+            } else {
+                alert("Sala ya Jumuiya inapakia, jaribu tena...");
+            }
+        }
+
         function search() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('card');

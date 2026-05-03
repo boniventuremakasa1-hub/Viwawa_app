@@ -3,160 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biblia - Viwawa App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <title>Biblia Takatifu - Viwawa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
-        :root {
-            --maroon: #801313;
-            --gold: #b8860b;
-            --bg-light: #fdfdfd;
-            --white: #ffffff;
-            --text-dark: #2d2d2d;
-            --text-gray: #666;
-        }
+        :root { --maroon: #801313; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        
+        body, html { height: 100%; overflow: hidden; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: var(--bg-light); font-family: 'Inter', sans-serif; color: var(--text-dark); padding-bottom: 40px; }
-
-        /* Header */
         .header {
-            background-color: var(--maroon);
+            background: var(--maroon);
             color: white;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             align-items: center;
-            gap: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .back-btn { color: white; text-decoration: none; font-size: 20px; }
-        .header h1 { font-size: 18px; font-weight: 700; text-transform: uppercase; }
-
-        /* Mstari wa Siku Card */
-        .verse-card {
-            background: linear-gradient(135deg, #801313, #a52a2a);
-            margin: 20px;
-            padding: 25px;
-            border-radius: 20px;
-            color: white;
-            box-shadow: 0 10px 20px rgba(128, 19, 19, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-        .verse-card::after {
-            content: '\f641'; /* Bible icon */
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            right: -10px;
-            bottom: -10px;
-            font-size: 80px;
-            opacity: 0.1;
-        }
-        .verse-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.9; margin-bottom: 10px; display: block; font-weight: 600; }
-        .verse-text { font-family: 'Lora', serif; font-size: 18px; line-height: 1.6; font-style: italic; margin-bottom: 10px; }
-        .verse-ref { font-weight: 700; font-size: 14px; color: #ffc107; }
-
-        /* Content Sections */
-        .content-section { padding: 0 20px; margin-top: 25px; }
-        .section-title { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            font-size: 16px; 
-            font-weight: 700; 
-            color: var(--maroon); 
-            margin-bottom: 15px; 
-            text-transform: uppercase;
-        }
-        
-        .card {
-            background: var(--white);
-            padding: 20px;
-            border-radius: 15px;
-            border-left: 4px solid var(--maroon);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            margin-bottom: 20px;
-        }
-        .card h3 { font-size: 15px; margin-bottom: 8px; color: var(--text-dark); }
-        .card p { font-size: 14px; line-height: 1.6; color: var(--text-gray); }
-
-        /* Search/Navigation mimic */
-        .bible-nav {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
             gap: 15px;
-            padding: 0 20px;
-            margin-top: 10px;
+            height: 60px;
         }
-        .nav-box {
-            background: #eee;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 13px;
-            color: var(--maroon);
-            cursor: pointer;
-            transition: 0.3s;
+
+        .header h1 { font-size: 16px; text-transform: uppercase; }
+        .back-btn { color: white; text-decoration: none; font-size: 20px; }
+
+        /* Hii ndio itafanya Biblia ibaki ndani ya App */
+        #bible-container {
+            width: 100%;
+            height: calc(100% - 60px); /* Inachukua nafasi yote iliyobaki */
+            border: none;
         }
-        .nav-box:active { background: #ddd; transform: scale(0.95); }
     </style>
 </head>
 <body>
 
     <div class="header">
         <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
-        <h1>BIBLIA TAKATIFU</h1>
+        <h1>BIBLIA YA KISWAHILI</h1>
     </div>
 
-    <div class="verse-card">
-        <span class="verse-label">Mstari wa Siku</span>
-        <p class="verse-text">"Neno lako ni taa ya miguu yangu, na mwanga wa njia yangu."</p>
-        <span class="verse-ref">Zaburi 119:105</span>
-    </div>
-
-    <div class="content-section">
-        <div class="section-title">
-            <i class="fa-solid fa-feather-pointed"></i>
-            <span>Tafakari ya Leo</span>
-        </div>
-        <div class="card">
-            <h3>Nguvu ya Neno la Mungu</h3>
-            <p>Leo tunakumbushwa kuwa katika kila hatua ya maisha yetu, Neno la Mungu lipo kutuongoza. Usitembee gizani wakati mwanga wa Kristo upo mbele yako. Jifunze kusikiliza sauti yake kupitia maandiko.</p>
-        </div>
-    </div>
-
-    <div class="content-section">
-        <div class="section-title">
-            <i class="fa-solid fa-hands-praying"></i>
-            <span>Sala ya Leo</span>
-        </div>
-        <div class="card" style="border-left-color: var(--gold);">
-            <h3>Ee Bwana, Uniongoze</h3>
-            <p>Ee Mungu Mwenyezi, nakushukuru kwa zawadi ya neno lako. Naomba Roho Mtakatifu anipe hekima ya kulielewa na neema ya kuliishi kila siku. Amina.</p>
-        </div>
-    </div>
-
-    <div class="content-section" style="margin-bottom: 20px;">
-        <div class="section-title">
-            <i class="fa-solid fa-book-open"></i>
-            <span>Soma Biblia</span>
-        </div>
-        <div class="bible-nav">
-            <div class="nav-box" onclick="funguaBiblia()"><i class="fa-solid fa-scroll"></i> AGANO LA KALE</div>
-            <div class="nav-box" onclick="funguaBiblia()"><i class="fa-solid fa-cross"></i> AGANO JIPYA</div>
-        </div>
-    </div>
+    <iframe id="bible-container" src="https://www.bible.com/sw/bible/1/GEN.1.SUV"></iframe>
 
     <script>
-        // Unganisha na Firebase yako
         const firebaseConfig = {
           apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
           authDomain: "viwawa-app.firebaseapp.com",
@@ -168,24 +57,15 @@
           measurementId: "G-KCF8FTMBW"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        let bibleUrl = "https://www.biblia.com/"; // Link ya akiba
-
-        // Pata link kutoka Firebase automatically
+        // Hii sehemu itasoma mstari wa siku au link mpya ukibadilisha kule Firebase
         db.collection("huduma").doc("biblia").get().then((doc) => {
-            if (doc.exists) {
-                bibleUrl = doc.data().link;
+            if (doc.exists && doc.data().link) {
+                document.getElementById('bible-container').src = doc.data().link;
             }
         });
-
-        // Kazi ya kufungua Biblia
-        function funguaBiblia() {
-            window.location.href = bibleUrl;
-        }
     </script>
-
 </body>
 </html>

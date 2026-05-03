@@ -39,7 +39,7 @@
         
         .back-btn { padding: 8px 12px 8px 5px; cursor: pointer; font-size: 18px; display: flex; align-items: center; }
         
-        .group-profile { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .group-profile { display: flex; align-items: center; gap: 12px; }
         .group-img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; background: #eee; }
         .title-area h3 { font-size: 16px; font-weight: 600; }
         .title-area p { font-size: 11px; opacity: 0.8; }
@@ -54,7 +54,6 @@
         .sent .bubble { background: var(--sent-bubble); border-top-right-radius: 0; }
 
         .u-name { font-size: 11.5px; font-weight: 700; color: #d91e18; margin-bottom: 3px; display: block; }
-        .sent .u-name { color: var(--navy-blue); text-align: right; }
         .msg-footer { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 4px; }
         .time { font-size: 10px; color: var(--text-sub); }
         .ticks { font-size: 13px; color: #53bdeb; }
@@ -100,7 +99,7 @@
         const firebaseConfig = {
             apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wDd-8A",
             authDomain: "viwawa-app.firebaseapp.com",
-            databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com",
+            databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com/", // Link yako imewekwa hapa
             projectId: "viwawa-app",
             storageBucket: "viwawa-app.firebasestorage.app",
             messagingSenderId: "523436472007",
@@ -154,3 +153,4 @@
     </script>
 </body>
 </html>
+

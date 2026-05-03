@@ -7,6 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --maroon: #801313;
@@ -21,7 +24,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: var(--bg); padding-bottom: 80px; color: var(--text); }
 
-        /* Header - Nimehakikisha mshale una nafasi yake */
         .header {
             background: var(--maroon);
             color: white;
@@ -34,7 +36,6 @@
         .header h1 { font-size: 18px; font-weight: 700; flex-grow: 1; }
         .back-btn { cursor: pointer; font-size: 20px; color: white; text-decoration: none; }
 
-        /* Main Menu Cards */
         .menu-container { padding: 20px; }
         .category-card {
             background: var(--white);
@@ -55,7 +56,6 @@
         .icon-ada { background: #fff0f0; color: var(--maroon); }
         .icon-mingine { background: #e7f5ff; color: #339af0; }
 
-        /* Members List & Details */
         .page-content { display: none; padding: 20px; }
         .member-item {
             background: white; padding: 15px; border-radius: 10px;
@@ -64,7 +64,6 @@
             cursor: pointer;
         }
 
-        /* Horizontal Table Row (Ulalo) */
         .data-row {
             background: white; padding: 12px; border-bottom: 1px solid #eee;
             display: flex; align-items: center; justify-content: space-between;
@@ -77,7 +76,6 @@
         .tiki { color: var(--success); font-size: 18px; }
         .kosa { color: var(--danger); font-size: 18px; }
 
-        /* Admin Action Button */
         .admin-fab {
             position: fixed; bottom: 90px; right: 20px;
             background: var(--maroon); color: white;
@@ -88,7 +86,6 @@
             text-decoration: none;
         }
 
-        /* Bottom Nav */
         .bottom-nav {
             position: fixed; bottom: 0; width: 100%; background: white;
             display: flex; justify-content: space-around; padding: 12px 0;
@@ -132,17 +129,8 @@
 
     <div id="membersPage" class="page-content">
         <h2 style="font-size: 14px; margin-bottom: 15px; color: var(--gray);">Chagua Mwanachama:</h2>
-        <div class="member-item" onclick="showPersonalDetails('Boniventure Makasa')">
-            <span>Boniventure Makasa</span>
-            <i class="fa-solid fa-chevron-right"></i>
-        </div>
-        <div class="member-item" onclick="showPersonalDetails('Maria Joseph')">
-            <span>Maria Joseph</span>
-            <i class="fa-solid fa-chevron-right"></i>
-        </div>
-        <div class="member-item" onclick="showPersonalDetails('John Peter')">
-            <span>John Peter</span>
-            <i class="fa-solid fa-chevron-right"></i>
+        <div id="membersList">
+            <p style="text-align:center; padding:20px; color:#999;">Inapakia wanachama...</p>
         </div>
     </div>
 
@@ -150,7 +138,6 @@
         <div id="detailsTitle" style="background: #eee; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: 700; font-size: 14px; text-align: center;">
             -
         </div>
-        
         <div id="dataRows"></div>
     </div>
 
@@ -174,78 +161,96 @@
     </nav>
 
     <script>
+        // --- KONFIGURESHENI YA FIREBASE ---
+        const firebaseConfig = {
+          apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
+          authDomain: "viwawa-app.firebaseapp.com",
+          databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com",
+          projectId: "viwawa-app",
+          storageBucket: "viwawa-app.firebasestorage.app",
+          messagingSenderId: "523436472007",
+          appId: "1:523436472007:web:dda010d18fd00ea60070e2",
+          measurementId: "G-KCF8FTMBW"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         let currentMode = ''; 
 
+        // 1. Soma Wanachama kutoka Firestore
         function showMembers(mode) {
             currentMode = mode;
             document.getElementById('mainCategories').style.display = 'none';
             document.getElementById('membersPage').style.display = 'block';
             document.getElementById('headerTitle').innerText = mode === 'ada' ? 'ADA YA MWEZI' : 'MICHANGO MINGINE';
+
+            const listDiv = document.getElementById('membersList');
+            listDiv.innerHTML = '<p style="text-align:center; padding:20px;">Inapakia...</p>';
+
+            db.collection("wanachama").orderBy("jina").get().then((querySnapshot) => {
+                listDiv.innerHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    listDiv.innerHTML += `
+                        <div class="member-item" onclick="showPersonalDetails('${doc.id}', '${data.jina}')">
+                            <span>${data.jina}</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                    `;
+                });
+            }).catch(err => {
+                listDiv.innerHTML = '<p style="color:red; text-align:center;">Imeshindwa kupakia. Angalia internet.</p>';
+            });
         }
 
-        function showPersonalDetails(name) {
+        // 2. Soma Taarifa za Malipo za Mwanachama
+        function showPersonalDetails(id, name) {
             document.getElementById('membersPage').style.display = 'none';
             document.getElementById('detailsPage').style.display = 'block';
             document.getElementById('detailsTitle').innerText = name;
             
             const dataRows = document.getElementById('dataRows');
-            dataRows.innerHTML = ''; 
+            dataRows.innerHTML = '<p style="text-align:center; padding:20px;">Inatafuta malipo...</p>'; 
 
-            if(currentMode === 'ada') {
-                const miezi = ['Januari', 'Februari', 'Machi', 'Aprili', 'Mei'];
-                miezi.forEach(mwezi => {
+            // Hapa inasoma "ada" au "michango" kulingana na ulichochagua
+            const collectionName = currentMode === 'ada' ? 'ada_malipo' : 'michango_mingine';
+
+            db.collection(collectionName).where("mwanachama_id", "==", id).get().then((querySnapshot) => {
+                dataRows.innerHTML = '';
+                if (querySnapshot.empty) {
+                    dataRows.innerHTML = '<p style="text-align:center; padding:20px; color:#999;">Hakuna rekodi ya malipo bado.</p>';
+                    return;
+                }
+                querySnapshot.forEach((doc) => {
+                    const malipo = doc.data();
+                    const icon = malipo.hali === 'tayari' ? 'fa-circle-check tiki' : 'fa-circle-xmark kosa';
+                    const color = malipo.hali === 'tayari' ? '' : 'color:var(--danger)';
+                    
                     dataRows.innerHTML += `
                         <div class="data-row">
-                            <div class="row-left">${mwezi}</div>
-                            <div class="row-center"><i class="fa-solid fa-circle-check tiki"></i></div>
-                            <div class="row-right">500/=</div>
+                            <div class="row-left">${malipo.kichwa}</div>
+                            <div class="row-center"><i class="fa-solid ${icon}"></i></div>
+                            <div class="row-right" style="${color}">${malipo.kiasi}/=</div>
                         </div>
                     `;
                 });
-                dataRows.innerHTML += `
-                    <div class="data-row">
-                        <div class="row-left">Juni</div>
-                        <div class="row-center"><i class="fa-solid fa-circle-xmark kosa"></i></div>
-                        <div class="row-right" style="color:var(--danger)">0/=</div>
-                    </div>
-                `;
-            } else {
-                const michango = [
-                    {aina: 'Mchango wa Kambi', hali: 'tiki', kiasi: '5,000'},
-                    {aina: 'Ujenzi wa Ofisi', hali: 'kosa', kiasi: '0'},
-                    {aina: 'Sherehe ya Viwawa', hali: 'tiki', kiasi: '2,000'}
-                ];
-                michango.forEach(item => {
-                    dataRows.innerHTML += `
-                        <div class="data-row">
-                            <div class="row-left">${item.aina}</div>
-                            <div class="row-center">
-                                <i class="fa-solid ${item.hali === 'tiki' ? 'fa-circle-check tiki' : 'fa-circle-xmark kosa'}"></i>
-                            </div>
-                            <div class="row-right" style="${item.hali === 'kosa' ? 'color:var(--danger)' : ''}">${item.kiasi}/=</div>
-                        </div>
-                    `;
-                });
-            }
+            });
         }
 
-        // Script ya kurudi nyuma imeboreshwa
         function goBack() {
             const mainCats = document.getElementById('mainCategories');
             const membersPage = document.getElementById('membersPage');
             const detailsPage = document.getElementById('detailsPage');
 
             if (detailsPage.style.display === 'block') {
-                // Kama tupo kwenye details, rudi kwenye list ya majina
                 detailsPage.style.display = 'none';
                 membersPage.style.display = 'block';
             } else if (membersPage.style.display === 'block') {
-                // Kama tupo kwenye majina, rudi kwenye menyu kuu ya michango
                 membersPage.style.display = 'none';
                 mainCats.style.display = 'block';
                 document.getElementById('headerTitle').innerText = 'MICHANGO';
             } else {
-                // Kama tupo menyu kuu ya michango, rudi Home (index.html)
                 window.location.href = 'index.html';
             }
         }

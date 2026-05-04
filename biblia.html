@@ -7,161 +7,62 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --maroon: #801313; --bg: #f8f9fa; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-        body { background-color: var(--bg); color: #333; line-height: 1.6; }
-        
-        .header { 
-            background: var(--maroon); 
-            color: white; 
-            padding: 18px; 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        
-        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
-        
-        .word-card { 
-            background: white; 
-            padding: 25px; 
-            border-radius: 15px; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08); 
-            border-left: 6px solid var(--maroon); 
-            display: none; 
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .verse-ref { color: var(--maroon); font-size: 24px; font-weight: 800; margin-bottom: 12px; display: block; }
-        
-        .scripture-box { 
-            background: #fff9f9; 
-            padding: 20px; 
-            border-radius: 10px; 
-            font-style: italic; 
-            font-size: 19px; 
-            margin-bottom: 25px; 
-            border: 1px dashed #e0baba; 
-            color: #444;
-            position: relative;
-        }
-
-        .scripture-box::before { content: '"'; font-size: 40px; color: #e0baba; position: absolute; top: -5px; left: 5px; opacity: 0.5; }
-
-        .reflection-title { 
-            font-weight: bold; 
-            color: var(--maroon); 
-            margin-bottom: 12px; 
-            font-size: 19px; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 8px;
-        }
-        
-        .reflection-body { font-size: 17px; text-align: justify; white-space: pre-line; color: #555; }
-        
-        .loader-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; text-align: center; }
-        
-        .spinner { 
-            width: 45px; 
-            height: 45px; 
-            border: 4px solid #f3f3f3; 
-            border-top: 4px solid var(--maroon); 
-            border-radius: 50%; 
-            animation: spin 1s linear infinite; 
-        }
-        
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .btn-back { color: white; font-size: 22px; text-decoration: none; transition: opacity 0.2s; }
-        .btn-back:hover { opacity: 0.7; }
-        
-        .error-msg { color: #801313; background: #fff0f0; padding: 15px; border-radius: 8px; display: none; margin-top: 20px; text-align: center; }
+        body { background-color: var(--bg); font-family: sans-serif; margin: 0; }
+        .header { background: var(--maroon); color: white; padding: 20px; text-align: center; font-weight: bold; }
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .word-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 6px solid var(--maroon); display: none; }
+        .verse-ref { color: var(--maroon); font-size: 24px; font-weight: bold; margin-bottom: 12px; display: block; }
+        .scripture { font-style: italic; font-size: 19px; margin-bottom: 20px; color: #444; line-height: 1.5; }
+        .reflection-title { font-weight: bold; color: var(--maroon); margin-bottom: 10px; }
+        .reflection { font-size: 17px; color: #555; white-space: pre-line; text-align: justify; }
+        .loader { text-align: center; margin-top: 100px; color: #888; font-size: 18px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i></a>
-        <h1 style="font-size:18px; text-transform: uppercase; letter-spacing: 1px;">Neno la Leo</h1>
-    </div>
+    <div class="header">NENO LA LEO</div>
 
     <div class="container">
-        <div id="loader" class="loader-container">
-            <div class="spinner"></div>
-            <p style="margin-top:20px; color: #888; font-weight: 500;">Inapakia neno la uzima...</p>
+        <div id="loader" class="loader">
+            <i class="fas fa-spinner fa-spin"></i><br><br>
+            Inapakia neno...
         </div>
-
-        <div id="error-box" class="error-msg"></div>
 
         <div id="word-card" class="word-card">
             <span id="v-title" class="verse-ref"></span>
-            <div id="v-scripture" class="scripture-box"></div>
-            
-            <div class="reflection-title">
-                <i class="fa-solid fa-dove"></i> Tafakari ya Leo
-            </div>
-            <div id="v-reflection" class="reflection-body"></div>
+            <div id="v-scripture" class="scripture"></div>
+            <div class="reflection-title">TAFAKARI YA LEO:</div>
+            <div id="v-reflection" class="reflection"></div>
         </div>
     </div>
 
     <script>
-        // Mipangilio ya REST API (Hii haihitaji API Key kwa kusoma tu kama Rules ziko wazi)
-        const projectID = "viwawa-app";
-        const documentPath = "huduma/biblia"; 
-        const url = `https://firestore.googleapis.com/v1/projects/${projectID}/databases/(default)/documents/${documentPath}`;
+        // Njia ya moja kwa moja ya leo/neno
+        const url = "https://firestore.googleapis.com/v1/projects/viwawa-app/databases/(default)/documents/leo/neno";
 
-        async function fetchBibleData() {
-            const loader = document.getElementById('loader');
-            const card = document.getElementById('word-card');
-            const errorBox = document.getElementById('error-box');
-
+        async function vutaNeno() {
             try {
                 const response = await fetch(url);
-                
-                if (!response.ok) {
-                    throw new Error("Imeshindwa kuunganisha na Database. Hakikisha Rules ziko 'if true'");
-                }
-
                 const data = await response.json();
 
                 if (data.fields) {
-                    const f = data.fields;
+                    // Kuingiza data kutoka Firebase REST API
+                    document.getElementById('v-title').innerText = data.fields.mstari.stringValue;
+                    document.getElementById('v-scripture').innerText = data.fields.maandiko.stringValue;
+                    document.getElementById('v-reflection').innerText = data.fields.tafakari.stringValue;
 
-                    // Mbinu ya kunasa data hata kama herufi ni kubwa au ndogo
-                    const mstari = f.mstari || f.Mstari || f.MSTARI;
-                    const maandiko = f.maandiko || f.Maandiko || f.MAANDIKO;
-                    const tafakari = f.tafakari || f.Tafakari || f.TAFAKARI;
-
-                    document.getElementById('v-title').innerText = mstari ? mstari.stringValue : "Mstari haujapatikana";
-                    document.getElementById('v-scripture').innerText = maandiko ? maandiko.stringValue : "Maandiko hayajapatikana";
-                    document.getElementById('v-reflection').innerText = tafakari ? tafakari.stringValue : "Tafakari haijapatikana";
-
-                    loader.style.display = 'none';
-                    card.style.display = 'block';
+                    // Onyesha kadi
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('word-card').style.display = 'block';
                 } else {
-                    loader.style.display = 'none';
-                    errorBox.style.display = 'block';
-                    errorBox.innerText = "Data haijapatikana. Hakikisha Document inaitwa 'biblia' ndani ya Collection 'huduma'.";
+                    document.getElementById('loader').innerText = "Database imepokea ombi lakini imekuta chumba kiko tupu.";
                 }
-
-            } catch (err) {
-                console.error(err);
-                loader.style.display = 'none';
-                errorBox.style.display = 'block';
-                errorBox.innerHTML = "<b>Tatizo la Mtandao</b><br>Tafadhali kagua muunganisho wako kisha refresh ukurasa huu.";
+            } catch (error) {
+                document.getElementById('loader').innerText = "Imeshindwa kufika kwenye Database. Refresh ukurasa.";
             }
         }
 
-        // Anza kazi
-        fetchBibleData();
+        vutaNeno();
     </script>
 </body>
 </html>

@@ -7,70 +7,59 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --maroon: #801313; --bg: #f8f9fa; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        body { background-color: var(--bg); color: #333; }
-        .header { background: var(--maroon); color: white; padding: 20px; display: flex; align-items: center; gap: 15px; }
-        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
-        .word-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 6px solid var(--maroon); display: none; }
-        .verse-ref { color: var(--maroon); font-size: 24px; font-weight: bold; margin-bottom: 12px; display: block; }
-        .scripture-box { background: #fff9f9; padding: 18px; border-radius: 10px; font-style: italic; font-size: 18px; margin-bottom: 25px; border: 1px dashed #e0baba; }
-        .reflection-title { font-weight: bold; color: var(--maroon); margin-bottom: 12px; font-size: 19px; }
-        .reflection-body { font-size: 16.5px; text-align: justify; white-space: pre-line; }
-        .loader-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 70vh; }
-        .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--maroon); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        body { background-color: var(--bg); font-family: sans-serif; margin: 0; }
+        .header { background: var(--maroon); color: white; padding: 20px; text-align: center; font-weight: bold; }
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .word-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: none; }
+        .verse-ref { color: var(--maroon); font-size: 22px; font-weight: bold; margin-bottom: 10px; display: block; }
+        .scripture { font-style: italic; font-size: 18px; margin-bottom: 20px; color: #444; }
+        .reflection { font-size: 16px; color: #555; white-space: pre-line; }
+        .loader { text-align: center; margin-top: 50px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <a href="index.html" style="color:white; text-decoration:none;"><i class="fa-solid fa-arrow-left"></i></a>
-        <h1 style="font-size:18px;">NENO LA LEO</h1>
-    </div>
+    <div class="header">NENO LA LEO</div>
 
     <div class="container">
-        <div id="loader" class="loader-container">
-            <div class="spinner"></div>
-            <p id="status-msg" style="margin-top:20px;">Inatafuta neno...</p>
-        </div>
+        <div id="loader" class="loader">Inapakia neno...</div>
 
         <div id="word-card" class="word-card">
             <span id="v-title" class="verse-ref"></span>
-            <div id="v-scripture" class="scripture-box"></div>
-            <div class="reflection-title"><i class="fa-solid fa-dove"></i> Tafakari ya Leo</div>
-            <div id="v-reflection" class="reflection-body"></div>
+            <div id="v-scripture" class="scripture"></div>
+            <hr style="border: 0.5px solid #eee; margin: 15px 0;">
+            <div style="font-weight:bold; color:var(--maroon); margin-bottom:10px;">TAFAKARI:</div>
+            <div id="v-reflection" class="reflection"></div>
         </div>
     </div>
 
     <script>
+        // Link ya uhakika ya REST API
         const url = "https://firestore.googleapis.com/v1/projects/viwawa-app/databases/(default)/documents/huduma/biblia";
 
-        async function vutaData() {
+        async function getBibleWord() {
             try {
                 const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error("Tatizo la Rules au Mtandao");
-                }
                 const data = await response.json();
-                
+
                 if (data.fields) {
-                    // Tunatumia .stringValue kwa sababu ndivyo Firestore REST API inavyotoa data
+                    // Kuingiza data
                     document.getElementById('v-title').innerText = data.fields.mstari.stringValue;
                     document.getElementById('v-scripture').innerText = data.fields.maandiko.stringValue;
                     document.getElementById('v-reflection').innerText = data.fields.tafakari.stringValue;
 
+                    // Kuonyesha kadi
                     document.getElementById('loader').style.display = 'none';
                     document.getElementById('word-card').style.display = 'block';
+                } else {
+                    document.getElementById('loader').innerText = "Data haijapatikana kwnye database.";
                 }
-            } catch (kosa) {
-                document.getElementById('status-msg').innerHTML = 
-                    "<b style='color:red;'>Bado inashindwa kufika!</b><br>Jaribu ku-refresh baada ya sekunde 10.";
-                console.log(kosa);
+            } catch (error) {
+                document.getElementById('loader').innerText = "Angalia internet yako kisha refresh.";
             }
         }
 
-        vutaData();
+        getBibleWord();
     </script>
 </body>
 </html>
-

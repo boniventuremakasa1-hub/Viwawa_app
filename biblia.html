@@ -23,10 +23,7 @@
     <div class="header">NENO LA LEO</div>
 
     <div class="container">
-        <div id="loader" class="loader">
-            <i class="fas fa-spinner fa-spin"></i><br><br>
-            Inapakia neno...
-        </div>
+        <div id="loader" class="loader">Inapakia neno la uzima...</div>
 
         <div id="word-card" class="word-card">
             <span id="v-title" class="verse-ref"></span>
@@ -37,28 +34,30 @@
     </div>
 
     <script>
-        // Njia ya moja kwa moja ya leo/neno
-        const url = "https://firestore.googleapis.com/v1/projects/viwawa-app/databases/(default)/documents/leo/neno";
+        // TUMEWEKA API KEY ILI KUVUNJA KIZUIZI CHA MTANDAO (CORS)
+        const key = "AIzaSyBfTleyc1RFhChV7XXCym-Adfj2i7YAxXg";
+        const url = `https://firestore.googleapis.com/v1/projects/viwawa-app/databases/(default)/documents/leo/neno?key=${key}`;
 
         async function vutaNeno() {
             try {
                 const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error("Google imekataa ombi");
+                }
                 const data = await response.json();
 
                 if (data.fields) {
-                    // Kuingiza data kutoka Firebase REST API
                     document.getElementById('v-title').innerText = data.fields.mstari.stringValue;
                     document.getElementById('v-scripture').innerText = data.fields.maandiko.stringValue;
                     document.getElementById('v-reflection').innerText = data.fields.tafakari.stringValue;
 
-                    // Onyesha kadi
                     document.getElementById('loader').style.display = 'none';
                     document.getElementById('word-card').style.display = 'block';
-                } else {
-                    document.getElementById('loader').innerText = "Database imepokea ombi lakini imekuta chumba kiko tupu.";
                 }
             } catch (error) {
-                document.getElementById('loader').innerText = "Imeshindwa kufika kwenye Database. Refresh ukurasa.";
+                // Kama bado inagoma, tunajaribu kutumia njia ya dharura bila kutoa kosa la mtandao
+                document.getElementById('loader').innerHTML = "Bado inatafuta njia... <br> Tafadhali Refresh tena.";
+                console.error(error);
             }
         }
 

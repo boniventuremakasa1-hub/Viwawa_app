@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --maroon: #801313; --bg: #f8f9fa; }
-        body { background-color: var(--bg); font-family: sans-serif; margin: 0; }
+        body { background-color: var(--bg); font-family: sans-serif; margin: 0; padding: 0; }
         .header { background: var(--maroon); color: white; padding: 20px; text-align: center; font-weight: bold; }
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
         .word-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 6px solid var(--maroon); display: none; }
@@ -21,13 +21,8 @@
 <body>
 
     <div class="header">NENO LA LEO</div>
-
     <div class="container">
-        <div id="loader" class="loader">
-            <i class="fas fa-spinner fa-spin"></i><br><br>
-            Inafungua njia ya Database...
-        </div>
-
+        <div id="loader" class="loader">Inapakia neno...</div>
         <div id="word-card" class="word-card">
             <span id="v-title" class="verse-ref"></span>
             <div id="v-scripture" class="scripture"></div>
@@ -37,16 +32,17 @@
     </div>
 
     <script>
-        // Tunatumia link ya REST yenye API Key ndani yake
-        const url = "https://firestore.googleapis.com/v1/projects/viwawa-app/databases/(default)/documents/leo/neno?key=AIzaSyBfTleyc1RFhChV7XXCym-Adfj2i7YAxXg";
+        // TUNAWEKA LINK KAMILI YA GOOGLE CLOUD ILI KUEPUKA 404
+        const url = "https://firestore.googleapis.com/v1/projects/viwawa-app/databases/(default)/documents/leo/neno";
 
         function vutaNeno() {
             var xhr = new XMLHttpRequest();
             xhr.open("GET", url, true);
             xhr.onload = function () {
-                if (xhr.status >= 200 && xhr.status < 300) {
+                if (xhr.status === 200) {
                     var data = JSON.parse(xhr.responseText);
                     if (data.fields) {
+                        // Kuingiza data kwa usahihi
                         document.getElementById('v-title').innerText = data.fields.mstari.stringValue;
                         document.getElementById('v-scripture').innerText = data.fields.maandiko.stringValue;
                         document.getElementById('v-reflection').innerText = data.fields.tafakari.stringValue;
@@ -55,11 +51,11 @@
                         document.getElementById('word-card').style.display = 'block';
                     }
                 } else {
-                    document.getElementById('loader').innerHTML = "Google imekataa ombi (Error: " + xhr.status + "). <br> Hakikisha Firestore Rules ziko 'if true'.";
+                    document.getElementById('loader').innerHTML = "Hitilafu: " + xhr.status + "<br>Hakikisha jina ni 'leo' na 'neno' kule Firebase.";
                 }
             };
             xhr.onerror = function () {
-                document.getElementById('loader').innerHTML = "Bado kuna kizuizi cha mtandao. <br> Jaribu kuzima Data na kuwasha tena.";
+                document.getElementById('loader').innerHTML = "Imeshindwa kuunganisha. Jaribu tena.";
             };
             xhr.send();
         }
@@ -68,3 +64,4 @@
     </script>
 </body>
 </html>
+

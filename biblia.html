@@ -10,92 +10,19 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <style>
-        :root { 
-            --maroon: #801313; 
-            --bg: #f8f9fa; 
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg); color: #333; line-height: 1.6; }
-        
-        .header { 
-            background: var(--maroon); 
-            color: white; 
-            padding: 20px; 
-            display: flex; 
-            align-items: center; 
-            gap: 15px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
+        :root { --maroon: #801313; --bg: #f8f9fa; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg); color: #333; }
+        .header { background: var(--maroon); color: white; padding: 20px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; z-index: 1000; }
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
-        
-        .word-card { 
-            background: white; 
-            padding: 25px; 
-            border-radius: 15px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            border-left: 6px solid var(--maroon); 
-            display: none; 
-            margin-top: 10px;
-        }
-        
-        .verse-ref { 
-            color: var(--maroon); 
-            font-size: 24px; 
-            font-weight: 800; 
-            margin-bottom: 12px; 
-            display: block; 
-        }
-        
-        .scripture-box { 
-            background: #fff9f9; 
-            padding: 18px; 
-            border-radius: 10px; 
-            font-style: italic; 
-            font-size: 18px; 
-            margin-bottom: 25px; 
-            border: 1px dashed #e0baba;
-            color: #444;
-        }
-        
-        .reflection-title { 
-            font-weight: bold; 
-            color: var(--maroon); 
-            margin-bottom: 12px; 
-            font-size: 19px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .reflection-body { 
-            font-size: 16.5px; 
-            text-align: justify; 
-            white-space: pre-line; 
-            color: #555;
-        }
-
-        .loader-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 70vh;
-            text-align: center;
-        }
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--maroon);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+        .word-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 6px solid var(--maroon); display: none; margin-top: 10px; }
+        .verse-ref { color: var(--maroon); font-size: 24px; font-weight: 800; margin-bottom: 12px; display: block; }
+        .scripture-box { background: #fff9f9; padding: 18px; border-radius: 10px; font-style: italic; font-size: 18px; margin-bottom: 25px; border: 1px dashed #e0baba; }
+        .reflection-title { font-weight: bold; color: var(--maroon); margin-bottom: 12px; font-size: 19px; display: flex; align-items: center; gap: 8px; }
+        .reflection-body { font-size: 16.5px; text-align: justify; white-space: pre-line; color: #555; }
+        .loader-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 70vh; text-align: center; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--maroon); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
         .btn-back { color: white; font-size: 22px; text-decoration: none; }
     </style>
 </head>
@@ -103,62 +30,55 @@
 
     <div class="header">
         <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i></a>
-        <h1 style="font-size:18px; text-transform: uppercase; letter-spacing: 1px;">Neno la Leo</h1>
+        <h1 style="font-size:18px;">NENO LA LEO</h1>
     </div>
 
     <div class="container">
         <div id="loader" class="loader-container">
             <div class="spinner"></div>
-            <p id="status-msg" style="margin-top:20px; color: #666; font-weight: 500;">Inapakia kutoka Firebase...</p>
+            <p id="status-msg" style="margin-top:20px;">Inapakia kutoka Firebase...</p>
         </div>
 
         <div id="word-card" class="word-card">
             <span id="v-title" class="verse-ref"></span>
             <div id="v-scripture" class="scripture-box"></div>
-            
-            <div class="reflection-title">
-                <i class="fa-solid fa-dove"></i> Tafakari ya Leo
-            </div>
+            <div class="reflection-title"><i class="fa-solid fa-dove"></i> Tafakari ya Leo</div>
             <div id="v-reflection" class="reflection-body"></div>
         </div>
     </div>
 
     <script>
-        // Firebase Configuration
+        // CONFIGURATION YAKO HALISI
         const firebaseConfig = {
-            apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
+            apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wDd-8A",
             authDomain: "viwawa-app.firebaseapp.com",
+            databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com",
             projectId: "viwawa-app",
             storageBucket: "viwawa-app.firebasestorage.app",
-            appId: "1:523436472007:web:dda010d18fd00ea60070e2"
+            messagingSenderId: "523436472007",
+            appId: "1:523436472007:web:dda010d18fd00ea60070e2",
+            measurementId: "G-KCF8BFTMBW"
         };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // MUHIMU: Tunatumia njia ya leo/neno kulingana na Firebase yako ya sasa
+        // Kusoma kutoka Collection: leo | Document: neno
         db.collection("leo").doc("neno").onSnapshot((doc) => {
-            const loader = document.getElementById('loader');
-            const card = document.getElementById('word-card');
-            const statusMsg = document.getElementById('status-msg');
-
             if (doc.exists) {
                 const data = doc.data();
-                
-                // Kusoma majina ya fields kama yalivyo kule Firestore
-                document.getElementById('v-title').innerText = data.mstari || "Mstari haupo";
-                document.getElementById('v-scripture').innerText = data.maandiko || "Maandiko hayapo";
-                document.getElementById('v-reflection').innerText = data.tafakari || "Tafakari haipo";
+                document.getElementById('v-title').innerText = data.mstari || "";
+                document.getElementById('v-scripture').innerText = data.maandiko || "";
+                document.getElementById('v-reflection').innerText = data.tafakari || "";
 
-                loader.style.display = 'none';
-                card.style.display = 'block';
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('word-card').style.display = 'block';
             } else {
-                statusMsg.innerHTML = "<span style='color:red;'>Neno halijapatikana kwnye Database.<br><small>Hakikisha njia ni leo/neno</small></span>";
+                document.getElementById('status-msg').innerHTML = "<span style='color:red;'>Neno halijapatikana kwnye Database.<br><small>Hakikisha njia ni leo/neno</small></span>";
             }
         }, (error) => {
-            console.error("Firebase Error: ", error);
-            document.getElementById('status-msg').innerText = "Hitilafu ya Firebase: " + error.message;
+            document.getElementById('status-msg').innerText = "Hitilafu: " + error.message;
         });
     </script>
 </body>

@@ -4,59 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neno la Leo - VIWAWA</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <style>
-        :root { --maroon: #801313; --bg: #f8f9fa; }
-        body { background-color: var(--bg); font-family: sans-serif; margin: 0; padding: 0; }
-        .header { background: var(--maroon); color: white; padding: 20px; text-align: center; font-weight: bold; }
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
-        .word-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 6px solid var(--maroon); display: none; }
-        .verse-ref { color: var(--maroon); font-size: 24px; font-weight: bold; margin-bottom: 12px; display: block; }
-        .scripture { font-style: italic; font-size: 19px; margin-bottom: 20px; color: #444; line-height: 1.5; }
-        .reflection-title { font-weight: bold; color: var(--maroon); margin-bottom: 10px; }
-        .reflection { font-size: 17px; color: #555; white-space: pre-line; text-align: justify; }
+        :root { --maroon: #801313; --bg: #f4f4f4; }
+        body { background-color: var(--bg); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        .header { background: var(--maroon); color: white; padding: 25px; text-align: center; font-size: 22px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .container { padding: 20px; max-width: 600px; margin: auto; }
+        .card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-top: 10px solid var(--maroon); display: none; margin-top: 20px; }
+        .mstari { color: var(--maroon); font-size: 26px; font-weight: 800; margin-bottom: 15px; }
+        .maandiko { font-size: 20px; line-height: 1.6; color: #333; font-style: italic; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        .tafakari-label { font-weight: bold; color: var(--maroon); text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
+        .tafakari { font-size: 18px; color: #555; line-height: 1.7; margin-top: 10px; }
         .loader { text-align: center; margin-top: 100px; color: #888; font-size: 18px; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--maroon); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div class="header">NENO LA LEO</div>
-    <div class="container">
-        <div id="loader" class="loader">Inapakia neno la uzima...</div>
-        <div id="word-card" class="word-card">
-            <span id="v-title" class="verse-ref"></span>
-            <div id="v-scripture" class="scripture"></div>
-            <div class="reflection-title">TAFAKARI YA LEO:</div>
-            <div id="v-reflection" class="reflection"></div>
-        </div>
+<div class="header">VIWAWA - NENO LA LEO</div>
+
+<div class="container">
+    <div id="loading" class="loader">
+        <div class="spinner"></div><br>
+        Inatafuta Neno la Uzima...
     </div>
 
-    <script>
-        // Link hii sasa hivi haina API Key ili kuzuia zile email za GitHub, 
-        // itafanya kazi kama Firestore Rules ziko "allow read: if true;"
-        const url = "https://firestore.googleapis.com/v1/projects/viwawa-app/databases/(default)/documents/leo/neno";
+    <div id="nenoCard" class="card">
+        <div id="txtMstari" class="mstari"></div>
+        <div id="txtMaandiko" class="maandiko"></div>
+        <div class="tafakari-label">Tafakari ya Leo</div>
+        <div id="txtTafakari" class="tafakari"></div>
+    </div>
+</div>
 
-        async function vutaNeno() {
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
+<script>
+    // Config iliyothibitishwa kutoka kwenye settings zako
+    const firebaseConfig = {
+        apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
+        authDomain: "viwawa-app.firebaseapp.com",
+        projectId: "viwawa-app"
+    };
 
-                if (data.fields) {
-                    // Kuingiza data kwa usahihi kulingana na picha yako ya Firebase
-                    document.getElementById('v-title').innerText = data.fields.mstari.stringValue;
-                    document.getElementById('v-scripture').innerText = data.fields.maandiko.stringValue;
-                    document.getElementById('v-reflection').innerText = data.fields.tafakari.stringValue;
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
 
-                    document.getElementById('loader').style.display = 'none';
-                    document.getElementById('word-card').style.display = 'block';
-                } else {
-                    document.getElementById('loader').innerHTML = "Imeshindwa kusoma data. <br>Hakikisha Firestore Rules zimeruhusu (if true).";
-                }
-            } catch (error) {
-                document.getElementById('loader').innerText = "Hitilafu ya mtandao.";
+    // Kazi ya kuvuta data bila mzunguko
+    function pakiaNeno() {
+        db.collection("leo").doc("neno").get()
+        .then((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                document.getElementById('txtMstari').innerText = data.mstari;
+                document.getElementById('txtMaandiko').innerText = data.maandiko;
+                document.getElementById('txtTafakari').innerText = data.tafakari;
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('nenoCard').style.display = 'block';
+            } else {
+                document.getElementById('loading').innerHTML = "Hitilafu: Data ya 'leo/neno' haijaonekana kule Firebase.";
             }
-        }
-        vutaNeno();
-    </script>
+        })
+        .catch((error) => {
+            console.error("Error: ", error);
+            document.getElementById('loading').innerHTML = "Imeshindwa kuunganisha: <br>" + error.message;
+        });
+    }
+
+    pakiaNeno();
+</script>
+
 </body>
 </html>

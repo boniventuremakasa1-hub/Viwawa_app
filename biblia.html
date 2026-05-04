@@ -12,7 +12,7 @@
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
         .word-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 6px solid var(--maroon); display: none; }
         .verse-ref { color: var(--maroon); font-size: 24px; font-weight: bold; margin-bottom: 12px; display: block; }
-        .scripture { font-style: italic; font-size: 18px; margin-bottom: 20px; color: #444; line-height: 1.5; }
+        .scripture { font-style: italic; font-size: 19px; margin-bottom: 20px; color: #444; line-height: 1.5; }
         .reflection-title { font-weight: bold; color: var(--maroon); margin-bottom: 10px; }
         .reflection { font-size: 17px; color: #555; white-space: pre-line; text-align: justify; }
         .loader { text-align: center; margin-top: 100px; color: #888; font-size: 18px; }
@@ -32,10 +32,9 @@
     </div>
 
     <script>
-        // Taarifa zilizochukuliwa kutoka kwenye picha yako ya Settings
-        const projectID = "viwawa-app"; 
-        const apiKey = "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A"; 
-        const url = `https://firestore.googleapis.com/v1/projects/${projectID}/databases/(default)/documents/leo/neno?key=${apiKey}`;
+        // Link hii sasa hivi haina API Key ili kuzuia zile email za GitHub, 
+        // itafanya kazi kama Firestore Rules ziko "allow read: if true;"
+        const url = "https://firestore.googleapis.com/v1/projects/viwawa-app/databases/(default)/documents/leo/neno";
 
         async function vutaNeno() {
             try {
@@ -43,18 +42,18 @@
                 const data = await response.json();
 
                 if (data.fields) {
-                    // Kuingiza data kutoka Firebase
+                    // Kuingiza data kwa usahihi kulingana na picha yako ya Firebase
                     document.getElementById('v-title').innerText = data.fields.mstari.stringValue;
                     document.getElementById('v-scripture').innerText = data.fields.maandiko.stringValue;
                     document.getElementById('v-reflection').innerText = data.fields.tafakari.stringValue;
 
                     document.getElementById('loader').style.display = 'none';
                     document.getElementById('word-card').style.display = 'block';
-                } else if (data.error) {
-                    document.getElementById('loader').innerHTML = "Hitilafu: " + data.error.message;
+                } else {
+                    document.getElementById('loader').innerHTML = "Imeshindwa kusoma data. <br>Hakikisha Firestore Rules zimeruhusu (if true).";
                 }
             } catch (error) {
-                document.getElementById('loader').innerText = "Imeshindwa kuunganisha na Google.";
+                document.getElementById('loader').innerText = "Hitilafu ya mtandao.";
             }
         }
         vutaNeno();

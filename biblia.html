@@ -14,19 +14,15 @@
         .verse-ref { color: var(--maroon); font-size: 24px; font-weight: bold; margin-bottom: 12px; display: block; }
         .scripture { font-style: italic; font-size: 18px; margin-bottom: 20px; color: #444; line-height: 1.5; }
         .reflection-title { font-weight: bold; color: var(--maroon); margin-bottom: 10px; }
-        .reflection { font-size: 17px; color: #555; white-space: pre-line; }
-        .loader { text-align: center; margin-top: 100px; color: #888; font-size: 16px; }
+        .reflection { font-size: 17px; color: #555; white-space: pre-line; text-align: justify; }
+        .loader { text-align: center; margin-top: 100px; color: #888; font-size: 18px; }
     </style>
 </head>
 <body>
 
     <div class="header">NENO LA LEO</div>
     <div class="container">
-        <div id="loader" class="loader">
-            <i class="fas fa-spinner fa-spin"></i><br><br>
-            Inatafuta neno...
-        </div>
-
+        <div id="loader" class="loader">Inapakia neno la uzima...</div>
         <div id="word-card" class="word-card">
             <span id="v-title" class="verse-ref"></span>
             <div id="v-scripture" class="scripture"></div>
@@ -36,35 +32,31 @@
     </div>
 
     <script>
-        // Tunajaribu njia mbili tofauti kama ya kwanza ikigoma
-        const projectID = "viwawa-app";
-        const url1 = `https://firestore.googleapis.com/v1/projects/${projectID}/databases/(default)/documents/leo/neno`;
+        // Taarifa zilizochukuliwa kutoka kwenye picha yako ya Settings
+        const projectID = "viwawa-app"; 
+        const apiKey = "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A"; 
+        const url = `https://firestore.googleapis.com/v1/projects/${projectID}/databases/(default)/documents/leo/neno?key=${apiKey}`;
 
         async function vutaNeno() {
             try {
-                const response = await fetch(url1);
-                
-                if (response.status === 404) {
-                    document.getElementById('loader').innerHTML = 
-                        "<b style='color:red;'>Hitilafu 404:</b><br>Google haioni 'leo/neno'.<br>Hakikisha umeweka neno kule Firebase.";
-                    return;
-                }
-
+                const response = await fetch(url);
                 const data = await response.json();
 
                 if (data.fields) {
+                    // Kuingiza data kutoka Firebase
                     document.getElementById('v-title').innerText = data.fields.mstari.stringValue;
                     document.getElementById('v-scripture').innerText = data.fields.maandiko.stringValue;
                     document.getElementById('v-reflection').innerText = data.fields.tafakari.stringValue;
 
                     document.getElementById('loader').style.display = 'none';
                     document.getElementById('word-card').style.display = 'block';
+                } else if (data.error) {
+                    document.getElementById('loader').innerHTML = "Hitilafu: " + data.error.message;
                 }
             } catch (error) {
-                document.getElementById('loader').innerText = "Imeshindwa kufika Google: " + error.message;
+                document.getElementById('loader').innerText = "Imeshindwa kuunganisha na Google.";
             }
         }
-
         vutaNeno();
     </script>
 </body>

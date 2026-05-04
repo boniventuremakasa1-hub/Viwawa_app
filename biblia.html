@@ -78,7 +78,6 @@
             color: #555;
         }
 
-        /* Loader Style */
         .loader-container {
             display: flex;
             flex-direction: column;
@@ -110,7 +109,7 @@
     <div class="container">
         <div id="loader" class="loader-container">
             <div class="spinner"></div>
-            <p id="status-msg" style="margin-top:20px; color: #666; font-weight: 500;">Inatafuta Neno la Leo...</p>
+            <p id="status-msg" style="margin-top:20px; color: #666; font-weight: 500;">Inapakia kutoka Firebase...</p>
         </div>
 
         <div id="word-card" class="word-card">
@@ -138,7 +137,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Sikiliza mabadiliko kwenye Collection: leo | Document: neno
+        // MUHIMU: Tunatumia njia ya leo/neno kulingana na Firebase yako ya sasa
         db.collection("leo").doc("neno").onSnapshot((doc) => {
             const loader = document.getElementById('loader');
             const card = document.getElementById('word-card');
@@ -147,20 +146,19 @@
             if (doc.exists) {
                 const data = doc.data();
                 
-                // Jaza data kutumia majina yako ya Kiswahili
-                document.getElementById('v-title').innerText = data.mstari || "Mstari haukuwekwa";
-                document.getElementById('v-scripture').innerText = data.maandiko || "Maandiko hayakuwekwa";
-                document.getElementById('v-reflection').innerText = data.tafakari || "Tafakari haikuwekwa";
+                // Kusoma majina ya fields kama yalivyo kule Firestore
+                document.getElementById('v-title').innerText = data.mstari || "Mstari haupo";
+                document.getElementById('v-scripture').innerText = data.maandiko || "Maandiko hayapo";
+                document.getElementById('v-reflection').innerText = data.tafakari || "Tafakari haipo";
 
-                // Onyesha kadi, ficha loader
                 loader.style.display = 'none';
                 card.style.display = 'block';
             } else {
-                statusMsg.innerHTML = "<span style='color:red;'>Neno halijapatikana kwnye Database.<br><small>Hakikisha Collection ni 'leo' na Document ni 'neno'</small></span>";
+                statusMsg.innerHTML = "<span style='color:red;'>Neno halijapatikana kwnye Database.<br><small>Hakikisha njia ni leo/neno</small></span>";
             }
         }, (error) => {
             console.error("Firebase Error: ", error);
-            document.getElementById('status-msg').innerText = "Hitilafu: " + error.message;
+            document.getElementById('status-msg').innerText = "Hitilafu ya Firebase: " + error.message;
         });
     </script>
 </body>

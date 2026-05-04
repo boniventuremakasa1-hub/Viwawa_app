@@ -5,26 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neno la Leo - VIWAWA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <style>
         :root { --maroon: #801313; --bg: #f8f9fa; }
-        body { background-color: var(--bg); font-family: sans-serif; margin: 0; }
+        body { background-color: var(--bg); font-family: sans-serif; margin: 0; padding: 0; }
         .header { background: var(--maroon); color: white; padding: 20px; text-align: center; font-weight: bold; }
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
         .word-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 6px solid var(--maroon); display: none; }
         .verse-ref { color: var(--maroon); font-size: 24px; font-weight: bold; margin-bottom: 12px; display: block; }
         .scripture { font-style: italic; font-size: 19px; margin-bottom: 20px; color: #444; line-height: 1.5; }
         .reflection-title { font-weight: bold; color: var(--maroon); margin-bottom: 10px; }
-        .reflection { font-size: 17px; color: #555; white-space: pre-line; text-align: justify; }
-        .loader { text-align: center; margin-top: 100px; color: #888; font-size: 18px; }
+        .reflection { font-size: 17px; color: #555; white-space: pre-line; }
+        .loader { text-align: center; margin-top: 100px; color: #888; }
     </style>
 </head>
 <body>
 
     <div class="header">NENO LA LEO</div>
-
     <div class="container">
-        <div id="loader" class="loader">Inapakia neno la uzima...</div>
-
+        <div id="loader" class="loader"><i class="fas fa-spinner fa-spin"></i> Inafungua Database...</div>
         <div id="word-card" class="word-card">
             <span id="v-title" class="verse-ref"></span>
             <div id="v-scripture" class="scripture"></div>
@@ -34,34 +36,41 @@
     </div>
 
     <script>
-        // TUMEWEKA API KEY ILI KUVUNJA KIZUIZI CHA MTANDAO (CORS)
-        const key = "AIzaSyBfTleyc1RFhChV7XXCym-Adfj2i7YAxXg";
-        const url = `https://firestore.googleapis.com/v1/projects/viwawa-app/databases/(default)/documents/leo/neno?key=${key}`;
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfTleyc1RFhChV7XXCym-Adfj2i7YAxXg",
+            authDomain: "viwawa-app.firebaseapp.com",
+            projectId: "viwawa-app"
+        };
 
-        async function vutaNeno() {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error("Google imekataa ombi");
-                }
-                const data = await response.json();
-
-                if (data.fields) {
-                    document.getElementById('v-title').innerText = data.fields.mstari.stringValue;
-                    document.getElementById('v-scripture').innerText = data.fields.maandiko.stringValue;
-                    document.getElementById('v-reflection').innerText = data.fields.tafakari.stringValue;
-
-                    document.getElementById('loader').style.display = 'none';
-                    document.getElementById('word-card').style.display = 'block';
-                }
-            } catch (error) {
-                // Kama bado inagoma, tunajaribu kutumia njia ya dharura bila kutoa kosa la mtandao
-                document.getElementById('loader').innerHTML = "Bado inatafuta njia... <br> Tafadhali Refresh tena.";
-                console.error(error);
-            }
+        // Anza Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
+        
+        const db = firebase.firestore();
 
-        vutaNeno();
+        // Hatua ya 1: Zima "Persistence" ili kuzuia kosa la Offline
+        db.settings({ cacheSizeBytes: 0 });
+
+        // Hatua ya 2: Vuta data kutoka njia ya leo/neno
+        db.collection("leo").doc("neno").get({ source: 'server' })
+        .then((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                document.getElementById('v-title').innerText = data.mstari;
+                document.getElementById('v-scripture').innerText = data.maandiko;
+                document.getElementById('v-reflection').innerText = data.tafakari;
+
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('word-card').style.display = 'block';
+            } else {
+                document.getElementById('loader').innerText = "Database imepokea ombi lakini haijaona data kwenye leo/neno.";
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            document.getElementById('loader').innerText = "Imeshindwa kuunganisha: " + error.message;
+        });
     </script>
 </body>
 </html>

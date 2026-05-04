@@ -7,32 +7,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --maroon: #801313; --bg: #f8f9fa; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg); color: #333; line-height: 1.6; }
-        .header { background: var(--maroon); color: white; padding: 20px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        body { background-color: var(--bg); color: #333; }
+        .header { background: var(--maroon); color: white; padding: 20px; display: flex; align-items: center; gap: 15px; }
         .container { padding: 15px; max-width: 600px; margin: 0 auto; }
-        .word-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 6px solid var(--maroon); display: none; margin-top: 10px; }
-        .verse-ref { color: var(--maroon); font-size: 24px; font-weight: 800; margin-bottom: 12px; display: block; }
-        .scripture-box { background: #fff9f9; padding: 18px; border-radius: 10px; font-style: italic; font-size: 18px; margin-bottom: 25px; border: 1px dashed #e0baba; color: #444; }
-        .reflection-title { font-weight: bold; color: var(--maroon); margin-bottom: 12px; font-size: 19px; display: flex; align-items: center; gap: 8px; }
-        .reflection-body { font-size: 16.5px; text-align: justify; white-space: pre-line; color: #555; }
-        .loader-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 70vh; text-align: center; }
+        .word-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 6px solid var(--maroon); display: none; }
+        .verse-ref { color: var(--maroon); font-size: 24px; font-weight: bold; margin-bottom: 12px; display: block; }
+        .scripture-box { background: #fff9f9; padding: 18px; border-radius: 10px; font-style: italic; font-size: 18px; margin-bottom: 25px; border: 1px dashed #e0baba; }
+        .reflection-title { font-weight: bold; color: var(--maroon); margin-bottom: 12px; font-size: 19px; }
+        .reflection-body { font-size: 16.5px; text-align: justify; white-space: pre-line; }
+        .loader-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 70vh; }
         .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--maroon); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .btn-back { color: white; font-size: 22px; text-decoration: none; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i></a>
-        <h1 style="font-size:18px; text-transform: uppercase; letter-spacing: 1px;">Neno la Leo</h1>
+        <a href="index.html" style="color:white; text-decoration:none;"><i class="fa-solid fa-arrow-left"></i></a>
+        <h1 style="font-size:18px;">NENO LA LEO</h1>
     </div>
 
     <div class="container">
         <div id="loader" class="loader-container">
             <div class="spinner"></div>
-            <p id="status-msg" style="margin-top:20px; color: #666;">Inatafuta neno la leo...</p>
+            <p id="status-msg" style="margin-top:20px;">Inatafuta neno...</p>
         </div>
 
         <div id="word-card" class="word-card">
@@ -44,40 +43,33 @@
     </div>
 
     <script>
-        // Kutumia njia ya REST API - Hii haina shida ya "Offline"
-        const projectID = "viwawa-app";
-        const documentPath = "huduma/biblia"; // Njia uliyoweka kule Firebase
-        const url = `https://firestore.googleapis.com/v1/projects/${projectID}/databases/(default)/documents/${documentPath}`;
+        const url = "https://firestore.googleapis.com/v1/projects/viwawa-app/databases/(default)/documents/huduma/biblia";
 
-        async function fetchDailyWord() {
+        async function vutaData() {
             try {
                 const response = await fetch(url);
                 if (!response.ok) {
-                    throw new Error("Imeshindwa kufika kwenye database");
+                    throw new Error("Tatizo la Rules au Mtandao");
                 }
-                
                 const data = await response.json();
-
+                
                 if (data.fields) {
-                    // Kuingiza data kwenye kurasa (tunatumia stringValue ya Firebase REST)
-                    document.getElementById('v-title').innerText = data.fields.mstari ? data.fields.mstari.stringValue : "Kichwa hakikupatikana";
-                    document.getElementById('v-scripture').innerText = data.fields.maandiko ? data.fields.maandiko.stringValue : "Maandiko hayajapatikana";
-                    document.getElementById('v-reflection').innerText = data.fields.tafakari ? data.fields.tafakari.stringValue : "Tafakari haijapatikana";
+                    // Tunatumia .stringValue kwa sababu ndivyo Firestore REST API inavyotoa data
+                    document.getElementById('v-title').innerText = data.fields.mstari.stringValue;
+                    document.getElementById('v-scripture').innerText = data.fields.maandiko.stringValue;
+                    document.getElementById('v-reflection').innerText = data.fields.tafakari.stringValue;
 
-                    // Ficha loader, onyesha neno
                     document.getElementById('loader').style.display = 'none';
                     document.getElementById('word-card').style.display = 'block';
-                } else {
-                    document.getElementById('status-msg').innerText = "Neno halijaandaliwa bado.";
                 }
-            } catch (error) {
-                console.error("Error:", error);
-                document.getElementById('status-msg').innerHTML = "<span style='color:red;'>Tatizo la kiufundi: " + error.message + "</span><br><br>Hakikisha internet yako iko sawa na urudishe kodi kisha upige refresh.";
+            } catch (kosa) {
+                document.getElementById('status-msg').innerHTML = 
+                    "<b style='color:red;'>Bado inashindwa kufika!</b><br>Jaribu ku-refresh baada ya sekunde 10.";
+                console.log(kosa);
             }
         }
 
-        // Anza kuvuta neno ukurasa ukifunguka
-        fetchDailyWord();
+        vutaData();
     </script>
 </body>
 </html>

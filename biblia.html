@@ -12,17 +12,21 @@
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
         .word-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 6px solid var(--maroon); display: none; }
         .verse-ref { color: var(--maroon); font-size: 24px; font-weight: bold; margin-bottom: 12px; display: block; }
-        .scripture { font-style: italic; font-size: 19px; margin-bottom: 20px; color: #444; line-height: 1.5; }
+        .scripture { font-style: italic; font-size: 18px; margin-bottom: 20px; color: #444; line-height: 1.5; }
         .reflection-title { font-weight: bold; color: var(--maroon); margin-bottom: 10px; }
-        .reflection { font-size: 17px; color: #555; white-space: pre-line; text-align: justify; }
-        .loader { text-align: center; margin-top: 100px; color: #888; font-size: 18px; }
+        .reflection { font-size: 17px; color: #555; white-space: pre-line; }
+        .loader { text-align: center; margin-top: 100px; color: #888; font-size: 16px; }
     </style>
 </head>
 <body>
 
     <div class="header">NENO LA LEO</div>
     <div class="container">
-        <div id="loader" class="loader">Inapakia neno...</div>
+        <div id="loader" class="loader">
+            <i class="fas fa-spinner fa-spin"></i><br><br>
+            Inatafuta neno...
+        </div>
+
         <div id="word-card" class="word-card">
             <span id="v-title" class="verse-ref"></span>
             <div id="v-scripture" class="scripture"></div>
@@ -32,36 +36,36 @@
     </div>
 
     <script>
-        // TUNAWEKA LINK KAMILI YA GOOGLE CLOUD ILI KUEPUKA 404
-        const url = "https://firestore.googleapis.com/v1/projects/viwawa-app/databases/(default)/documents/leo/neno";
+        // Tunajaribu njia mbili tofauti kama ya kwanza ikigoma
+        const projectID = "viwawa-app";
+        const url1 = `https://firestore.googleapis.com/v1/projects/${projectID}/databases/(default)/documents/leo/neno`;
 
-        function vutaNeno() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", url, true);
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    var data = JSON.parse(xhr.responseText);
-                    if (data.fields) {
-                        // Kuingiza data kwa usahihi
-                        document.getElementById('v-title').innerText = data.fields.mstari.stringValue;
-                        document.getElementById('v-scripture').innerText = data.fields.maandiko.stringValue;
-                        document.getElementById('v-reflection').innerText = data.fields.tafakari.stringValue;
-
-                        document.getElementById('loader').style.display = 'none';
-                        document.getElementById('word-card').style.display = 'block';
-                    }
-                } else {
-                    document.getElementById('loader').innerHTML = "Hitilafu: " + xhr.status + "<br>Hakikisha jina ni 'leo' na 'neno' kule Firebase.";
+        async function vutaNeno() {
+            try {
+                const response = await fetch(url1);
+                
+                if (response.status === 404) {
+                    document.getElementById('loader').innerHTML = 
+                        "<b style='color:red;'>Hitilafu 404:</b><br>Google haioni 'leo/neno'.<br>Hakikisha umeweka neno kule Firebase.";
+                    return;
                 }
-            };
-            xhr.onerror = function () {
-                document.getElementById('loader').innerHTML = "Imeshindwa kuunganisha. Jaribu tena.";
-            };
-            xhr.send();
+
+                const data = await response.json();
+
+                if (data.fields) {
+                    document.getElementById('v-title').innerText = data.fields.mstari.stringValue;
+                    document.getElementById('v-scripture').innerText = data.fields.maandiko.stringValue;
+                    document.getElementById('v-reflection').innerText = data.fields.tafakari.stringValue;
+
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('word-card').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('loader').innerText = "Imeshindwa kufika Google: " + error.message;
+            }
         }
 
         vutaNeno();
     </script>
 </body>
 </html>
-

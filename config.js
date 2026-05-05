@@ -1,6 +1,4 @@
-// VIWAWA APP - CENTRAL CONFIGURATION
-// Hii ndio kodi inayounganisha GitHub na Firebase yako
-
+// VIWAWA APP - FINAL STABLE CONFIGURATION
 const firebaseConfig = {
     apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
     authDomain: "viwawa-app.firebaseapp.com",
@@ -10,11 +8,16 @@ const firebaseConfig = {
     appId: "1:238515321557:web:e000c87895e54d588308d1"
 };
 
-// Kuanzisha Firebase (Initialize)
+// Initialize Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
+} else {
+    firebase.app(); // Ikishakuwepo itumie hiyo hiyo
 }
 
-// Kurahisisha matumizi ya Database (Firestore)
 const db = firebase.firestore();
 
+// Hakikisha Database inatumia mpangilio wa tarehe wa kisasa
+db.settings({
+    timestampsInSnapshots: true
+});

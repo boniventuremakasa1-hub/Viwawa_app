@@ -1,82 +1,59 @@
 <!DOCTYPE html>
-<html lang="sw">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Andika Neno la Leo</title>
+    <title>Admin VIWAWA</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    
     <script src="config.js"></script>
-
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; border-top: 8px solid #800000; }
-        h2 { color: #800000; text-align: center; }
-        label { font-weight: bold; display: block; margin-top: 15px; color: #333; }
-        input, textarea { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; background: #800000; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; margin-top: 25px; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #4a0000; }
-        #msg { text-align: center; margin-top: 15px; font-weight: bold; }
+        body { font-family: sans-serif; padding: 20px; text-align: center; background: #f4f4f4; }
+        .box { background: white; padding: 20px; border-radius: 10px; max-width: 400px; margin: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        input, textarea { width: 90%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
+        button { background: #800000; color: white; border: none; padding: 15px; width: 95%; cursor: pointer; font-weight: bold; }
+        #status { margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
+    <div class="box">
+        <h2 style="color:#800000">VIWAWA - Sasisha Neno</h2>
+        <input type="text" id="mstari" placeholder="Mstari wa Biblia">
+        <textarea id="maandiko" placeholder="Maandiko..."></textarea>
+        <textarea id="tafakari" placeholder="Tafakari..."></textarea>
+        <button onclick="saveData()">HIFADHI SASA</button>
+        <div id="status"></div>
+    </div>
 
-<div class="card">
-    <h2>VIWAWA ADMIN</h2>
-    <p style="text-align: center; color: #666;">Sasisha Neno la Leo</p>
-    
-    <label>Mstari wa Biblia</label>
-    <input type="text" id="mstari" placeholder="Mfano: Yohane 3:16">
-    
-    <label>Maandiko</label>
-    <textarea id="maandiko" rows="3" placeholder="Andika maneno ya neno la leo..."></textarea>
-    
-    <label>Tafakari ya Leo</label>
-    <textarea id="tafakari" rows="4" placeholder="Andika tafakari fupi..."></textarea>
-    
-    <button onclick="hifadhiNeno()">HIFADHI NENO</button>
-    <div id="msg"></div>
-</div>
+    <script>
+        async function saveData() {
+            const status = document.getElementById('status');
+            const data = {
+                mstari: document.getElementById('mstari').value,
+                maandiko: document.getElementById('maandiko').value,
+                tafakari: document.getElementById('tafakari').value,
+                muda: firebase.firestore.FieldValue.serverTimestamp()
+            };
 
-<script>
-    function hifadhiNeno() {
-        const mstari = document.getElementById('mstari').value;
-        const maandiko = document.getElementById('maandiko').value;
-        const tafakari = document.getElementById('tafakari').value;
-        const msg = document.getElementById('msg');
+            if(!data.mstari || !data.maandiko) {
+                status.style.color = "orange";
+                status.innerText = "Jaza kila kitu!";
+                return;
+            }
 
-        if(!mstari || !maandiko || !tafakari) {
-            msg.style.color = "red";
-            msg.innerText = "Tafadhali jaza nafasi zote!";
-            return;
+            status.style.color = "blue";
+            status.innerText = "Inatuma data...";
+
+            try {
+                // Hapa ndipo tunapima kama Firebase inajibu
+                await db.collection("leo").doc("neno").set(data);
+                status.style.color = "green";
+                status.innerText = "IMEFANIKIWA! Neno limeingia.";
+            } catch (error) {
+                status.style.color = "red";
+                status.innerText = "Kosa la Kitaalamu: " + error.message;
+                console.error(error);
+            }
         }
-
-        msg.style.color = "blue";
-        msg.innerText = "Inahifadhi...";
-
-        // Tunahifadhi kwenye collection "leo" na document "neno"
-        db.collection("leo").doc("neno").set({
-            mstari: mstari,
-            maandiko: maandiko,
-            tafakari: tafakari,
-            tarehe: new Date().toLocaleDateString()
-        })
-        .then(() => {
-            msg.style.color = "green";
-            msg.innerText = "Safii! Neno limesambazwa kwenye App.";
-            // Safisha fomu
-            document.getElementById('mstari').value = "";
-            document.getElementById('maandiko').value = "";
-            document.getElementById('tafakari').value = "";
-        })
-        .catch((error) => {
-            msg.style.color = "red";
-            msg.innerText = "Kuna tatizo: " + error.message;
-        });
-    }
-</script>
-
+    </script>
 </body>
 </html>
-

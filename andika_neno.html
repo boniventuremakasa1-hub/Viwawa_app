@@ -2,48 +2,77 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Admin - VIWAWA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIWAWA ADMIN</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="config.js"></script>
-</head>
-<body style="font-family:sans-serif; text-align:center; padding:20px; background:#f4f4f4;">
-
-    <div style="background:white; padding:20px; border-radius:10px; max-width:400px; margin:auto; border-top:10px solid #800000;">
-        <h2 style="color:#800000">VIWAWA ADMIN</h2>
-        <input type="text" id="mstari" placeholder="Mstari" style="width:90%; padding:10px; margin:5px;"><br>
-        <textarea id="maandiko" placeholder="Maandiko" style="width:90%; padding:10px; margin:5px;"></textarea><br>
-        <textarea id="tafakari" placeholder="Tafakari" style="width:90%; padding:10px; margin:5px;"></textarea><br>
-        <button onclick="pigaKazi()" style="width:95%; padding:15px; background:#800000; color:white; border:none; cursor:pointer;">HIFADHI SASA</button>
-        <h3 id="feedback" style="color:blue;">Tayari kufanya kazi...</h3>
-    </div>
 
     <script>
-        function pigaKazi() {
-            const fb = document.getElementById('feedback');
-            const data = {
-                mstari: document.getElementById('mstari').value,
-                maandiko: document.getElementById('maandiko').value,
-                tafakari: document.getElementById('tafakari').value,
-                muda: new Date().toISOString()
-            };
+        // Hapa nimeiweka kodi hapa hapa ili isitafute faili lingine
+        const firebaseConfig = {
+            apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
+            authDomain: "viwawa-app.firebaseapp.com",
+            projectId: "viwawa-app",
+            storageBucket: "viwawa-app.appspot.com",
+            messagingSenderId: "238515321557",
+            appId: "1:238515321557:web:e000c87895e54d588308d1"
+        };
 
-            fb.innerText = "Inatuma data kwa nguvu...";
-            fb.style.color = "orange";
-
-            // Tunatumia .set kwa kutaja doc maalum
-            db.collection("leo").doc("neno").set(data)
-            .then(() => {
-                fb.innerText = "IMEFANIKIWA! Angalia Firebase sasa hivi.";
-                fb.style.color = "green";
-                alert("Data imeingia!");
-            })
-            .catch((err) => {
-                fb.innerText = "Imegoma: " + err.message;
-                fb.style.color = "red";
-                console.error(err);
-            });
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
+        const db = firebase.firestore();
     </script>
+
+    <style>
+        body { font-family: sans-serif; background: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border-top: 8px solid #800000; }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #800000; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        #status { text-align: center; margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2 style="color:#800000; text-align:center;">VIWAWA ADMIN</h2>
+    <input type="text" id="mstari" placeholder="Mstari wa Biblia">
+    <textarea id="maandiko" rows="3" placeholder="Andika maandiko..."></textarea>
+    <textarea id="tafakari" rows="3" placeholder="Andika tafakari..."></textarea>
+    <button onclick="hifadhi()">HIFADHI SASA</button>
+    <div id="status">Tayari...</div>
+</div>
+
+<script>
+    async function hifadhi() {
+        const s = document.getElementById('status');
+        const d = {
+            mstari: document.getElementById('mstari').value,
+            maandiko: document.getElementById('maandiko').value,
+            tafakari: document.getElementById('tafakari').value,
+            muda: new Date().toISOString()
+        };
+
+        if(!d.mstari || !d.maandiko) {
+            s.innerText = "Jaza nafasi zote!";
+            s.style.color = "red";
+            return;
+        }
+
+        s.innerText = "Inatuma...";
+        s.style.color = "orange";
+
+        try {
+            await db.collection("leo").doc("neno").set(d);
+            s.innerText = "IMEFANIKIWA!";
+            s.style.color = "green";
+            alert("Data imehifadhiwa!");
+        } catch (e) {
+            s.innerText = "Kosa: " + e.message;
+            s.style.color = "red";
+        }
+    }
+</script>
+
 </body>
 </html>

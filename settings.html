@@ -26,14 +26,15 @@
         .container { padding: 20px; }
         h2.section-title { font-size: 15px; color: #333; margin: 20px 0 15px; font-weight: bold; text-transform: uppercase; }
 
-        /* ADMIN ACTIONS GRID - Updated to 3 columns */
-        .admin-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 25px; }
-        .action-card { background: #fff; border: 1px solid #eee; padding: 15px 5px; border-radius: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; }
-        .action-card i { font-size: 22px; margin-bottom: 8px; display: block; }
+        /* ADMIN ACTIONS GRID - Updated to 4 items */
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 25px; }
+        .action-card { background: #fff; border: 1px solid #eee; padding: 12px 2px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; }
+        .action-card i { font-size: 20px; margin-bottom: 8px; display: block; }
         .card-tangazo i { color: #ff8c00; }
         .card-mchango i { color: #e91e63; }
         .card-neno i { color: #4caf50; }
-        .action-card span { font-weight: bold; font-size: 11px; color: #333; text-transform: uppercase; }
+        .card-ada i { color: #2196f3; }
+        .action-card span { font-weight: bold; font-size: 9px; color: #333; text-transform: uppercase; }
 
         /* INPUT FIELDS (TAARIFA BINAFSI) */
         .input-group { margin-bottom: 15px; }
@@ -60,7 +61,8 @@
         <i class="fa-solid fa-arrow-left back-btn" onclick="history.back()"></i>
         <div class="profile-img-box">
             <img src="https://via.placeholder.com/150" id="displayPic">
-            <div class="cam-badge"><i class="fa-solid fa-camera"></i></div>
+            <label for="profileInput" class="cam-badge"><i class="fa-solid fa-camera"></i></label>
+            <input type="file" id="profileInput" style="display:none;" onchange="uploadProfilePic(this)">
         </div>
         <h1 id="displayName">Boniventure Makasa</h1>
         <p>ADMIN</p>
@@ -80,6 +82,10 @@
             <div class="action-card card-neno" onclick="showForm('neno')">
                 <i class="fa-solid fa-book-bible"></i>
                 <span>Neno</span>
+            </div>
+            <div class="action-card card-ada" onclick="showForm('ada')">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <span>Ada</span>
             </div>
         </div>
 
@@ -108,6 +114,27 @@
         <button class="btn-upload" style="background:#555;" onclick="saveProfile()">HIFADHI TAARIFA</button>
 
         <div id="form-container">
+            <div id="form-ada" class="form-card" style="display:none;">
+                <h2 class="section-title">Rekodi Ada</h2>
+                <div style="background:#f9f9f9; padding:10px; border-radius:10px; margin-bottom:15px;">
+                    <label style="font-size:10px; color:var(--primary);">USAUSAJILI MPYA</label>
+                    <input type="text" id="newMemberName" class="input-field" placeholder="Jina la mwanachama">
+                    <button class="btn-upload" style="padding:8px; font-size:12px;" onclick="registerMember()">SAJILI</button>
+                </div>
+                <label>Chagua Mwanachama</label>
+                <select id="selectMember" class="input-field"></select>
+                <label style="margin-top:10px; display:block;">Chagua Mwezi</label>
+                <select id="selectMonth" class="input-field">
+                    <option value="Jan">Januari</option><option value="Feb">Februari</option>
+                    <option value="Mar">Machi</option><option value="Apr">Aprili</option>
+                    <option value="Mei">Mei</option><option value="Jun">Juni</option>
+                    <option value="Jul">Julai</option><option value="Ago">Agosti</option>
+                    <option value="Sep">Septemba</option><option value="Okt">Oktoba</option>
+                    <option value="Nov">Novemba</option><option value="Des">Desemba</option>
+                </select>
+                <button class="btn-upload" onclick="updateAda()">WEKA TIKI (✔)</button>
+            </div>
+
             <div id="form-tangazo" class="form-card" style="display:none;">
                 <h2 class="section-title">Pakia Tangazo</h2>
                 <label style="font-size:12px; font-weight:bold;">Picha ya Tangazo</label>
@@ -166,15 +193,61 @@
             document.getElementById('form-tangazo').style.display = type === 'tangazo' ? 'block' : 'none';
             document.getElementById('form-mchango').style.display = type === 'mchango' ? 'block' : 'none';
             document.getElementById('form-neno').style.display = type === 'neno' ? 'block' : 'none';
+            document.getElementById('form-ada').style.display = type === 'ada' ? 'block' : 'none';
+            if(type === 'ada') loadMembersToSelect();
             window.scrollTo(0, document.body.scrollHeight);
         }
 
+        // PICHA YA WASIFU
+        async function uploadProfilePic(input) {
+            const file = input.files[0];
+            if(!file) return;
+            try {
+                const ref = storage.ref('profiles/admin_pic');
+                await ref.put(file);
+                const url = await ref.getDownloadURL();
+                document.getElementById('displayPic').src = url;
+                alert("Picha imebadilishwa!");
+            } catch(e) { alert("Imeshindwa kupakia picha!"); }
+        }
+
+        // KAZI ZA ADA
+        async function registerMember() {
+            const name = document.getElementById('newMemberName').value;
+            if(!name) return alert("Andika jina!");
+            await db.collection("wanachama").add({ 
+                jina: name, Jan: false, Feb: false, Mar: false, Apr: false, Mei: false, Jun: false,
+                Jul: false, Ago: false, Sep: false, Okt: false, Nov: false, Des: false 
+            });
+            alert("Mwanachama amesajiliwa!");
+            loadMembersToSelect();
+        }
+
+        function loadMembersToSelect() {
+            const select = document.getElementById('selectMember');
+            db.collection("wanachama").orderBy("jina").onSnapshot(snap => {
+                select.innerHTML = '<option value="">-- Chagua Jina --</option>';
+                snap.forEach(doc => {
+                    select.innerHTML += `<option value="${doc.id}">${doc.data().jina}</option>`;
+                });
+            });
+        }
+
+        async function updateAda() {
+            const id = document.getElementById('selectMember').value;
+            const month = document.getElementById('selectMonth').value;
+            if(!id) return alert("Chagua mwanachama!");
+            let data = {}; data[month] = true;
+            await db.collection("wanachama").doc(id).update(data);
+            alert("Tiki imewekwa!");
+        }
+
+        // KAZI ZA ZAMANI
         async function uploadTangazo() {
             const file = document.getElementById('adFile').files[0];
             const title = document.getElementById('adTitle').value;
             const msg = document.getElementById('adMsg').value;
             if(!title || !msg) return alert("Jaza kichwa na maelezo!");
-            
             try {
                 let url = "";
                 if(file) {
@@ -182,49 +255,33 @@
                     await ref.put(file);
                     url = await ref.getDownloadURL();
                 }
-                await db.collection("matangazo").add({
-                    kichwa: title, ujumbe: msg, image: url,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                await db.collection("matangazo").add({ kichwa: title, ujumbe: msg, image: url, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
                 alert("Tangazo limepakiwa!");
                 location.reload();
             } catch(e) { alert("Imefeli!"); }
         }
 
-        // KAZI YA KUPAKIA NENO
         async function uploadNeno() {
             const verse = document.getElementById('wordVerse').value;
             const scripture = document.getElementById('wordScripture').value;
             const reflect = document.getElementById('wordReflect').value;
-
             if(!verse || !scripture) return alert("Jaza mstari na maandiko!");
-
-            try {
-                await db.collection("neno_leo").doc("leo").set({
-                    mstari: verse,
-                    maandiko: scripture,
-                    tafakari: reflect,
-                    tarehe: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                alert("Neno la leo limepakiwa!");
-                location.reload();
-            } catch(e) { alert("Imefeli kupakia neno!"); }
+            await db.collection("neno_leo").doc("leo").set({ mstari: verse, maandiko: scripture, tafakari: reflect, tarehe: firebase.firestore.FieldValue.serverTimestamp() });
+            alert("Neno la leo limepakiwa!");
         }
 
-        function saveProfile() {
-            const name = document.getElementById('editName').value;
-            if(name) {
-                document.getElementById('displayName').innerText = name;
-                alert("Taarifa zimehifadhiwa!");
-            }
-        }
-        
         async function uploadMchango() {
             const type = document.getElementById('mType').value;
             const name = document.getElementById('mPerson').value;
             const amt = document.getElementById('mAmount').value;
             await db.collection("michango").add({ aina: type, jina: name, kiasi: amt, tarehe: new Date() });
             alert("Mchango umerekodiwa!");
+        }
+
+        function saveProfile() {
+            const name = document.getElementById('editName').value;
+            if(name) document.getElementById('displayName').innerText = name;
+            alert("Taarifa zimehifadhiwa!");
         }
     </script>
 </body>

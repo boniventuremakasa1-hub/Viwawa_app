@@ -2,155 +2,200 @@
 <html lang="sw">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Viwawa chat</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { 
-            --navy-blue: #072e54; 
-            --bg-color: #e5ddd5; 
-            --received-bubble: #ffffff;
-            --sent-bubble: #f1f0f0; 
-            --text-main: #303030;
-            --text-sub: #8696a0;
-        }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        
-        body { 
-            background-color: var(--bg-color);
-            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mazungumzo - VIWAWA</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-        .chat-header { 
-            background: var(--navy-blue); 
+    <script>
+        // Unganisho la Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
+            authDomain: "viwawa-app.firebaseapp.com",
+            projectId: "viwawa-app",
+            storageBucket: "viwawa-app.appspot.com",
+            messagingSenderId: "238515321557",
+            appId: "1:238515321557:web:e000c87895e54d588308d1"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const db = firebase.firestore();
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #f0f2f5; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+        /* Header ya Maroon */
+        .header { 
+            background: #800000; 
             color: white; 
-            padding: 10px 12px; 
+            padding: 15px 20px; 
             display: flex; 
             align-items: center; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            gap: 15px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        .header a { color: white; text-decoration: none; font-size: 20px; }
+        .header h3 { font-size: 18px; font-weight: 600; }
+
+        /* Eneo la Meseji */
+        #chat-window { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 20px 15px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
         }
         
-        .back-btn { padding: 8px 12px 8px 5px; cursor: pointer; font-size: 18px; display: flex; align-items: center; }
+        .message { 
+            max-width: 80%; 
+            padding: 10px 14px; 
+            border-radius: 15px; 
+            font-size: 14.5px; 
+            position: relative; 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            word-wrap: break-word;
+        }
         
-        .group-profile { display: flex; align-items: center; gap: 12px; }
-        .group-img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; background: #eee; }
-        .title-area h3 { font-size: 16px; font-weight: 600; }
-        .title-area p { font-size: 11px; opacity: 0.8; }
+        /* Meseji za wengine */
+        .msg-other { 
+            background: white; 
+            align-self: flex-start; 
+            color: #333; 
+            border-bottom-left-radius: 2px; 
+        }
+        
+        /* Meseji zangu */
+        .msg-me { 
+            background: #800000; 
+            align-self: flex-end; 
+            color: white; 
+            border-bottom-right-radius: 2px; 
+        }
+        
+        .user-name { 
+            font-size: 10px; 
+            font-weight: 700; 
+            margin-bottom: 4px; 
+            display: block; 
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
 
-        .messages-container { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .message-row { display: flex; align-items: flex-start; gap: 8px; max-width: 85%; }
-        .message-row.sent { align-self: flex-end; flex-direction: row-reverse; }
-
-        .user-sms-img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 5px; }
-        .bubble { padding: 8px 12px; border-radius: 12px; font-size: 14.5px; box-shadow: 0 1px 1px rgba(0,0,0,0.1); position: relative; }
-        .received .bubble { background: var(--received-bubble); border-top-left-radius: 0; }
-        .sent .bubble { background: var(--sent-bubble); border-top-right-radius: 0; }
-
-        .u-name { font-size: 11.5px; font-weight: 700; color: #d91e18; margin-bottom: 3px; display: block; }
-        .msg-footer { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 4px; }
-        .time { font-size: 10px; color: var(--text-sub); }
-        .ticks { font-size: 13px; color: #53bdeb; }
-
-        .chat-footer { background: #f0f0f0; padding: 8px 10px; display: flex; align-items: center; gap: 8px; }
-        .input-wrapper { flex: 1; background: white; border-radius: 25px; display: flex; align-items: center; padding: 5px 15px; min-height: 42px; }
-        #msgInput { flex: 1; border: none; outline: none; font-size: 15px; padding: 5px; }
-        .icon-btn { color: var(--text-sub); font-size: 20px; cursor: pointer; }
-        .send-btn { background: var(--navy-blue); color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
+        /* Sehemu ya Kuandikia */
+        .input-area { 
+            background: white; 
+            padding: 12px 15px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            border-top: 1px solid #ddd;
+        }
+        input { 
+            flex: 1; 
+            border: 1px solid #eee; 
+            padding: 12px 18px; 
+            border-radius: 25px; 
+            outline: none; 
+            background: #f8f9fa;
+            font-size: 14px;
+        }
+        input:focus { border-color: #800000; background: white; }
+        
+        button { 
+            background: #800000; 
+            color: white; 
+            border: none; 
+            width: 45px; 
+            height: 45px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 18px; 
+            transition: 0.2s;
+        }
+        button:active { transform: scale(0.9); }
     </style>
 </head>
 <body>
 
-    <div class="chat-header">
-        <div class="back-btn" onclick="history.back()">
-            <i class="fa-solid fa-arrow-left"></i>
-        </div>
-        <div class="group-profile">
-            <img src="https://via.placeholder.com/100" class="group-img" alt="GP">
-            <div class="title-area">
-                <h3>Viwawa chat</h3>
-                <p>Maria, Mzee, Sr. Maria, Wewe...</p>
-            </div>
-        </div>
+    <div class="header">
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i></a>
+        <h3>Mazungumzo ya VIWAWA</h3>
     </div>
 
-    <div class="messages-container" id="chatBox">
+    <div id="chat-window">
         </div>
 
-    <div class="chat-footer">
-        <i class="fa-solid fa-plus icon-btn"></i>
-        <div class="input-wrapper">
-            <input type="text" id="msgInput" placeholder="Andika ujumbe...">
-            <i class="fa-regular fa-face-smile icon-btn"></i>
-        </div>
-        <button class="send-btn" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+    <div class="input-area">
+        <input type="text" id="msg-input" placeholder="Andika ujumbe hapa..." autocomplete="off">
+        <button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    <script>
+        // Pata jina la mtumiaji kutoka kwenye Profile iliyohifadhiwa
+        const profileData = JSON.parse(localStorage.getItem('viwawa_profile')) || { name: "Mwanachama" };
+        const myName = profileData.name;
 
-        const firebaseConfig = {
-  apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
-  authDomain: "viwawa-app.firebaseapp.com",
-  databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com",
-  projectId: "viwawa-app",
-  storageBucket: "viwawa-app.firebasestorage.app",
-  messagingSenderId: "523436472007",
-  appId: "1:523436472007:web:dda010d18fd00ea60070e2",
-  measurementId: "G-KCF8FTMBW"
-} ;
+        const chatWindow = document.getElementById('chat-window');
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const messagesRef = ref(db, 'messages');
-
-        const chatBox = document.getElementById('chatBox');
-        const msgInput = document.getElementById('msgInput');
-        const sendBtn = document.getElementById('sendBtn');
-
-        sendBtn.onclick = () => {
-            const text = msgInput.value.trim();
-            if (text !== "") {
-                const now = new Date();
-                const time = now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes();
-                push(messagesRef, {
-                    sender: "Wewe",
-                    message: text,
-                    time: time,
-                    profilePic: "https://via.placeholder.com/100" 
-                });
-                msgInput.value = "";
-            }
-        };
-
-        onChildAdded(messagesRef, (snapshot) => {
-            const data = snapshot.val();
-            const isSent = data.sender === "Wewe";
-            const messageHtml = `
-                <div class="message-row ${isSent ? 'sent' : 'received'}">
-                    <img src="${data.profilePic || 'https://via.placeholder.com/100'}" class="user-sms-img">
-                    <div class="bubble">
-                        <span class="u-name">${data.sender}</span>
-                        ${data.message}
-                        <div class="msg-footer">
-                            <span class="time">${data.time}</span>
-                            ${isSent ? '<span class="ticks"><i class="fa-solid fa-check-double"></i></span>' : ''}
-                        </div>
-                    </div>
-                </div>`;
-            chatBox.innerHTML += messageHtml;
-            chatBox.scrollTop = chatBox.scrollHeight;
+        // 1. KUSOMA MESEJI (Real-time)
+        db.collection("chats").orderBy("time", "asc").onSnapshot((snapshot) => {
+            chatWindow.innerHTML = ""; // Safisha kioo kabla ya kupakia upya
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const isMe = data.user === myName;
+                
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `message ${isMe ? 'msg-me' : 'msg-other'}`;
+                
+                msgDiv.innerHTML = `
+                    <span class="user-name">${isMe ? 'Mimi' : data.user}</span>
+                    <div>${data.text}</div>
+                `;
+                chatWindow.appendChild(msgDiv);
+            });
+            // Shusha scroll mpaka chini meseji mpya inapoingia
+            chatWindow.scrollTop = chatWindow.scrollHeight;
         });
 
-        msgInput.onkeypress = (e) => { if (e.key === "Enter") sendBtn.click(); };
+        // 2. KUTUMA MESEJI
+        async function sendMessage() {
+            const input = document.getElementById('msg-input');
+            const ujumbe = input.value.trim();
+
+            if (ujumbe === "") return; // Usitume kitu kitupu
+
+            input.value = ""; // Safisha kisanduku cha kuandikia
+            
+            try {
+                await db.collection("chats").add({
+                    user: myName,
+                    text: ujumbe,
+                    time: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } catch (error) {
+                console.error("Error sending message: ", error);
+                alert("Imeshindwa kutuma, angalia internet yako.");
+            }
+        }
+
+        // Ruhusu kutuma kwa kubonyeza kitufe cha 'Enter'
+        document.getElementById('msg-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
     </script>
+
 </body>
 </html>
-

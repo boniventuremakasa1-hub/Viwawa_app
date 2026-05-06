@@ -3,256 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usimamizi wa Michango - Viwawa</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>MICHANGO - VIWAWA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
-        :root {
-            --maroon: #801313;
-            --bg: #f8f9fa;
-            --white: #ffffff;
-            --text: #333;
-            --gray: #757575;
-            --success: #28a745;
-            --danger: #dc3545;
-        }
+        :root { --primary: #8d1212; --success: #2e7d32; --danger: #c62828; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f8f9fa; color: #333; padding-bottom: 50px; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg); padding-bottom: 80px; color: var(--text); }
+        /* AppBar Custom */
+        .app-bar { background: var(--primary); color: white; padding: 15px; display: flex; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .app-bar i { font-size: 20px; cursor: pointer; margin-right: 15px; }
+        .app-bar h1 { font-size: 18px; text-transform: uppercase; }
 
-        .header {
-            background: var(--maroon);
-            color: white;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            position: sticky; top: 0; z-index: 100;
-        }
-        .header h1 { font-size: 18px; font-weight: 700; flex-grow: 1; }
-        .back-btn { cursor: pointer; font-size: 20px; color: white; text-decoration: none; }
+        .container { padding: 15px; }
 
-        .menu-container { padding: 20px; }
-        .category-card {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            cursor: pointer;
-        }
-        .card-info { display: flex; align-items: center; gap: 15px; }
-        .card-icon { 
-            width: 45px; height: 45px; border-radius: 10px; 
-            display: flex; align-items: center; justify-content: center; font-size: 20px;
-        }
-        .icon-ada { background: #fff0f0; color: var(--maroon); }
-        .icon-mingine { background: #e7f5ff; color: #339af0; }
+        /* Kadi za Kuchagua (Kama Picha Yako) */
+        .selection-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; }
+        .selection-card:active { transform: scale(0.98); }
+        .card-left { display: flex; align-items: center; gap: 15px; }
+        .icon-circle { width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .bg-ada { background: #fff0f0; color: var(--primary); }
+        .bg-mingine { background: #f0f7ff; color: #1976d2; }
+        .card-info h3 { font-size: 16px; font-weight: bold; }
+        .card-info p { font-size: 12px; color: #888; }
 
-        .page-content { display: none; padding: 20px; }
-        .member-item {
-            background: white; padding: 15px; border-radius: 10px;
-            margin-bottom: 10px; display: flex; justify-content: space-between;
-            align-items: center; border-left: 4px solid var(--maroon);
-            cursor: pointer;
-        }
+        /* SPREADSHEET VIEW (ADA) */
+        #view-ada, #view-mingine { display: none; }
+        .spreadsheet-container { background: white; border-radius: 12px; padding: 10px; overflow-x: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; font-size: 13px; }
+        th, td { border: 1px solid #eee; padding: 12px 8px; text-align: center; }
+        th { background: #f9f9f9; font-weight: bold; color: var(--primary); }
+        .member-name { text-align: left; position: sticky; left: 0; background: white; font-weight: bold; padding-left: 10px; min-width: 140px; }
+        .check-icon { color: var(--success); font-weight: bold; }
+        .cross-icon { color: var(--danger); font-weight: bold; opacity: 0.3; }
 
-        .data-row {
-            background: white; padding: 12px; border-bottom: 1px solid #eee;
-            display: flex; align-items: center; justify-content: space-between;
-            font-size: 13px;
-        }
-        .row-left { flex: 2; font-weight: 600; }
-        .row-center { flex: 1; text-align: center; }
-        .row-right { flex: 1; text-align: right; font-weight: 700; color: var(--success); }
+        /* MICHANGO MINGINE VIEW */
+        .mchango-list-item { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; border-left: 5px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .mchango-top { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .mchango-title { font-weight: bold; font-size: 14px; color: var(--primary); text-transform: uppercase; }
+        .mchango-amt { font-weight: 900; color: #333; }
+        .mchango-user { font-size: 13px; color: #666; display: flex; align-items: center; gap: 5px; }
+        .mchango-date { font-size: 11px; color: #999; margin-top: 5px; }
 
-        .tiki { color: var(--success); font-size: 18px; }
-        .kosa { color: var(--danger); font-size: 18px; }
-
-        .admin-fab {
-            position: fixed; bottom: 90px; right: 20px;
-            background: var(--maroon); color: white;
-            width: 120px; height: 45px; border-radius: 25px;
-            display: flex; align-items: center; justify-content: center;
-            gap: 8px; font-weight: 700; font-size: 13px;
-            box-shadow: 0 4px 15px rgba(128, 19, 19, 0.4);
-            text-decoration: none;
-        }
-
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: white;
-            display: flex; justify-content: space-around; padding: 12px 0;
-            border-top: 1px solid #eee;
-        }
-        .nav-item { text-decoration: none; color: var(--gray); font-size: 10px; text-align: center; }
-        .nav-item.active { color: var(--maroon); font-weight: 700; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+        /* Bottom Nav Hidden in Sub-pages */
+        .sub-nav { color: var(--primary); font-weight: bold; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="header" id="mainHeader">
-        <i class="fa-solid fa-arrow-left back-btn" id="backBtn" onclick="goBack()"></i>
-        <h1 id="headerTitle">MICHANGO</h1>
+    <div class="app-bar">
+        <i class="fa-solid fa-arrow-left" id="mainBack" onclick="window.history.back()"></i>
+        <h1 id="titleText">Michango</h1>
     </div>
 
-    <div id="mainCategories" class="menu-container">
-        <div class="category-card" onclick="showMembers('ada')">
-            <div class="card-info">
-                <div class="card-icon icon-ada"><i class="fa-solid fa-calendar-check"></i></div>
-                <div>
-                    <h3 style="font-size: 15px;">Ada ya Mwezi</h3>
-                    <p style="font-size: 11px; color: var(--gray);">Januari - Desemba</p>
+    <div class="container">
+        
+        <div id="menu-area">
+            <div class="selection-card" onclick="toggleView('ada')">
+                <div class="card-left">
+                    <div class="icon-circle bg-ada"><i class="fa-solid fa-calendar-check"></i></div>
+                    <div class="card-info">
+                        <h3>Ada ya Mwezi</h3>
+                        <p>Januari - Desemba</p>
+                    </div>
                 </div>
+                <i class="fa-solid fa-chevron-right" style="color:#ccc;"></i>
             </div>
-            <i class="fa-solid fa-chevron-right" style="color: #ccc;"></i>
-        </div>
 
-        <div class="category-card" onclick="showMembers('mingine')">
-            <div class="card-info">
-                <div class="card-icon icon-mingine"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-                <div>
-                    <h3 style="font-size: 15px;">Michango Mingine</h3>
-                    <p style="font-size: 11px; color: var(--gray);">Kambi, Ujenzi, Sherehe n.k</p>
+            <div class="selection-card" onclick="toggleView('mingine')">
+                <div class="card-left">
+                    <div class="icon-circle bg-mingine"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                    <div class="card-info">
+                        <h3>Michango Mingine</h3>
+                        <p>Kambi, Ujenzi, Sherehe n.k</p>
+                    </div>
                 </div>
+                <i class="fa-solid fa-chevron-right" style="color:#ccc;"></i>
             </div>
-            <i class="fa-solid fa-chevron-right" style="color: #ccc;"></i>
         </div>
-    </div>
 
-    <div id="membersPage" class="page-content">
-        <h2 style="font-size: 14px; margin-bottom: 15px; color: var(--gray);">Chagua Mwanachama:</h2>
-        <div id="membersList">
-            <p style="text-align:center; padding:20px; color:#999;">Inapakia wanachama...</p>
+        <div id="view-ada">
+            <div class="sub-nav" onclick="resetPage()"><i class="fa-solid fa-chevron-left"></i> Rudi</div>
+            <div class="spreadsheet-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="member-name">Mwanachama</th>
+                            <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>Mei</th><th>Jun</th>
+                            <th>Jul</th><th>Ago</th><th>Sep</th><th>Okt</th><th>Nov</th><th>Des</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adaTableBody">
+                        <tr>
+                            <td class="member-name">Boniventure Makasa</td>
+                            <td class="check-icon">✔</td><td class="check-icon">✔</td>
+                            <td class="check-icon">✔</td><td class="cross-icon">✘</td>
+                            <td class="cross-icon">✘</td><td class="cross-icon">✘</td>
+                            <td class="cross-icon">✘</td><td class="cross-icon">✘</td>
+                            <td class="cross-icon">✘</td><td class="cross-icon">✘</td>
+                            <td class="cross-icon">✘</td><td class="cross-icon">✘</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <div id="detailsPage" class="page-content">
-        <div id="detailsTitle" style="background: #eee; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: 700; font-size: 14px; text-align: center;">
-            -
+        <div id="view-mingine">
+            <div class="sub-nav" onclick="resetPage()"><i class="fa-solid fa-chevron-left"></i> Rudi</div>
+            <div id="otherContributionsList">
+                <div style="text-align:center; padding:20px; color:#999;">Inapakia michango...</div>
+            </div>
         </div>
-        <div id="dataRows"></div>
+
     </div>
-
-    <a href="#" class="admin-fab">
-        <i class="fa-solid fa-plus-circle"></i> REKODI
-    </a>
-
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-item">
-            <i class="fa-solid fa-house"></i>NYUMBANI
-        </a>
-        <a href="biblia.html" class="nav-item">
-            <i class="fa-solid fa-book-bible"></i>BIBLIA
-        </a>
-        <a href="michango.html" class="nav-item active">
-            <i class="fa-solid fa-wallet"></i>MICHANGO
-        </a>
-        <a href="profile.html" class="nav-item">
-            <i class="fa-solid fa-user"></i>WASIFU
-        </a>
-    </nav>
 
     <script>
-        // --- KONFIGURESHENI YA FIREBASE ---
         const firebaseConfig = {
-          apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
-          authDomain: "viwawa-app.firebaseapp.com",
-          databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com",
-          projectId: "viwawa-app",
-          storageBucket: "viwawa-app.firebasestorage.app",
-          messagingSenderId: "523436472007",
-          appId: "1:523436472007:web:dda010d18fd00ea60070e2",
-          measurementId: "G-KCF8FTMBW"
+            apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
+            authDomain: "viwawa-app.firebaseapp.com",
+            projectId: "viwawa-app",
+            storageBucket: "viwawa-app.firebasestorage.app",
+            messagingSenderId: "523436472007",
+            appId: "1:523436472007:web:dda010d18fd00ea60070e2"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        let currentMode = ''; 
-
-        // 1. Soma Wanachama kutoka Firestore
-        function showMembers(mode) {
-            currentMode = mode;
-            document.getElementById('mainCategories').style.display = 'none';
-            document.getElementById('membersPage').style.display = 'block';
-            document.getElementById('headerTitle').innerText = mode === 'ada' ? 'ADA YA MWEZI' : 'MICHANGO MINGINE';
-
-            const listDiv = document.getElementById('membersList');
-            listDiv.innerHTML = '<p style="text-align:center; padding:20px;">Inapakia...</p>';
-
-            db.collection("wanachama").orderBy("jina").get().then((querySnapshot) => {
-                listDiv.innerHTML = '';
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    listDiv.innerHTML += `
-                        <div class="member-item" onclick="showPersonalDetails('${doc.id}', '${data.jina}')">
-                            <span>${data.jina}</span>
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </div>
-                    `;
-                });
-            }).catch(err => {
-                listDiv.innerHTML = '<p style="color:red; text-align:center;">Imeshindwa kupakia. Angalia internet.</p>';
-            });
+        function toggleView(target) {
+            document.getElementById('menu-area').style.display = 'none';
+            document.getElementById('mainBack').onclick = resetPage;
+            
+            if(target === 'ada') {
+                document.getElementById('view-ada').style.display = 'block';
+                document.getElementById('titleText').innerText = "Ada ya Mwezi";
+            } else {
+                document.getElementById('view-mingine').style.display = 'block';
+                document.getElementById('titleText').innerText = "Michango Mingine";
+                loadOtherContributions();
+            }
         }
 
-        // 2. Soma Taarifa za Malipo za Mwanachama
-        function showPersonalDetails(id, name) {
-            document.getElementById('membersPage').style.display = 'none';
-            document.getElementById('detailsPage').style.display = 'block';
-            document.getElementById('detailsTitle').innerText = name;
+        function resetPage() {
+            document.getElementById('menu-area').style.display = 'block';
+            document.getElementById('view-ada').style.display = 'none';
+            document.getElementById('view-mingine').style.display = 'none';
+            document.getElementById('titleText').innerText = "Michango";
+            document.getElementById('mainBack').onclick = () => window.history.back();
+        }
+
+        function loadOtherContributions() {
+            const listDiv = document.getElementById('otherContributionsList');
             
-            const dataRows = document.getElementById('dataRows');
-            dataRows.innerHTML = '<p style="text-align:center; padding:20px;">Inatafuta malipo...</p>'; 
-
-            // Hapa inasoma "ada" au "michango" kulingana na ulichochagua
-            const collectionName = currentMode === 'ada' ? 'ada_malipo' : 'michango_mingine';
-
-            db.collection(collectionName).where("mwanachama_id", "==", id).get().then((querySnapshot) => {
-                dataRows.innerHTML = '';
-                if (querySnapshot.empty) {
-                    dataRows.innerHTML = '<p style="text-align:center; padding:20px; color:#999;">Hakuna rekodi ya malipo bado.</p>';
+            db.collection("michango").orderBy("tarehe", "desc").onSnapshot((snapshot) => {
+                listDiv.innerHTML = "";
+                if(snapshot.empty) {
+                    listDiv.innerHTML = "<div style='text-align:center; padding:20px; color:#999;'>Hakuna rekodi za michango kwa sasa.</div>";
                     return;
                 }
-                querySnapshot.forEach((doc) => {
-                    const malipo = doc.data();
-                    const icon = malipo.hali === 'tayari' ? 'fa-circle-check tiki' : 'fa-circle-xmark kosa';
-                    const color = malipo.hali === 'tayari' ? '' : 'color:var(--danger)';
+
+                snapshot.forEach((doc) => {
+                    const d = doc.data();
+                    const dateStr = d.tarehe ? d.tarehe.toDate().toLocaleDateString('sw-TZ') : "---";
                     
-                    dataRows.innerHTML += `
-                        <div class="data-row">
-                            <div class="row-left">${malipo.kichwa}</div>
-                            <div class="row-center"><i class="fa-solid ${icon}"></i></div>
-                            <div class="row-right" style="${color}">${malipo.kiasi}/=</div>
+                    listDiv.innerHTML += `
+                        <div class="mchango-list-item">
+                            <div class="mchango-top">
+                                <span class="mchango-title">${d.aina}</span>
+                                <span class="mchango-amt">Tsh ${Number(d.kiasi).toLocaleString()}</span>
+                            </div>
+                            <div class="mchango-user"><i class="fa-solid fa-user-check"></i> ${d.jina}</div>
+                            <div class="mchango-date"><i class="fa-regular fa-calendar"></i> ${dateStr}</div>
                         </div>
                     `;
                 });
             });
-        }
-
-        function goBack() {
-            const mainCats = document.getElementById('mainCategories');
-            const membersPage = document.getElementById('membersPage');
-            const detailsPage = document.getElementById('detailsPage');
-
-            if (detailsPage.style.display === 'block') {
-                detailsPage.style.display = 'none';
-                membersPage.style.display = 'block';
-            } else if (membersPage.style.display === 'block') {
-                membersPage.style.display = 'none';
-                mainCats.style.display = 'block';
-                document.getElementById('headerTitle').innerText = 'MICHANGO';
-            } else {
-                window.location.href = 'index.html';
-            }
         }
     </script>
 </body>

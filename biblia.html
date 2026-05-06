@@ -8,7 +8,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // Unganisha na Firebase yako
         const firebaseConfig = {
             apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
             authDomain: "viwawa-app.firebaseapp.com",
@@ -17,103 +16,92 @@
             messagingSenderId: "238515321557",
             appId: "1:238515321557:web:e000c87895e54d588308d1"
         };
-
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.firestore();
     </script>
 
     <style>
         body {
-            font-family: 'Georgia', serif;
-            background-color: #fdf2f2;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: #333;
         }
-        .container {
-            width: 90%;
-            max-width: 500px;
+        /* Card ya saizi ya kati na nadhifu */
+        .card {
+            width: 85%;
+            max-width: 350px; /* Hii inapunguza upana uwe wa kati */
             background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             text-align: center;
-            border: 2px solid #800000;
+            border-top: 6px solid #800000;
         }
         .header {
             color: #800000;
-            font-size: 24px;
+            font-size: 18px;
             font-weight: bold;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ffd700;
-            display: inline-block;
-            padding-bottom: 5px;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
         }
         .mstari {
-            font-size: 20px;
-            color: #800000;
-            font-style: italic;
-            margin-bottom: 15px;
+            font-size: 17px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
         }
         .maandiko {
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            background: #fffafa;
-            padding: 15px;
-            border-radius: 10px;
+            font-size: 15px;
+            line-height: 1.5;
+            color: #555;
+            font-style: italic;
+            margin-bottom: 15px;
         }
         .tafakari-box {
             background: #800000;
             color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 10px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
         }
-        .tafakari-title {
-            font-weight: bold;
+        .tafakari-label {
             color: #ffd700;
-            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 5px;
             text-transform: uppercase;
-        }
-        #loading {
-            font-size: 18px;
-            color: #800000;
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="content-box">
-        <div id="loading">Inapakia Neno la Leo...</div>
+    <div class="card" id="output">
+        <div style="color: #800000;">Inapakia...</div>
     </div>
 
     <script>
-        // Kodi ya kusoma data kutoka Firestore
         db.collection("leo").doc("neno").onSnapshot((doc) => {
-            const contentBox = document.getElementById('content-box');
+            const output = document.getElementById('output');
             if (doc.exists) {
-                const data = doc.data();
-                contentBox.innerHTML = `
+                const d = doc.data();
+                output.innerHTML = `
                     <div class="header">VIWAWA - NENO LA LEO</div>
-                    <div class="mstari">${data.mstari}</div>
-                    <div class="maandiko">"${data.maandiko}"</div>
+                    <div class="mstari">${d.mstari}</div>
+                    <div class="maandiko">"${d.maandiko}"</div>
                     <div class="tafakari-box">
-                        <div class="tafakari-title">Tafakari</div>
-                        <div>${data.tafakari}</div>
+                        <div class="tafakari-label">Tafakari fupi</div>
+                        <div>${d.tafakari}</div>
                     </div>
                 `;
             } else {
-                contentBox.innerHTML = "Bado neno halijawekwa leo.";
+                output.innerHTML = "Bado neno halijawekwa.";
             }
-        }, (error) => {
-            console.error("Kosa: ", error);
-            document.getElementById('loading').innerText = "Imeshindwa kupakia data.";
         });
     </script>
 

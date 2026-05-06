@@ -11,16 +11,18 @@
 
     <style>
         :root { 
-            --primary: #800000; /* Maroon ya asili */
-            --bg: #f9f9f9;
+            --primary: #800000;
             --gold: #b8860b;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Georgia', serif; }
 
-        body { background-color: var(--bg); }
+        body { 
+            background-color: #f4ece1;
+            /* Background kama ya Biblia.html */
+            background-image: url('https://www.transparenttextures.com/patterns/parchment.png');
+        }
 
-        /* Header ya Sala Zetu */
         .app-bar {
             background-color: var(--primary);
             color: white;
@@ -30,82 +32,81 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            border-bottom: 2px solid var(--gold);
         }
 
-        .back-btn {
-            font-size: 20px;
-            margin-right: 15px;
-            cursor: pointer;
-            padding: 5px;
-            display: flex;
-            align-items: center;
-        }
+        .back-btn { font-size: 20px; margin-right: 15px; cursor: pointer; }
+        .app-bar h1 { font-size: 19px; font-weight: bold; color: #ffd700; }
 
-        .app-bar h1 { font-size: 19px; font-weight: bold; }
-
-        /* Kitufe cha Sala ya Jumuiya (Kutoka Firebase) */
         .jumuiya-btn {
             background: linear-gradient(135deg, var(--primary), #a52a2a);
             margin: 15px;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 8px;
             color: white;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 15px rgba(128, 0, 0, 0.2);
             cursor: pointer;
-            border: 2px solid var(--gold);
+            border: 1px solid var(--gold);
         }
 
-        /* Sehemu ya Search ya Asili */
-        .search-area {
-            background: white;
-            padding: 12px 15px;
-            border-bottom: 1px solid #ddd;
-        }
+        .prayer-list { padding: 10px; }
 
-        .search-bar {
-            background: #f1f1f1;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            padding: 8px 12px;
-        }
-
-        .search-bar input {
-            border: none;
-            background: transparent;
-            outline: none;
-            flex: 1;
-            font-size: 16px;
-            padding-left: 10px;
-        }
-
-        /* Container ya Sala */
-        .prayer-list { padding: 15px; }
-
+        /* Mfumo wa Kuficha Sala (Accordion) */
         .card {
-            background: white;
-            border-radius: 10px;
-            padding: 18px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border-left: 5px solid var(--primary);
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #c3a36a;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .card h2 {
+        .card-header {
+            padding: 15px;
+            cursor: pointer;
+            background: rgba(128, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
             color: var(--primary);
-            font-size: 17px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
+            font-size: 15px;
+            border-bottom: 1px solid transparent;
+        }
+
+        .card.active .card-header {
+            border-bottom: 1px solid #c3a36a;
+            background: rgba(128, 0, 0, 0.1);
+        }
+
+        .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding: 0 15px;
+        }
+
+        .card.active .card-content {
+            max-height: 1500px;
+            padding: 15px;
         }
 
         .card p {
-            font-size: 15.5px;
-            line-height: 1.7;
-            color: #333;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #2b1e16;
             white-space: pre-line;
+            text-align: justify;
+        }
+
+        .card i.fa-chevron-down {
+            transition: transform 0.3s;
+        }
+
+        .card.active i.fa-chevron-down {
+            transform: rotate(180deg);
         }
 
         #empty { text-align: center; padding: 40px; color: #888; display: none; }
@@ -114,9 +115,7 @@
 <body>
 
     <div class="app-bar">
-        <div class="back-btn" onclick="history.back()">
-            <i class="fa-solid fa-arrow-left"></i>
-        </div>
+        <div class="back-btn" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></div>
         <h1>SALA ZETU</h1>
     </div>
 
@@ -128,64 +127,152 @@
         <i class="fa-solid fa-hands-praying fa-2x"></i>
     </div>
 
-    <div class="search-area">
-        <div class="search-bar">
-            <i class="fa-solid fa-magnifying-glass" style="color: #666;"></i>
-            <input type="text" id="searchInput" onkeyup="search()" placeholder="Tafuta sala hapa...">
-        </div>
-    </div>
-
     <div class="prayer-list" id="pBox">
-        <div class="card">
-            <h2>1. ISHARA YA MSALABA</h2>
-            <p>Kwa jina la Baba, na la Mwana, na la Roho Mtakatifu. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>2. BABA YETU</h2>
-            <p>Baba Yetu uliye mbinguni, jina lako litukuzwe; ufalme wako ufike; utakalo lifanyike duniani kama mbinguni. Utupe leo mkate wetu wa kila siku; utusamehe makosa yetu, kama tunavyowasamehe na sisi waliotukosea; usitutie katika kishawishi, lakini utuopoe maovuni. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>3. SALAMU MARIA</h2>
-            <p>Salamu Maria, umejaa neema, Bwana yu nawe; umebarikiwa kuliko wanawake wote, na Yesu mzao wa tumbo lako amebarikiwa. Maria Mtakatifu, Mama wa Mungu, utuombee sisi wakosefu, sasa na saa ya kufa kwetu. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>4. ATUKUZWE BABA</h2>
-            <p>Atukuzwe Baba, na Mwana, na Roho Mtakatifu. Kama mwanzo, na sasa, na siku zote na milele. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>5. NASADIKI</h2>
-            <p>Nasadiki kwa Mungu Baba mwenyezi, muumba wa mbingu na dunia. Na kwa Yesu Kristo Mwana wake wa pekee Bwana wetu; aliyetungwa kwa uwezo wa Roho Mtakatifu, akazaliwa na Bikira Maria; akateswa kwa mamlaka ya Ponsyo Pilato, akasulubiwa, akafa, akazikwa; akashukia kuzimu; siku ya tatu akafufuka katika wafu; akapaa mbinguni, ameketi kuume kwa Mungu Baba mwenyezi; kutoka huko atakuja kuwahukumu wazima na wafu. Nasadiki kwa Roho Mtakatifu, Kanisa takatifu Katoliki, ushirika wa watakatifu, maondoleo ya dhambi, ufufuko wa miili na uzima wa milele. Amina.</p>
-        </div>
-
-        <div class="card">
-            <h2>6. AMRI KUMI ZA MUNGU</h2>
-            <p>1. Usiabudu miungu migeni. 2. Usitaje bure jina la Mungu. 3. Takasa siku ya Bwana. 4. Waheshimu baba na mama. 5. Usiue. 6. Usizini. 7. Usiibe. 8. Usiseme uongo. 9. Usitamani mwanamke asiye mke wako. 10. Usitamani mali ya mtu mwingine.</p>
-        </div>
-
-        <div class="card">
-            <h2>7. AMRI TANO ZA KANISA</h2>
-            <p>1. Hudhuria Misa Takatifu dominika na sikukuu zilizoamriwa. 2. Funga wakati uliowekwa. 3. Ungama dhambi zako angalau mara moja kwa mwaka. 4. Pokea Ekaristi Takatifu wakati wa Pasaka. 5. Saidia Kanisa kwa zaka na sadaka.</p>
-        </div>
-
-        <div class="card">
-            <h2>8. SALA YA TOBA</h2>
-            <p>Ee Mungu wangu, najuta sana kwa niliyokukosea, kwani wewe ni mwema na unastahili kupendwa na watu wote. Nachukia dhambi zangu zote, nakusudia kwa msaada wa neema yako nisitende dhambi tena, na nikimbie nafasi za dhambi. Amina.</p>
-        </div>
         
         <div class="card">
-            <h2>17. SALA YA ASUBUHI</h2>
-            <p>Ee Mungu, nakushukuru kwa kunilinda usiku wa leo. Nakutolea mawazo, maneno na matendo yangu yote ya leo, nisaidie nisikukosee tena. Amina.</p>
+            <div class="card-header" onclick="toggleSala(this)">SALA YA ASUBUHI <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Ee Baba yetu Mungu mkuu, Umenilinda usiku huu, Nakushukuru kwa Moyo, Ee Baba, Mwana, na Roho. Nilinde tena siku hii, Niache dhambi, nikutii. Naomba sana, Baba wee, Baraka yako nipokee. Bikira safi, Ee Maria, nisipotee nisimamie, Mlinzi mkuu Malaika wee. Kwa Mungu wetu niombee. Nitake, nitende mema tu, na mwisho nije kwako juu. Amina.</p>
+            </div>
         </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">NIA NJEMA <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Kumheshimu Mungu wangu namtolea roho yangu, nifanye kazi nipumzike, Amri zake tu nishike. Wazo, neno, tendo lote namtolea Mungu pote, Roho, mwili, chote changu, Pendo na uzima wangu, Mungu wangu nitampenda, wala dhambi sitatenda. Jina lako nasifia, utakalo hutimia, kwa utii navumilia, teso na matata pia. Nipe Bwana, neema zako niongeze sifa yako. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">SALA YA MATOLEO <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Ee Yesu, kwa mikono ya Bikira Maria, na kwa muungano na sadaka yako kuu, ninakutolea sala, matendo, masumbuko na furaha zangu zote za leo. Ee Yesu, ufalme wako utufikie.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">BABA YETU <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Baba yetu uliye mbinguni, jina lako litukuzwe, Ufalme wako ufike, utakalo lifanyike duniani kama mbinguni. Utupe leo mkate wetu wa kila siku. Utusamehe makosa yetu, kama tunavyowasamehe na sisi waliotukosea. Usitutie katika kishawishi, lakini utuopoe maovuni. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">SALAMU MARIA <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Salamu Maria, umejaa neema, Bwana yu nawe, umebarikiwa kuliko wanawake wote, na Yesu mzao wa tumbo lako amebarikiwa. Maria Mtakatifu, Mama wa Mungu, utuombee sisi wakosefu, sasa na saa ya kufa kwetu. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">ATUKUZWE BABA <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Atukuzwe Baba, na Mwana, na Roho Mtakatifu. Kama mwanzo, na sasa, na siku zote na milele. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">KANUNI YA IMANI (NASADIKI) <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Nasadiki kwa Mungu Baba Mwenyezi, Muumba mbingu na dunia, Na kwa Yesu Kristo, Mwana wa pekee, Bwana wetu, aliye tungwa kwa uwezo wa Roho Mtakatifu, Akazaliwa na Bikira Maria, Akateswa kwa mamlaka ya Ponsyo Pilato, akasulubiwa, akafa, akazikwa, Akashukia kuzimu, siku ya tatu akafufuka katika wafu, Akapaa Mbinguni, Amekaa kuume kwa Mungu Baba Mwenyezi; Toka huko atakuja kuwahukumu wazima na wafu. Nasadiki kwa Roho Mtakatifu, Kanisa Takatifu Katoliki, ushirika wa watakatifu, maondoleo ya dhambi, ufufuko wa miili na uzima wa milele. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">SALA YA MATUMAINI <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Mungu wangu, natumaini kwako nitapewa kwa njia ya Yesu Kristu, neema zako hapa duniani na utukufu mbinguni, kwani ndiwe uliyeagana hayo nasi, nawe mwamini. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">SALA YA MAPENDO <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Mungu wangu, nakupenda zaidi ya chochote; kwani ndiwe mwema, ndiwe mwenye kupendeza. Nampenda na jirani yangu kama nafsi yangu kwa ajili yako. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">SALA YA KUTUBU <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Mungu wangu, nimetubu sana dhambi zangu, kwani ndiwe mwema, ndiwe mwenye kupendeza, wachukizwa na dhambi. Basi sitaki kukosa tena, nitafanya kitubio, naomba neema yako nipate kurudi. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">SALA KWA MALAIKA MLINZI <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Malaika Mlinzi wangu, unilinde katika hatari zote za roho na mwili. Ee Malaika wa Mungu, niliyekabidhiwa kwako kwa wema wa Mungu, uniangazie, unilinde, uniongoze na unitawale leo. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">MALAIKA WA BWANA <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Malaika wa Bwana alimpasha habari Maria. Naye akapata mimba kwa uwezo wa Roho Mtakatifu. (Salamu Maria...)
+                Ndimi mtumishi wa Bwana. Nitendewe ulivyonena. (Salamu Maria...)
+                Neno la Mungu akatwaa mwili. Akakaa kwetu. (Salamu Maria...)
+                
+                V. Utuombee, mzazi mtakatifu wa Mungu.
+                R. Tujalie ahadi za Kristu.
+                
+                Tuombe: Tunakuomba Ee Bwana utie neema yako miyoni mwetu, ili sisi tuliojua kwa maelezo ya malaika kwamba mwanao amejifanya mtu kwa mateso na msalaba wake tufikishwe kwenye utukufu na ufufuko. Tunaomba hayo kwa njia ya Kristu Bwana wetu. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">TUNAKIMBILIA <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Tunakimbilia, ulinzi wako, mzazi Mtakatifu wa Mungu, Usitunyime tukiomba katika shida zetu, utuokoe siku zote kila tuingiapo hatarini, ee Bikira mtukufu mwenye baraka. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">SALA KABLA YA KULA <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Unibariki, Mungu wangu, mimi na chakula changu, ulichonipa nipate nguvu za kukutumikia vema. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">SALA BAADA YA KULA <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Nakushukuru Mungu wangu, kwa chakula ulichonipa, Nimepata nguvu za kukutumikia vema. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">SALA KABLA YA KAZI <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Uje Roho Mtakatifu uzienee nyoyo za waamini wako, uwatie mapendo yako. Peleka Roho wako, vitaumbwa upya, na nchi zitageuka.
+                
+                Tuombe: Ee Mungu uliyefundisha nyoyo za waamini wako ukiwaletea mwanga wa Roho Mtakatifu, tunaomba tuongozwe na huyo Roho, tupende yaliyo mema, tupate daima faraja zake. Tunaomba hayo kwa njia ya Kristo, Bwana wetu. Amina.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleSala(this)">SALA BAADA YA KAZI <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="card-content">
+                <p>Ee Mungu, mwanzo na mwisho wa mambo yote, tunakushukuru kwa kuwa umetujalia neema ya kufanya kazi hii. Utusamehe makosa tuliyofanya, na utujalie bidii na moyo wa upendo katika kazi zetu zote. Tunaomba hayo kwa njia ya Kristo Bwana wetu. Amina.</p>
+            </div>
+        </div>
+
     </div>
 
-    <div id="empty">Sala haijapatikana...</div>
-
     <script>
-        // Unganisha na Firebase yako
+        // Mfumo wa kufungua na kufunga sala
+        function toggleSala(element) {
+            const card = element.parentElement;
+            card.classList.toggle('active');
+            
+            // Funga zingine zote
+            const allCards = document.querySelectorAll('.card');
+            allCards.forEach(c => {
+                if (c !== card) c.classList.remove('active');
+            });
+        }
+
+        // Firebase Setup
         const firebaseConfig = {
           apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
           authDomain: "viwawa-app.firebaseapp.com",
@@ -193,44 +280,20 @@
           projectId: "viwawa-app",
           storageBucket: "viwawa-app.firebasestorage.app",
           messagingSenderId: "523436472007",
-          appId: "1:523436472007:web:dda010d18fd00ea60070e2",
-          measurementId: "G-KCF8FTMBW"
+          appId: "1:523436472007:web:dda010d18fd00ea60070e2"
         };
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
         let jumuiyaUrl = "#";
-
-        // Pata link ya Sala ya Jumuiya kutoka Firebase
         db.collection("huduma").doc("sala").get().then((doc) => {
-            if (doc.exists) {
-                jumuiyaUrl = doc.data().link;
-            }
+            if (doc.exists) jumuiyaUrl = doc.data().link;
         });
 
         function funguaSalaJumuiya() {
-            if(jumuiyaUrl !== "#") {
-                window.location.href = jumuiyaUrl;
-            } else {
-                alert("Sala ya Jumuiya inapakia, jaribu tena...");
-            }
-        }
-
-        function search() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let cards = document.getElementsByClassName('card');
-            let found = false;
-
-            for (let i = 0; i < cards.length; i++) {
-                if (cards[i].innerText.toLowerCase().includes(input)) {
-                    cards[i].style.display = "block";
-                    found = true;
-                } else {
-                    cards[i].style.display = "none";
-                }
-            }
-            document.getElementById('empty').style.display = found ? "none" : "block";
+            if(jumuiyaUrl !== "#") window.location.href = jumuiyaUrl;
+            else alert("Inapakia...");
         }
     </script>
 </body>

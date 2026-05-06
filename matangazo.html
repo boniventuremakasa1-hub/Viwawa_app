@@ -18,9 +18,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 
         body { 
-            background-color: #f4f4f4;
-            /* Background ya mistari meupe (white pattern) kama screenshot yako */
-            background-image: url('https://www.transparenttextures.com/patterns/pinstriped-suit.png'); 
+            /* Rangi nyeupe safi kabisa kama ulivyoomba */
+            background-color: #ffffff; 
             min-height: 100vh;
         }
 
@@ -33,21 +32,21 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .back-btn { font-size: 20px; margin-right: 15px; cursor: pointer; }
-        .app-bar h1 { font-size: 18px; font-weight: bold; text-transform: uppercase; color: #ffd700; }
+        .app-bar h1 { font-size: 18px; font-weight: bold; text-transform: uppercase; }
 
         .content-area { padding: 15px; }
 
         .announcement-card {
-            background: white;
+            background: #ffffff;
             border-radius: 12px;
             overflow: hidden;
             margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            animation: fadeIn 0.5s ease;
+            /* Kivuli kidogo ili kadi ionekane kwenye background nyeupe */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            border: 1px solid #eeeeee;
         }
 
         .announcement-img {
@@ -66,13 +65,11 @@
             margin-bottom: 10px;
         }
 
-        .date-tag { font-size: 11px; color: #888; }
+        .date-tag { font-size: 12px; color: #666; font-weight: 500; }
 
-        /* Alama ya Paper Plane kulingana na picha yako */
         .plane-icon { 
-            color: var(--accent); 
+            color: var(--primary); 
             font-size: 20px; 
-            transform: rotate(-15deg); 
         }
 
         .announcement-title {
@@ -83,9 +80,8 @@
             text-transform: uppercase;
         }
 
-        /* Maelezo mafupi */
         .snippet {
-            color: #555;
+            color: #444;
             font-size: 14.5px;
             line-height: 1.5;
             display: -webkit-box;
@@ -94,14 +90,12 @@
             overflow: hidden;
         }
 
-        /* Maelezo kamili yanayofichwa */
         .full-message {
             display: none;
-            color: #444;
+            color: #333;
             font-size: 15px;
             line-height: 1.7;
             white-space: pre-line;
-            padding-top: 5px;
         }
 
         .read-more-btn {
@@ -113,32 +107,25 @@
             display: inline-block;
         }
 
-        /* Hali ya kadi ikiwa imefunguka */
         .announcement-card.open .snippet { display: none; }
         .announcement-card.open .full-message { display: block; }
         .announcement-card.open .read-more-btn { display: none; }
 
-        #loading { text-align: center; padding: 50px; color: var(--primary); font-weight: bold; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        #loading { text-align: center; padding: 50px; color: var(--primary); }
     </style>
 </head>
 <body>
 
     <div class="app-bar">
         <div class="back-btn" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></div>
-        <h1>MATANGAZO</h1>
+        <h1>MATANGAZO - VIWAWA</h1>
     </div>
 
     <div class="content-area" id="box">
-        <div id="loading">Inapakia matangazo...</div>
+        <div id="loading">Inapakia...</div>
     </div>
 
     <script>
-        // Copy Firebase Config yako hapa
         const firebaseConfig = {
           apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
           authDomain: "viwawa-app.firebaseapp.com",
@@ -155,7 +142,7 @@
         function pakiaMatangazo() {
             const displayBox = document.getElementById('box');
             const sasa = new Date();
-            const mudaWaKujifuta = 7 * 24 * 60 * 60 * 1000; // Siku 7 katika milliseconds
+            const mudaWaKujifuta = 7 * 24 * 60 * 60 * 1000; 
 
             db.collection("matangazo").orderBy("timestamp", "desc").onSnapshot((snap) => {
                 displayBox.innerHTML = "";
@@ -163,9 +150,10 @@
 
                 snap.forEach((doc) => {
                     const data = doc.data();
+                    if (!data.timestamp) return;
+
                     const mudaUliopita = sasa - data.timestamp.toDate();
 
-                    // Mfumo wa kujifuta (angalia kama imezidi wiki moja)
                     if (mudaUliopita < mudaWaKujifuta) {
                         count++;
                         const card = document.createElement('div');
@@ -178,7 +166,7 @@
                             ${imgTag}
                             <div class="announcement-body">
                                 <div class="date-row">
-                                    <span class="date-tag"><i class="fa-regular fa-calendar-days"></i> ${tarehe}</span>
+                                    <span class="date-tag"><i class="fa-regular fa-calendar"></i> ${tarehe}</span>
                                     <i class="fa-solid fa-paper-plane plane-icon"></i>
                                 </div>
                                 <h2 class="announcement-title">${data.kichwa}</h2>
@@ -192,13 +180,12 @@
                 });
 
                 if (count === 0) {
-                    displayBox.innerHTML = "<div style='text-align:center; padding:50px; color:#999;'>Hakuna matangazo mapya kwa sasa.</div>";
+                    displayBox.innerHTML = "<div style='text-align:center; padding:50px; color:#999;'>Hakuna matangazo mapya.</div>";
                 }
             });
         }
 
         function funguaTangazo(el) {
-            // Inatafuta kadi iliyoguswa na kuifungua ujumbe mzima
             el.closest('.announcement-card').classList.add('open');
         }
 

@@ -4,81 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neno la Leo - VIWAWA</title>
-    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
+    <script>
+        // Unganisha na Firebase yako
+        const firebaseConfig = {
+            apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
+            authDomain: "viwawa-app.firebaseapp.com",
+            projectId: "viwawa-app",
+            storageBucket: "viwawa-app.appspot.com",
+            messagingSenderId: "238515321557",
+            appId: "1:238515321557:web:e000c87895e54d588308d1"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+    </script>
+
     <style>
-        :root { --maroon: #801313; --bg: #f4f4f4; }
-        body { background-color: var(--bg); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-        .header { background: var(--maroon); color: white; padding: 25px; text-align: center; font-size: 22px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .container { padding: 20px; max-width: 600px; margin: auto; }
-        .card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-top: 10px solid var(--maroon); display: none; margin-top: 20px; }
-        .mstari { color: var(--maroon); font-size: 26px; font-weight: 800; margin-bottom: 15px; }
-        .maandiko { font-size: 20px; line-height: 1.6; color: #333; font-style: italic; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
-        .tafakari-label { font-weight: bold; color: var(--maroon); text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
-        .tafakari { font-size: 18px; color: #555; line-height: 1.7; margin-top: 10px; }
-        .loader { text-align: center; margin-top: 100px; color: #888; font-size: 18px; }
-        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--maroon); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #fdf2f2;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 2px solid #800000;
+        }
+        .header {
+            color: #800000;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ffd700;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        .mstari {
+            font-size: 20px;
+            color: #800000;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        .maandiko {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            background: #fffafa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .tafakari-box {
+            background: #800000;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 10px;
+        }
+        .tafakari-title {
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        #loading {
+            font-size: 18px;
+            color: #800000;
+        }
     </style>
 </head>
 <body>
 
-<div class="header">VIWAWA - NENO LA LEO</div>
-
-<div class="container">
-    <div id="loading" class="loader">
-        <div class="spinner"></div><br>
-        Inatafuta Neno la Uzima...
+    <div class="container" id="content-box">
+        <div id="loading">Inapakia Neno la Leo...</div>
     </div>
 
-    <div id="nenoCard" class="card">
-        <div id="txtMstari" class="mstari"></div>
-        <div id="txtMaandiko" class="maandiko"></div>
-        <div class="tafakari-label">Tafakari ya Leo</div>
-        <div id="txtTafakari" class="tafakari"></div>
-    </div>
-</div>
-
-<script>
-    // Config iliyothibitishwa kutoka kwenye settings zako
-    const firebaseConfig = {
-        apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
-        authDomain: "viwawa-app.firebaseapp.com",
-        projectId: "viwawa-app"
-    };
-
-    // Initialize Firebase
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.firestore();
-
-    // Kazi ya kuvuta data bila mzunguko
-    function pakiaNeno() {
-        db.collection("leo").doc("neno").get()
-        .then((doc) => {
+    <script>
+        // Kodi ya kusoma data kutoka Firestore
+        db.collection("leo").doc("neno").onSnapshot((doc) => {
+            const contentBox = document.getElementById('content-box');
             if (doc.exists) {
                 const data = doc.data();
-                document.getElementById('txtMstari').innerText = data.mstari;
-                document.getElementById('txtMaandiko').innerText = data.maandiko;
-                document.getElementById('txtTafakari').innerText = data.tafakari;
-
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('nenoCard').style.display = 'block';
+                contentBox.innerHTML = `
+                    <div class="header">VIWAWA - NENO LA LEO</div>
+                    <div class="mstari">${data.mstari}</div>
+                    <div class="maandiko">"${data.maandiko}"</div>
+                    <div class="tafakari-box">
+                        <div class="tafakari-title">Tafakari</div>
+                        <div>${data.tafakari}</div>
+                    </div>
+                `;
             } else {
-                document.getElementById('loading').innerHTML = "Hitilafu: Data ya 'leo/neno' haijaonekana kule Firebase.";
+                contentBox.innerHTML = "Bado neno halijawekwa leo.";
             }
-        })
-        .catch((error) => {
-            console.error("Error: ", error);
-            document.getElementById('loading').innerHTML = "Imeshindwa kuunganisha: <br>" + error.message;
+        }, (error) => {
+            console.error("Kosa: ", error);
+            document.getElementById('loading').innerText = "Imeshindwa kupakia data.";
         });
-    }
-
-    pakiaNeno();
-</script>
+    </script>
 
 </body>
 </html>

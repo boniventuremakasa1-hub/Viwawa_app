@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN - PAKIA TANGAZO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
+    <style>
+        :root { --primary: #800000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body { background-color: #ffffff; padding-bottom: 30px; }
+
+        .app-bar {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .container { padding: 20px; }
+
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary); font-size: 14px; }
+        
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        textarea { height: 150px; resize: none; }
+
+        .file-input-wrapper {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .upload-btn {
+            background-color: var(--primary);
+            color: white;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-btn:disabled { background-color: #ccc; }
+
+        #preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            margin-top: 10px;
+            display: none;
+            border-radius: 8px;
+        }
+
+        .status { text-align: center; margin-top: 10px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="app-bar">
+        <i class="fa-solid fa-arrow-left" style="margin-right:15px;" onclick="history.back()"></i>
+        <h1>PAKIA TANGAZO JIPYA</h1>
+    </div>
+
+    <div class="container">
+        <div class="form-group">
+            <label>1. Picha ya Tangazo (Flyer)</label>
+            <div class="file-input-wrapper" onclick="document.getElementById('fileInput').click()">
+                <i class="fa-solid fa-image fa-2x" style="color: #888;"></i>
+                <p id="fileNameDisplay" style="margin-top:10px; color:#666;">Gusa hapa kuchagua picha</p>
+                <input type="file" id="fileInput" hidden accept="image/*" onchange="previewImage(this)">
+                <img id="preview">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>2. Kichwa cha Tangazo</label>
+            <input type="text" id="kichwa" placeholder="Mfano: MKUTANO WA VIWAWA">
+        </div>
+
+        <div class="form-group">
+            <label>3. Ujumbe Kamili</label>
+            <textarea id="ujumbe" placeholder="Andika maelezo yote hapa..."></textarea>
+        </div>
+
+        <button class="upload-btn" id="btnPakia" onclick="hifadhiKwenyeFirebase()">
+            <i class="fa-solid fa-paper-plane"></i> PAKIA TANGAZO
+        </button>
+
+        <p id="status" class="status"></p>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
+          authDomain: "viwawa-app.firebaseapp.com",
+          databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com",
+          projectId: "viwawa-app",
+          storageBucket: "viwawa-app.firebasestorage.app",
+          messagingSenderId: "523436472007",
+          appId: "1:523436472007:web:dda010d18fd00ea60070e2"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        function previewImage(input) {
+            const preview = document.getElementById('preview');
+            const display = document.getElementById('fileNameDisplay');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    display.style.display = 'none';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function hifadhiKwenyeFirebase() {
+            const kichwa = document.getElementById('kichwa').value;
+            const ujumbe = document.getElementById('ujumbe').value;
+            const file = document.getElementById('fileInput').files[0];
+            const btn = document.getElementById('btnPakia');
+            const status = document.getElementById('status');
+
+            if (!kichwa || !ujumbe) {
+                alert("Tafadhali jaza kichwa na ujumbe!");
+                return;
+            }
+
+            btn.disabled = true;
+            status.innerText = "Inapakia... tafadhali subiri";
+            status.style.color = "blue";
+
+            try {
+                let pichaUrl = "";
+
+                // 1. Pakia picha kama ipo
+                if (file) {
+                    const storageRef = storage.ref('matangazo/' + Date.now() + "_" + file.name);
+                    const uploadTask = await storageRef.put(file);
+                    pichaUrl = await uploadTask.ref.getDownloadURL();
+                }
+
+                // 2. Hifadhi data kwenye Firestore
+                await db.collection("matangazo").add({
+                    kichwa: kichwa,
+                    ujumbe: ujumbe,
+                    image: pichaUrl,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp() // Hii ndio inaruhusu kujifuta baada ya wiki
+                });
+
+                status.innerText = "TUMEFANIKIWA! Tangazo limepakiwa.";
+                status.style.color = "green";
+                
+                // Safisha fomu
+                document.getElementById('kichwa').value = "";
+                document.getElementById('ujumbe').value = "";
+                document.getElementById('preview').style.display = 'none';
+                document.getElementById('fileNameDisplay').style.display = 'block';
+
+            } catch (error) {
+                console.error(error);
+                status.innerText = "Imefeli! Angalia internet yako.";
+                status.style.color = "red";
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
+

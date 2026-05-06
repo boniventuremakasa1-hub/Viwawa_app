@@ -8,7 +8,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // Unganisha na Firebase yako
         const firebaseConfig = {
             apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
             authDomain: "viwawa-app.firebaseapp.com",
@@ -21,7 +20,7 @@
         const db = firebase.firestore();
     </script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
         body {
@@ -31,119 +30,94 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            
-            /* BACKGROUND MPYA YENYE UHAI (Maroon Gradient Pattern) */
-            background-color: #800000;
-            background-image: 
-                linear-gradient(rgba(128, 0, 0, 0.9), rgba(74, 0, 0, 0.95)),
-                url("https://www.transparenttextures.com/patterns/cubes.png");
-            background-blend-mode: overlay;
+            /* Background ya maziwa (Soft Cream/Off-white) */
+            background-color: #f9f7f2;
+            /* Pattern hafifu sana ya vichembechembe */
+            background-image: url("https://www.transparenttextures.com/patterns/cream-pixels.png");
         }
 
         .card {
-            width: 85%;
-            max-width: 340px; 
-            min-height: 480px; 
+            width: 88%;
+            max-width: 350px;
             background: #ffffff;
-            padding: 40px 30px;
-            border-radius: 35px;
+            padding: 35px 25px;
+            border-radius: 30px;
             text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); /* Kivuli laini cha kiprofeshno */
+            border: 1px solid rgba(128, 0, 0, 0.15); /* Mpaka mwembamba wa Maroon */
             position: relative;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 215, 0, 0.4);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            overflow: hidden;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 10px;
-            background: linear-gradient(90deg, #ffd700, #800000, #ffd700);
+        /* Alama ya kitabu au pambo la juu */
+        .card-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #800000;
         }
 
         .header {
             color: #800000;
-            font-size: 18px;
-            font-weight: 800;
+            font-size: 14px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 2.5px;
-            margin-bottom: 5px;
-        }
-
-        .divider {
-            width: 50px;
-            height: 3px;
-            background: #ffd700;
-            margin: 0 auto 25px;
-            border-radius: 2px;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
         }
 
         .mstari {
-            font-size: 19px;
+            font-size: 22px;
             font-weight: 700;
-            color: #333;
-            background: rgba(255, 215, 0, 0.1);
-            padding: 12px 25px;
-            border-radius: 50px;
-            display: inline-block;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #800000;
+            margin-bottom: 15px;
+            display: block;
         }
 
         .maandiko {
             font-size: 17px;
             line-height: 1.8;
             color: #444;
-            font-style: italic;
-            margin-bottom: 35px;
-            flex-grow: 1;
+            font-weight: 400;
+            margin-bottom: 30px;
             padding: 0 10px;
         }
 
+        /* Box la Tafakari limekaa kama ile picha (Dark Maroon) */
         .tafakari-box {
             background: linear-gradient(135deg, #800000 0%, #4a0000 100%);
             color: white;
-            padding: 25px;
-            border-radius: 25px;
+            padding: 25px 20px;
+            border-radius: 20px;
             font-size: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 10px 20px rgba(128, 0, 0, 0.2);
+            text-align: center;
         }
 
         .tafakari-label {
             color: #ffd700;
-            font-weight: bold;
-            font-size: 12px;
-            margin-bottom: 12px;
+            font-weight: 700;
+            font-size: 11px;
+            margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: block;
         }
 
         .tafakari-label::before {
-            content: '✨';
-            margin-right: 8px;
+            content: '✨ ';
         }
 
-        #status {
-            font-size: 16px;
-            color: white;
-            font-weight: bold;
+        #loading {
+            font-size: 14px;
+            color: #800000;
         }
     </style>
 </head>
 <body>
 
     <div class="card" id="output">
-        <div id="status">Inapakia...</div>
+        <div id="loading">Inapakia baraka za leo...</div>
     </div>
 
     <script>
@@ -152,14 +126,12 @@
             if (doc.exists) {
                 const d = doc.data();
                 output.innerHTML = `
-                    <div>
-                        <div class="header">VIWAWA</div>
-                        <div class="divider"></div>
-                        <div class="mstari">${d.mstari}</div>
-                        <div class="maandiko">"${d.maandiko}"</div>
-                    </div>
+                    <div class="card-icon">📖</div>
+                    <div class="header">VIWAWA - NENO LA LEO</div>
+                    <span class="mstari">${d.mstari}</span>
+                    <div class="maandiko">"${d.maandiko}"</div>
                     <div class="tafakari-box">
-                        <div class="tafakari-label">Tafakari ya Leo</div>
+                        <span class="tafakari-label">Tafakari ya Leo</span>
                         <div>${d.tafakari}</div>
                     </div>
                 `;

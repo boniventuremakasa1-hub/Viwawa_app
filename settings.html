@@ -3,184 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mipangilio - VIWAWA</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>USIMAMIZI - VIWAWA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
     <style>
-        :root { --maroon: #801313; --bg: #f4f4f4; --white: #ffffff; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: 0.2s; }
-        body { background-color: var(--bg); color: #333; padding-bottom: 30px; }
-
-        .header { background: var(--maroon); color: white; padding: 15px 20px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; z-index: 100; }
-        .header a { color: white; text-decoration: none; font-size: 20px; }
-
-        .settings-user { background: white; padding: 20px; display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #eee; }
-        .user-avatar { width: 55px; height: 55px; border-radius: 50%; background: #eee; overflow: hidden; }
-        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
-        .settings-group { background: white; margin-bottom: 15px; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
-        .group-title { padding: 10px 20px; font-size: 11px; font-weight: 700; color: var(--maroon); text-transform: uppercase; background: #fafafa; }
+        :root { --primary: #800000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #ffffff; padding-bottom: 50px; }
+        .app-bar { background-color: var(--primary); color: white; padding: 15px; display: flex; align-items: center; }
+        .container { padding: 15px; display: none; } /* Inajificha mpaka password iwekwe */
         
-        .setting-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; text-decoration: none; color: #333; border-bottom: 1px solid #f5f5f5; cursor: pointer; }
-        .setting-content { display: flex; align-items: center; gap: 15px; }
-        .setting-content i { font-size: 18px; width: 25px; color: var(--maroon); text-align: center; }
-        .setting-text h4 { font-size: 14px; font-weight: 600; }
-        .setting-text p { font-size: 12px; color: #888; }
-
-        .switch { position: relative; display: inline-block; width: 38px; height: 18px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; border-radius: 20px; }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; border-radius: 50%; transition: 0.3s; }
-        input:checked + .slider { background-color: var(--maroon); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        select { border: none; background: transparent; font-size: 13px; font-weight: 600; color: var(--maroon); outline: none; }
-
-        /* Modal Msaada & Admin */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1000; padding: 20px; }
-        .modal-content { background: white; border-radius: 20px; padding: 25px; max-height: 85vh; overflow-y: auto; }
-        .modal-content h2 { color: var(--maroon); margin-bottom: 15px; border-bottom: 2px solid var(--maroon); padding-bottom: 5px; }
-        .close-modal { display: block; width: 100%; background: var(--maroon); color: white; border: none; padding: 12px; border-radius: 10px; margin-top: 10px; font-weight: 700; }
+        .admin-card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .admin-card h2 { color: var(--primary); font-size: 16px; margin-bottom: 15px; border-bottom: 2px solid #f4f4f4; padding-bottom: 5px; }
         
-        /* Admin Form Style */
-        input[type="text"], textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; }
-        .btn-admin { background: var(--maroon); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 700; margin-top: 10px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #555; }
+        input, textarea { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; outline: none; }
+        textarea { height: 80px; }
+        
+        .upload-btn { background: var(--primary); color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        
+        #login-box { text-align: center; padding: 50px 20px; }
+        .preview-img { width: 100%; max-height: 150px; object-fit: contain; display: none; margin-bottom: 10px; border-radius: 8px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <a href="index.html"><i class="fa-solid fa-arrow-left"></i></a>
-        <h2 id="txt_title">Mipangilio</h2>
+    <div class="app-bar">
+        <i class="fa-solid fa-gears" style="margin-right:10px;"></i>
+        <h1>USIMAMIZI WA APP</h1>
     </div>
 
-    <div class="settings-user" onclick="window.location.href='profile.html'">
-        <div class="user-avatar"><img id="userImg" src="https://via.placeholder.com/55"></div>
-        <div class="user-info">
-            <h2 id="sideName">Boniventure Makasa</h2>
-            <p id="txt_edit_profile">Gusa kubadili wasifu</p>
-        </div>
+    <div id="login-box">
+        <i class="fa-solid fa-lock fa-3x" style="color: var(--primary); margin-bottom: 20px;"></i>
+        <p style="margin-bottom: 15px;">Ingiza Nenosiri la Usimamizi</p>
+        <input type="password" id="passInput" placeholder="Nenosiri..." style="text-align: center;">
+        <button class="upload-btn" onclick="checkPass()">FUNGUA USIMAMIZI</button>
     </div>
 
-    <div class="group-title" id="txt_app_settings">Mipangilio ya App</div>
-    <div class="settings-group">
-        <div class="setting-item">
-            <div class="setting-content">
-                <i class="fa-solid fa-language"></i>
-                <div class="setting-text">
-                    <h4 id="txt_lang">Lugha (Language)</h4>
-                    <p id="txt_lang_sub">Chagua lugha ya App</p>
-                </div>
-            </div>
-            <select id="langSelect" onchange="changeLanguage()">
-                <option value="sw">Kiswahili</option>
-                <option value="en">English</option>
-            </select>
+    <div class="container" id="adminContent">
+        
+        <div class="admin-card">
+            <h2><i class="fa-solid fa-quote-left"></i> BADILI NENO LA LEO</h2>
+            <textarea id="nenoLeo" placeholder="Andika neno la leo hapa..."></textarea>
+            <button class="upload-btn" onclick="updateNeno()">UPDATE NENO</button>
         </div>
-    </div>
 
-    <div class="group-title">Usimamizi</div>
-    <div class="settings-group">
-        <div class="setting-item" onclick="openAdmin()">
-            <div class="setting-content">
-                <i class="fa-solid fa-pen-to-square"></i>
-                <div class="setting-text">
-                    <h4>Neno la Leo</h4>
-                    <p>Badili mstari na tafakari ya leo</p>
-                </div>
-            </div>
-            <i class="fa-solid fa-lock" style="font-size:12px; color:#ccc"></i>
+        <div class="admin-card">
+            <h2><i class="fa-solid fa-bullhorn"></i> PAKIA TANGAZO JIPYA</h2>
+            <label>Picha ya Tangazo</label>
+            <input type="file" id="adFile" accept="image/*" onchange="previewAd(this)">
+            <img id="adPreview" class="preview-img">
+            
+            <label>Kichwa cha Tangazo</label>
+            <input type="text" id="adTitle" placeholder="Mfano: SEMINA YA VIJANA">
+            
+            <label>Ujumbe wa Tangazo</label>
+            <textarea id="adMsg" placeholder="Maelezo kamili..."></textarea>
+            <button class="upload-btn" onclick="uploadAd()">PAKIA TANGAZO</button>
         </div>
-    </div>
 
-    <div class="group-title" id="txt_more">Ziada</div>
-    <div class="settings-group">
-        <div class="setting-item" onclick="openHelp()">
-            <div class="setting-content">
-                <i class="fa-solid fa-circle-question"></i>
-                <div class="setting-text">
-                    <h4 id="txt_help">Msaada</h4>
-                    <p id="txt_help_sub">Maelezo ya kutumia App</p>
-                </div>
-            </div>
+        <div class="admin-card">
+            <h2><i class="fa-solid fa-hand-holding-dollar"></i> PAKIA MICHANGO</h2>
+            <label>Jina la Mchango</label>
+            <input type="text" id="mchangoName" placeholder="Mfano: Mchango wa Sherehe">
+            
+            <label>Kiasi Kilichofikiwa (Tsh)</label>
+            <input type="text" id="mchangoAmount" placeholder="Mfano: 500,000">
+            
+            <label>Lengo Kuu (Tsh)</label>
+            <input type="text" id="mchangoGoal" placeholder="Mfano: 1,500,000">
+            <button class="upload-btn" onclick="uploadMchango()">UPDATE MCHANGO</button>
         </div>
-        <div class="setting-item" style="color: #d32f2f;" onclick="logout()">
-            <div class="setting-content">
-                <i class="fa-solid fa-right-from-bracket" style="color: #d32f2f;"></i>
-                <div class="setting-text">
-                    <h4 id="txt_logout">Ondoka (Log Out)</h4>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="modal" id="adminModal">
-        <div class="modal-content">
-            <h2>Badili Neno la Leo</h2>
-            <input type="text" id="admin_mstari" placeholder="Mstari (Mfano: Zaburi 23:1)">
-            <textarea id="admin_maandiko" rows="4" placeholder="Maandiko ya Biblia..."></textarea>
-            <textarea id="admin_tafakari" rows="3" placeholder="Tafakari ya leo..."></textarea>
-            <button class="btn-admin" onclick="updateNeno()" id="btnUpdate">Update Sasa</button>
-            <button class="close-modal" onclick="closeAdmin()" style="background:#888;">Funga</button>
-        </div>
-    </div>
-
-    <div class="modal" id="helpModal">
-        <div class="modal-content">
-            <h2 id="h_help_title">Msaada wa App</h2>
-            <p>Maelezo ya kutumia App yataonekana hapa...</p>
-            <button class="close-modal" onclick="closeHelp()">Funga</button>
-        </div>
     </div>
 
     <script>
-        // CONFIG ZA FIREBASE
         const firebaseConfig = {
-            apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
-            authDomain: "viwawa-app.firebaseapp.com",
-            projectId: "viwawa-app",
-            storageBucket: "viwawa-app.appspot.com",
-            messagingSenderId: "238515321557",
-            appId: "1:238515321557:web:e000c87895e54d588308d1"
+          apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
+          authDomain: "viwawa-app.firebaseapp.com",
+          databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com",
+          projectId: "viwawa-app",
+          storageBucket: "viwawa-app.firebasestorage.app",
+          messagingSenderId: "523436472007",
+          appId: "1:523436472007:web:dda010d18fd00ea60070e2"
         };
-        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const storage = firebase.storage();
 
-        function openAdmin() {
-            let p = prompt("Ingiza Password ya Admin:");
-            if (p === "Viwawa2026") {
-                document.getElementById('adminModal').style.display = 'block';
+        // 1. Check Password
+        function checkPass() {
+            const pass = document.getElementById('passInput').value;
+            if(pass === "PASSWORD_YAKO") { // Badilisha hapa weka password yako halisi
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
             } else {
-                alert("Password siyo sahihi!");
+                alert("Nenosiri si sahihi!");
             }
         }
 
-        function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; }
-
-        async function updateNeno() {
-            const m = document.getElementById('admin_mstari').value;
-            const txt = document.getElementById('admin_maandiko').value;
-            const tf = document.getElementById('admin_tafakari').value;
-            const btn = document.getElementById('btnUpdate');
-
-            if(!m || !txt || !tf) { alert("Jaza vyote!"); return; }
-            
-            btn.innerHTML = "Inatuma...";
-            try {
-                await db.collection("leo").doc("neno").set({ mstari: m, maandiko: txt, tafakari: tf });
-                alert("Imefanikiwa!");
-                closeAdmin();
-            } catch(e) { alert("Kuna kosa!"); }
-            btn.innerHTML = "Update Sasa";
+        // 2. Preview Picha ya Tangazo
+        function previewAd(input) {
+            const pre = document.getElementById('adPreview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => { pre.src = e.target.result; pre.style.display = 'block'; }
+                reader.readAsDataURL(input.files[0]);
+            }
         }
 
-        function openHelp() { document.getElementById('helpModal').style.display = 'block'; }
-        function closeHelp() { document.getElementById('helpModal').style.display = 'none'; }
-        function logout() { if(confirm("Unataka kuondoka?")) window.location.href="login.html"; }
+        // 3. Pakia Tangazo
+        async function uploadAd() {
+            const title = document.getElementById('adTitle').value;
+            const msg = document.getElementById('adMsg').value;
+            const file = document.getElementById('adFile').files[0];
+            if(!title || !msg) return alert("Jaza kichwa na ujumbe!");
+
+            try {
+                let imgUrl = "";
+                if(file) {
+                    const ref = storage.ref('matangazo/' + Date.now());
+                    await ref.put(file);
+                    imgUrl = await ref.getDownloadURL();
+                }
+                await db.collection("matangazo").add({
+                    kichwa: title, ujumbe: msg, image: imgUrl,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                alert("Tangazo limepakiwa!");
+                location.reload();
+            } catch(e) { alert("Imefeli!"); }
+        }
+
+        // 4. Pakia Mchango
+        async function uploadMchango() {
+            const name = document.getElementById('mchangoName').value;
+            const amount = document.getElementById('mchangoAmount').value;
+            const goal = document.getElementById('mchangoGoal').value;
+            if(!name || !amount) return alert("Jaza jina na kiasi!");
+
+            await db.collection("huduma").doc("michango").set({
+                jina: name, kiasi: amount, lengo: goal,
+                updated: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert("Mchango umesasishwa!");
+        }
+
+        // 5. Update Neno
+        async function updateNeno() {
+            const neno = document.getElementById('nenoLeo').value;
+            await db.collection("huduma").doc("neno").set({ maandishi: neno });
+            alert("Neno limesasishwa!");
+        }
     </script>
 </body>
 </html>

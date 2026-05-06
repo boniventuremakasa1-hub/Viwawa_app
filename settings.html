@@ -3,134 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WASIFU - VIWAWA</title>
+    <title>WASIFU NA USIMAMIZI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
     <style>
-        :root { --primary: #8d1212; --text-muted: #8899a6; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background-color: #f8f9fa; color: #333; }
+        :root { --primary: #8d1212; --bg-input: #f2f2f2; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #ffffff; padding-bottom: 100px; }
 
-        /* TOP BAR */
-        .top-nav { background: var(--primary); padding: 15px; display: flex; align-items: center; justify-content: space-between; color: white; }
-        .top-nav h2 { font-size: 18px; font-weight: 600; }
+        /* HEADER & PROFILE SECTION */
+        .profile-card { background: var(--primary); padding: 40px 20px 30px; border-radius: 0 0 45px 45px; text-align: center; color: white; position: relative; }
+        .back-btn { position: absolute; top: 20px; left: 20px; font-size: 20px; color: white; cursor: pointer; }
+        .profile-img-box { position: relative; width: 110px; height: 110px; margin: 0 auto 15px; }
+        .profile-img-box img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid white; object-fit: cover; }
+        .cam-badge { position: absolute; bottom: 5px; right: 5px; background: #ffcc00; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; font-size: 14px; border: 2px solid var(--primary); cursor: pointer; }
+        .profile-card h1 { font-size: 22px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
+        .profile-card p { font-size: 14px; opacity: 0.9; }
 
-        /* PROFILE CARD (Kama picha ya kwanza) */
-        .profile-container { 
-            background: var(--primary); 
-            padding: 30px 20px 50px; 
-            border-radius: 0 0 60px 60px; 
-            text-align: center; 
-            color: white; 
-            position: relative;
-        }
-        .profile-img-box { position: relative; width: 120px; height: 120px; margin: 0 auto 15px; }
-        .profile-img-box img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid #db3434; object-fit: cover; background: #eee; }
-        .cam-icon { position: absolute; bottom: 5px; right: 5px; background: #ffcc00; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; font-size: 14px; border: 2px solid var(--primary); }
-        .profile-container h1 { font-size: 22px; font-weight: bold; margin-bottom: 5px; }
-        .profile-container p { font-size: 13px; font-weight: 500; opacity: 0.9; }
+        .container { padding: 20px; }
+        h2.section-title { font-size: 15px; color: #333; margin: 20px 0 15px; font-weight: bold; text-transform: uppercase; }
 
-        /* INFO SECTION (Jimbo, Parokia, n.k.) */
-        .info-section { padding: 20px; background: #fff; }
-        .info-header { display: flex; align-items: center; gap: 10px; color: var(--primary); font-weight: bold; margin-bottom: 20px; }
-        .grid-info { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-        .info-box { margin-bottom: 15px; }
-        .info-box label { display: block; font-size: 11px; color: #a0aec0; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; }
-        .info-box p { font-size: 15px; color: #2d3748; font-weight: 500; }
+        /* ADMIN ACTIONS GRID */
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .action-card { background: #fff; border: 1px solid #eee; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; }
+        .action-card i { font-size: 24px; margin-bottom: 10px; display: block; }
+        .card-tangazo i { color: #ff8c00; }
+        .card-mchango i { color: #e91e63; }
+        .action-card span { font-weight: bold; font-size: 13px; color: #333; text-transform: uppercase; }
 
-        /* SETTINGS ITEMS */
-        .setting-row { display: flex; align-items: center; padding: 15px 20px; background: #fff; border-bottom: 1px solid #f0f0f0; cursor: pointer; }
-        .setting-row i { width: 35px; color: var(--primary); font-size: 18px; }
-        .setting-row span { flex: 1; font-size: 15px; font-weight: 500; }
-        .switch { width: 40px; height: 20px; background: #e2e8f0; border-radius: 20px; position: relative; }
-        .switch::after { content: ''; position: absolute; width: 16px; height: 16px; background: white; border-radius: 50%; top: 2px; left: 2px; }
+        /* INPUT FIELDS (TAARIFA BINAFSI) */
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 11px; font-weight: bold; color: #888; margin-bottom: 8px; text-transform: uppercase; }
+        .input-field { width: 100%; background: var(--bg-input); border: none; padding: 14px; border-radius: 12px; font-size: 14px; outline: none; color: #333; }
 
-        /* ADMIN FORM AREA */
-        #adminArea { display: none; padding: 20px; background: #fff; border-top: 5px solid #f8f9fa; }
-        .admin-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; margin-bottom: 20px; }
-        .admin-card h3 { color: var(--primary); font-size: 14px; margin-bottom: 15px; border-bottom: 2px solid #f8f9fa; padding-bottom: 5px; }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; font-size: 14px; }
-        .btn-post { background: var(--primary); color: white; border: none; width: 100%; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        /* HIDDEN FORMS */
+        #form-container { display: none; margin-top: 20px; border-top: 2px solid #f2f2f2; padding-top: 20px; }
+        .form-card { background: #fff; border-radius: 15px; padding: 5px; }
+        .btn-upload { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+
+        /* NOTIFICATION SWITCHES */
+        .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f2f2f2; }
+        .switch-row span { font-size: 15px; font-weight: 500; color: #333; }
+        .toggle { width: 45px; height: 24px; background: #ddd; border-radius: 20px; position: relative; cursor: pointer; }
+        .toggle.active { background: var(--primary); }
+        .toggle::after { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
+        .toggle.active::after { left: 23px; }
     </style>
 </head>
 <body>
 
-    <div class="top-nav">
-        <i class="fa-solid fa-bars"></i>
-        <h2>Wasifu</h2>
-        <i class="fa-solid fa-bell"></i>
-    </div>
-
-    <div class="profile-container">
+    <div class="profile-card">
+        <i class="fa-solid fa-arrow-left back-btn" onclick="history.back()"></i>
         <div class="profile-img-box">
-            <img src="https://via.placeholder.com/150" id="profilePic">
-            <div class="cam-icon"><i class="fa-solid fa-camera"></i></div>
+            <img src="https://via.placeholder.com/150" id="displayPic">
+            <div class="cam-badge"><i class="fa-solid fa-camera"></i></div>
         </div>
-        <h1>Boniventure Makasa</h1>
-        <p>ADMIN • MICHAEL MALAIKA MKUU</p>
+        <h1 id="displayName">Boniventure Makasa</h1>
+        <p>ADMIN</p>
     </div>
 
-    <div class="info-section">
-        <div class="info-header"><i class="fa-solid fa-user-pen"></i> Hariri Wasifu</div>
+    <div class="container">
+        <h2 class="section-title">Admin Actions</h2>
+        <div class="admin-grid">
+            <div class="action-card card-tangazo" onclick="showForm('tangazo')">
+                <i class="fa-solid fa-bullhorn"></i>
+                <span>Tangazo</span>
+            </div>
+            <div class="action-card card-mchango" onclick="showForm('mchango')">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Mchango</span>
+            </div>
+        </div>
+
+        <h2 class="section-title">Taarifa Binafsi</h2>
         
-        <div class="info-box">
+        <div class="input-group">
             <label>Jina Kamili</label>
-            <p>Boniventure Makasa</p>
+            <input type="text" id="editName" class="input-field" placeholder="Weka jina lako">
         </div>
 
-        <div class="info-box">
-            <label>Namba ya Simu</label>
-            <p>0616644584</p>
+        <div class="input-group">
+            <label>Jimbo</label>
+            <input type="text" id="editJimbo" class="input-field" placeholder="Weka Jimbo">
         </div>
 
-        <div class="grid-info">
-            <div class="info-box"><label>Jimbo</label><p>Jimbo Kuu la Dodoma</p></div>
-            <div class="info-box"><label>Dekania</label><p>Paulo wa Msalaba</p></div>
-            <div class="info-box"><label>Parokia</label><p>Mt. Theresia wa m.</p></div>
-            <div class="info-box"><label>Kanda</label><p>Yeriko</p></div>
-        </div>
-    </div>
-
-    <div class="setting-row"><i class="fa-solid fa-bell"></i> <span>Ruhusu Notification</span> <div class="switch"></div></div>
-    <div class="setting-row"><i class="fa-solid fa-language"></i> <span>Lugha (Language Swahili)</span> <i class="fa-solid fa-chevron-right" style="color:#ccc; font-size:12px;"></i></div>
-    <div class="setting-row"><i class="fa-solid fa-moon"></i> <span>Theme (Light/Dark Mode)</span> <i class="fa-solid fa-chevron-right" style="color:#ccc; font-size:12px;"></i></div>
-    <div class="setting-row"><i class="fa-solid fa-circle-info"></i> <span>About App</span> <i class="fa-solid fa-chevron-right" style="color:#ccc; font-size:12px;"></i></div>
-    
-    <div class="setting-row" onclick="openAdmin()" style="background:#fff5f5;"><i class="fa-solid fa-user-shield"></i> <span>USIMAMIZI (ADMIN)</span> <i class="fa-solid fa-lock" style="color:#ccc; font-size:12px;"></i></div>
-    
-    <div class="setting-row" style="color:red; border-bottom:none;"><i class="fa-solid fa-right-from-bracket"></i> <span>Log Out</span></div>
-
-    <div id="adminArea">
-        <div class="admin-card">
-            <h3>1. PAKIA NENO LA LEO</h3>
-            <input type="text" id="mstari" placeholder="Mstari (Zaburi 23:1)">
-            <textarea id="andiko" placeholder="Maandiko ya Biblia..."></textarea>
-            <textarea id="tafakari" placeholder="Tafakari ya leo..."></textarea>
-            <button class="btn-post" onclick="saveNeno()">HIFADHI NENO</button>
+        <div class="input-group">
+            <label>Parokia</label>
+            <input type="text" id="editParokia" class="input-field" placeholder="Weka Parokia">
         </div>
 
-        <div class="admin-card">
-            <h3>2. PAKIA TANGAZO</h3>
-            <input type="file" id="adFile">
-            <input type="text" id="adKichwa" placeholder="Kichwa cha Tangazo">
-            <textarea id="adMaelezo" placeholder="Maelezo ya tangazo..."></textarea>
-            <button class="btn-post" onclick="saveAd()">PAKIA TANGAZO</button>
+        <div class="input-group">
+            <label>Jumuiya</label>
+            <input type="text" id="editJumuiya" class="input-field" placeholder="Weka Jumuiya">
         </div>
 
-        <div class="admin-card">
-            <h3>3. PAKIA MCHANGO</h3>
-            <input type="text" id="mJina" placeholder="Mchango wa (Ada/Vifaa)">
-            <input type="text" id="mNani" placeholder="Jina la Mchangiaji">
-            <input type="number" id="mKiasi" placeholder="Kiasi (Tsh)">
-            <button class="btn-post" onclick="saveMchango()">PAKIA MCHANGO</button>
+        <button class="btn-upload" style="background:#555;" onclick="saveProfile()">HIFADHI TAARIFA</button>
+
+        <div id="form-container">
+            <div id="form-tangazo" class="form-card" style="display:none;">
+                <h2 class="section-title">Pakia Tangazo</h2>
+                <label style="font-size:12px; font-weight:bold;">Picha ya Tangazo</label>
+                <input type="file" id="adFile" class="input-field" style="background:white; border:1px solid #ddd;">
+                <input type="text" id="adTitle" class="input-field" placeholder="Kichwa cha Tangazo" style="margin-top:10px;">
+                <textarea id="adMsg" class="input-field" placeholder="Maelezo ya Tangazo" style="height:100px; margin-top:10px;"></textarea>
+                <button class="btn-upload" onclick="uploadTangazo()">PAKIA TANGAZO SASA</button>
+            </div>
+
+            <div id="form-mchango" class="form-card" style="display:none;">
+                <h2 class="section-title">Pakia Mchango</h2>
+                <input type="text" id="mType" class="input-field" placeholder="Jina la Mchango (Ada/Vifaa)">
+                <input type="text" id="mPerson" class="input-field" placeholder="Jina la Mchangiaji" style="margin-top:10px;">
+                <input type="number" id="mAmount" class="input-field" placeholder="Kiasi (Tsh)" style="margin-top:10px;">
+                <button class="btn-upload" onclick="uploadMchango()">PAKIZA MCHANGO</button>
+            </div>
+        </div>
+
+        <h2 class="section-title" style="margin-top:30px;">Notification Settings</h2>
+        <div class="switch-row">
+            <span>Announcements</span>
+            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+        </div>
+        <div class="switch-row">
+            <span>Bible Verse of Day</span>
+            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
         </div>
     </div>
 
     <script>
+        // Copy Firebase Config yako hapa
         const firebaseConfig = {
             apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
             authDomain: "viwawa-app.firebaseapp.com",
@@ -141,28 +144,54 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const storage = firebase.storage();
 
-        function openAdmin() {
-            const p = prompt("Nenosiri la Usimamizi:");
-            if(p === "Viwawa@2026") {
-                document.getElementById('adminArea').style.display = 'block';
-                window.scrollTo(0, document.body.scrollHeight);
-            } else if(p !== null) { alert("Nenosiri si sahihi!"); }
+        function showForm(type) {
+            const pass = prompt("Ingiza Password ya Usimamizi:");
+            if(pass !== "Viwawa@2026") return alert("Password si sahihi!");
+
+            document.getElementById('form-container').style.display = 'block';
+            document.getElementById('form-tangazo').style.display = type === 'tangazo' ? 'block' : 'none';
+            document.getElementById('form-mchango').style.display = type === 'mchango' ? 'block' : 'none';
+            window.scrollTo(0, document.body.scrollHeight);
         }
 
-        async function saveNeno() {
-            const m = document.getElementById('mstari').value;
-            const a = document.getElementById('andiko').value;
-            const t = document.getElementById('tafakari').value;
-            await db.collection("neno_leo").doc("leo").set({ mstari:m, andiko:a, tafakari:t });
-            alert("Neno limepakiwa!");
+        async function uploadTangazo() {
+            const file = document.getElementById('adFile').files[0];
+            const title = document.getElementById('adTitle').value;
+            const msg = document.getElementById('adMsg').value;
+
+            if(!title || !msg) return alert("Jaza kichwa na maelezo!");
+            
+            try {
+                let url = "";
+                if(file) {
+                    const ref = storage.ref('ads/' + Date.now());
+                    await ref.put(file);
+                    url = await ref.getDownloadURL();
+                }
+                await db.collection("matangazo").add({
+                    kichwa: title, ujumbe: msg, image: url,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                alert("Tangazo limepakiwa!");
+                location.reload();
+            } catch(e) { alert("Imefeli!"); }
         }
 
-        async function saveMchango() {
-            const j = document.getElementById('mJina').value;
-            const n = document.getElementById('mNani').value;
-            const k = document.getElementById('mKiasi').value;
-            await db.collection("michango").add({ jina:j, mtu:n, kiasi:k, date: new Date() });
+        function saveProfile() {
+            const name = document.getElementById('editName').value;
+            if(name) {
+                document.getElementById('displayName').innerText = name;
+                alert("Taarifa zimehifadhiwa!");
+            }
+        }
+        
+        async function uploadMchango() {
+            const type = document.getElementById('mType').value;
+            const name = document.getElementById('mPerson').value;
+            const amt = document.getElementById('mAmount').value;
+            await db.collection("michango").add({ aina: type, jina: name, kiasi: amt, tarehe: new Date() });
             alert("Mchango umerekodiwa!");
         }
     </script>

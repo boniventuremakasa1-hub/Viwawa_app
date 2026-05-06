@@ -2,57 +2,47 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Admin VIWAWA</title>
+    <title>Admin - VIWAWA</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="config.js"></script>
-    <style>
-        body { font-family: sans-serif; padding: 20px; text-align: center; background: #f4f4f4; }
-        .box { background: white; padding: 20px; border-radius: 10px; max-width: 400px; margin: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        input, textarea { width: 90%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
-        button { background: #800000; color: white; border: none; padding: 15px; width: 95%; cursor: pointer; font-weight: bold; }
-        #status { margin-top: 15px; font-weight: bold; }
-    </style>
 </head>
-<body>
-    <div class="box">
-        <h2 style="color:#800000">VIWAWA - Sasisha Neno</h2>
-        <input type="text" id="mstari" placeholder="Mstari wa Biblia">
-        <textarea id="maandiko" placeholder="Maandiko..."></textarea>
-        <textarea id="tafakari" placeholder="Tafakari..."></textarea>
-        <button onclick="saveData()">HIFADHI SASA</button>
-        <div id="status"></div>
+<body style="font-family:sans-serif; text-align:center; padding:20px; background:#f4f4f4;">
+
+    <div style="background:white; padding:20px; border-radius:10px; max-width:400px; margin:auto; border-top:10px solid #800000;">
+        <h2 style="color:#800000">VIWAWA ADMIN</h2>
+        <input type="text" id="mstari" placeholder="Mstari" style="width:90%; padding:10px; margin:5px;"><br>
+        <textarea id="maandiko" placeholder="Maandiko" style="width:90%; padding:10px; margin:5px;"></textarea><br>
+        <textarea id="tafakari" placeholder="Tafakari" style="width:90%; padding:10px; margin:5px;"></textarea><br>
+        <button onclick="pigaKazi()" style="width:95%; padding:15px; background:#800000; color:white; border:none; cursor:pointer;">HIFADHI SASA</button>
+        <h3 id="feedback" style="color:blue;">Tayari kufanya kazi...</h3>
     </div>
 
     <script>
-        async function saveData() {
-            const status = document.getElementById('status');
+        function pigaKazi() {
+            const fb = document.getElementById('feedback');
             const data = {
                 mstari: document.getElementById('mstari').value,
                 maandiko: document.getElementById('maandiko').value,
                 tafakari: document.getElementById('tafakari').value,
-                muda: firebase.firestore.FieldValue.serverTimestamp()
+                muda: new Date().toISOString()
             };
 
-            if(!data.mstari || !data.maandiko) {
-                status.style.color = "orange";
-                status.innerText = "Jaza kila kitu!";
-                return;
-            }
+            fb.innerText = "Inatuma data kwa nguvu...";
+            fb.style.color = "orange";
 
-            status.style.color = "blue";
-            status.innerText = "Inatuma data...";
-
-            try {
-                // Hapa ndipo tunapima kama Firebase inajibu
-                await db.collection("leo").doc("neno").set(data);
-                status.style.color = "green";
-                status.innerText = "IMEFANIKIWA! Neno limeingia.";
-            } catch (error) {
-                status.style.color = "red";
-                status.innerText = "Kosa la Kitaalamu: " + error.message;
-                console.error(error);
-            }
+            // Tunatumia .set kwa kutaja doc maalum
+            db.collection("leo").doc("neno").set(data)
+            .then(() => {
+                fb.innerText = "IMEFANIKIWA! Angalia Firebase sasa hivi.";
+                fb.style.color = "green";
+                alert("Data imeingia!");
+            })
+            .catch((err) => {
+                fb.innerText = "Imegoma: " + err.message;
+                fb.style.color = "red";
+                console.error(err);
+            });
         }
     </script>
 </body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SETTINGS - VIWAWA</title>
+    <title>WASIFU & SETTINGS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -11,248 +11,214 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
     <style>
-        :root { --primary: #800000; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        
+        :root { --primary: #800000; --gold: #ffd700; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #ffffff; padding-bottom: 50px; }
+
+        /* PROFILE SECTION (Kama kwenye picha) */
+        .profile-header {
+            background: linear-gradient(to bottom, #800000, #5a0000);
+            padding: 40px 20px 60px;
+            text-align: center;
+            color: white;
+            border-radius: 0 0 40px 40px;
+            position: relative;
+        }
+        .profile-img-container {
+            width: 110px; height: 110px;
+            margin: 0 auto 15px;
+            position: relative;
+        }
+        .profile-img-container img {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+        .edit-badge {
+            position: absolute; bottom: 5px; right: 5px;
+            background: var(--gold); color: #333;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; border: 2px solid white;
+        }
+        .user-name { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+        .user-role { font-size: 13px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* SETTINGS LIST */
+        .settings-container { padding: 20px 15px; }
+        .setting-item {
+            display: flex; align-items: center;
+            padding: 16px 10px;
+            border-bottom: 1px solid #f1f1f1;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .setting-item i { width: 35px; color: var(--primary); font-size: 18px; }
+        .setting-item span { flex: 1; font-size: 15px; color: #333; }
+        .setting-item .arrow { color: #ccc; font-size: 12px; }
+
+        /* TOGGLE SWITCH */
+        .switch { width: 35px; height: 18px; background: #ddd; border-radius: 20px; position: relative; }
+        .switch::after { content: ''; position: absolute; width: 14px; height: 14px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
+
+        /* ADMIN AREA (INAFICHWA) */
+        #admin-panel { display: none; padding-top: 10px; border-top: 5px solid #f9f9f9; }
+        .admin-section { background: #fdfdfd; border: 1px solid #eee; border-radius: 12px; padding: 15px; margin-bottom: 20px; }
+        .admin-section h3 { font-size: 14px; color: var(--primary); margin-bottom: 15px; border-bottom: 2px solid #f4f4f4; padding-bottom: 5px; text-transform: uppercase; }
         
-        .app-bar { background-color: var(--primary); color: white; padding: 15px; display: flex; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .back-btn { font-size: 20px; margin-right: 15px; cursor: pointer; }
-        .app-bar h1 { font-size: 18px; font-weight: bold; text-transform: uppercase; }
-
-        .container { padding: 15px; }
-
-        /* Kadi ya Neno la Leo (Kama ilivyokuwa mwanzo) */
-        .admin-card { 
-            background: #ffffff; 
-            border: 1px solid #eeeeee; 
-            border-radius: 12px; 
-            padding: 15px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
-        }
+        label { display: block; font-size: 12px; font-weight: bold; color: #666; margin-bottom: 5px; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; }
+        textarea { height: 80px; resize: none; }
         
-        .admin-card h2 { 
-            color: var(--primary); 
-            font-size: 15px; 
-            margin-bottom: 15px; 
-            border-bottom: 2px solid #f4f4f4; 
-            padding-bottom: 5px;
-            text-transform: uppercase;
-        }
-
-        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #555; }
-        input[type="text"], input[type="password"], textarea { 
-            width: 100%; 
-            padding: 12px; 
-            margin-bottom: 15px; 
-            border: 1px solid #ddd; 
-            border-radius: 8px; 
-            outline: none; 
-            font-size: 14px;
-        }
-        
-        textarea { height: 100px; resize: none; }
-
-        .upload-btn { 
-            background: var(--primary); 
-            color: white; 
-            width: 100%; 
-            padding: 14px; 
-            border: none; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            font-size: 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
+        .upload-btn { background: var(--primary); color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .upload-btn:active { transform: scale(0.98); }
-
-        /* Sehemu ya Usimamizi inayofichwa kwa Password */
-        #admin-lock-btn { background-color: #555; margin-top: 10px; }
-        #usimamizi-area { display: none; margin-top: 20px; border-top: 3px solid #f4f4f4; padding-top: 20px; }
-
-        .preview-img { width: 100%; max-height: 200px; object-fit: contain; display: none; margin-bottom: 15px; border-radius: 8px; border: 1px solid #ddd; }
-        
-        #status-msg { text-align: center; font-size: 13px; margin-top: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="app-bar">
-        <div class="back-btn" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></div>
-        <h1>SETTINGS & USIMAMIZI</h1>
+    <div class="profile-header">
+        <div class="profile-img-container">
+            <img src="https://via.placeholder.com/150" alt="Profile">
+            <div class="edit-badge"><i class="fa-solid fa-camera"></i></div>
+        </div>
+        <div class="user-name">BONIVENTURE MAKASA</div>
+        <div class="user-role">ADMIN • MICHAEL MALAIKA MKUU</div>
     </div>
 
-    <div class="container">
-        
-        <div class="admin-card">
-            <h2><i class="fa-solid fa-quote-left"></i> Badili Neno la Leo</h2>
-            <textarea id="nenoLeo" placeholder="Andika neno la leo hapa..."></textarea>
-            <button class="upload-btn" onclick="updateNeno()">
-                <i class="fa-solid fa-sync"></i> UPDATE NENO LA LEO
-            </button>
+    <div class="settings-container">
+        <div class="setting-item">
+            <i class="fa-solid fa-bell"></i>
+            <span>Ruhusu Notification</span>
+            <div class="switch"></div>
         </div>
 
-        <button class="upload-btn" id="admin-lock-btn" onclick="funguaUsimamizi()">
-            <i class="fa-solid fa-lock"></i> FUNGUA USIMAMIZI (MATANGAZO & MICHANGO)
-        </button>
+        <div class="setting-item">
+            <i class="fa-solid fa-language"></i>
+            <span>Lugha (Language)</span>
+            <i class="fa-solid fa-chevron-right arrow"></i>
+        </div>
 
-        <div id="usimamizi-area">
+        <div class="setting-item">
+            <i class="fa-solid fa-moon"></i>
+            <span>Theme (Light/Dark Mode)</span>
+            <i class="fa-solid fa-chevron-right arrow"></i>
+        </div>
+
+        <div class="setting-item">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>About App</span>
+            <i class="fa-solid fa-chevron-right arrow"></i>
+        </div>
+
+        <div class="setting-item" onclick="funguaUsimamizi()" style="background: #fff9f9;">
+            <i class="fa-solid fa-user-shield"></i>
+            <span style="font-weight: bold;">USIMAMIZI (ADMIN)</span>
+            <i class="fa-solid fa-lock arrow"></i>
+        </div>
+
+        <div class="setting-item" style="margin-top: 10px;">
+            <i class="fa-solid fa-right-from-bracket" style="color: red;"></i>
+            <span style="color: red;">Log Out</span>
+        </div>
+
+        <div id="admin-panel">
             
-            <div class="admin-card">
-                <h2><i class="fa-solid fa-bullhorn"></i> Pakia Tangazo Jipya</h2>
-                <label>Picha ya Tangazo (Flyer)</label>
-                <input type="file" id="adFile" accept="image/*" onchange="previewAd(this)" style="margin-bottom: 10px;">
-                <img id="adPreview" class="preview-img">
-                
-                <label>Kichwa cha Tangazo</label>
-                <input type="text" id="adTitle" placeholder="Mfano: SEMINA YA VIJANA">
-                
-                <label>Ujumbe wa Tangazo</label>
-                <textarea id="adMsg" placeholder="Andika maelezo kamili ya tangazo hapa..."></textarea>
-                
-                <button class="upload-btn" id="btnAd" onclick="uploadAd()">
-                    <i class="fa-solid fa-paper-plane"></i> PAKIA TANGAZO SASA
-                </button>
+            <div class="admin-section">
+                <h3>1. PAKIA NENO LA LEO</h3>
+                <label>Mstari wa Biblia</label>
+                <input type="text" id="mstari" placeholder="Mfano: Zaburi 23:1">
+                <label>Maandiko</label>
+                <textarea id="maandiko" placeholder="Andika maandiko kamili hapa..."></textarea>
+                <label>Tafakari</label>
+                <textarea id="tafakari" placeholder="Andika tafakari fupi..."></textarea>
+                <button class="upload-btn" onclick="hifadhiNeno()">HIFADHI NENO</button>
             </div>
 
-            <div class="admin-card">
-                <h2><i class="fa-solid fa-hand-holding-dollar"></i> Update Michango</h2>
+            <div class="admin-section">
+                <h3>2. PAKIA TANGAZO</h3>
+                <label>Picha ya Tangazo</label>
+                <input type="file" id="adFile" accept="image/*">
+                <label>Kichwa cha Tangazo</label>
+                <input type="text" id="adKichwa" placeholder="Mfano: SEMINA YA VIJANA">
+                <label>Maelezo ya Tangazo</label>
+                <textarea id="adMaelezo" placeholder="Maelezo kamili ya tangazo..."></textarea>
+                <button class="upload-btn" onclick="hifadhiTangazo()">PAKIA TANGAZO</button>
+            </div>
+
+            <div class="admin-section">
+                <h3>3. PAKIA MICHANGO</h3>
                 <label>Jina la Mchango</label>
-                <input type="text" id="mchangoName" placeholder="Mfano: Mchango wa Vifaa">
-                
-                <label>Kiasi Kilichopatikana (Tsh)</label>
-                <input type="text" id="mchangoAmount" placeholder="Mfano: 350,000">
-                
-                <label>Lengo Kuu (Tsh)</label>
-                <input type="text" id="mchangoGoal" placeholder="Mfano: 1,000,000">
-                
-                <button class="upload-btn" id="btnMchango" onclick="uploadMchango()">
-                    <i class="fa-solid fa-save"></i> UPDATE MCHANGO
-                </button>
+                <input type="text" id="mchangoJina" placeholder="Mfano: Mchango wa Ada">
+                <label>Jina la Mchangiaji</label>
+                <input type="text" id="mchangiaji" placeholder="Mfano: John Doe">
+                <label>Kiasi (Tsh)</label>
+                <input type="number" id="mchangoKiasi" placeholder="Mfano: 50000">
+                <button class="upload-btn" onclick="hifadhiMchango()">REKODI MCHANGO</button>
             </div>
 
         </div>
-
-        <div id="status-msg"></div>
     </div>
 
     <script>
-        // Firebase Config yako
         const firebaseConfig = {
-          apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
-          authDomain: "viwawa-app.firebaseapp.com",
-          databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com",
-          projectId: "viwawa-app",
-          storageBucket: "viwawa-app.firebasestorage.app",
-          messagingSenderId: "523436472007",
-          appId: "1:523436472007:web:dda010d18fd00ea60070e2"
+            apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
+            authDomain: "viwawa-app.firebaseapp.com",
+            projectId: "viwawa-app",
+            storageBucket: "viwawa-app.firebasestorage.app",
+            messagingSenderId: "523436472007",
+            appId: "1:523436472007:web:dda010d18fd00ea60070e2"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        // 1. Kazi ya Password (Viwawa@2026)
         function funguaUsimamizi() {
-            const pass = prompt("Ingiza Nenosiri la Usimamizi:");
-            if (pass === "Viwawa@2026") {
-                document.getElementById('usimamizi-area').style.display = 'block';
-                document.getElementById('admin-lock-btn').style.display = 'none';
-                alert("Usimamizi Umefunguliwa!");
-            } else if (pass !== null) {
+            const neno = prompt("Ingiza Password ya Usimamizi:");
+            if (neno === "Viwawa@2026") {
+                document.getElementById('admin-panel').style.display = 'block';
+                window.scrollTo(0, document.getElementById('admin-panel').offsetTop);
+            } else if (neno !== null) {
                 alert("Nenosiri si sahihi!");
             }
         }
 
-        // 2. Preview ya Picha ya Tangazo
-        function previewAd(input) {
-            const pre = document.getElementById('adPreview');
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    pre.src = e.target.result;
-                    pre.style.display = 'block';
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        // 3. Kazi ya Update Neno la Leo
-        async function updateNeno() {
-            const neno = document.getElementById('nenoLeo').value;
-            if(!neno) return alert("Andika neno kwanza!");
+        async function hifadhiNeno() {
+            const mstari = document.getElementById('mstari').value;
+            const maandiko = document.getElementById('maandiko').value;
+            const tafakari = document.getElementById('tafakari').value;
+            if(!mstari || !maandiko) return alert("Jaza angalau mstari na maandiko!");
             
-            try {
-                await db.collection("huduma").doc("neno").set({ maandishi: neno });
-                alert("Neno la Leo limesasishwa!");
-                document.getElementById('nenoLeo').value = "";
-            } catch(e) { alert("Imeshindikana! Angalia internet."); }
+            await db.collection("neno_leo").doc("data").set({ mstari, maandiko, tafakari });
+            alert("Neno la Leo limesasishwa!");
         }
 
-        // 4. Kazi ya Pakia Tangazo (Inaenda Firebase)
-        async function uploadAd() {
-            const title = document.getElementById('adTitle').value;
-            const msg = document.getElementById('adMsg').value;
+        async function hifadhiTangazo() {
+            const kichwa = document.getElementById('adKichwa').value;
+            const maelezo = document.getElementById('adMaelezo').value;
             const file = document.getElementById('adFile').files[0];
-            const btn = document.getElementById('btnAd');
+            if(!kichwa || !maelezo) return alert("Jaza kichwa na maelezo!");
 
-            if(!title || !msg) return alert("Jaza kichwa na ujumbe!");
-
-            btn.disabled = true;
-            btn.innerHTML = "Inapakia...";
-
-            try {
-                let imgUrl = "";
-                if(file) {
-                    const storageRef = storage.ref('matangazo/' + Date.now() + "_" + file.name);
-                    const task = await storageRef.put(file);
-                    imgUrl = await task.ref.getDownloadURL();
-                }
-
-                await db.collection("matangazo").add({
-                    kichwa: title,
-                    ujumbe: msg,
-                    image: imgUrl,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                alert("Tangazo limepakiwa kikamilifu!");
-                location.reload();
-            } catch(e) {
-                alert("Tatizo la kiufundi! Jaribu tena.");
-                btn.disabled = false;
-                btn.innerHTML = "PAKIA TANGAZO SASA";
+            let imgUrl = "";
+            if(file) {
+                const ref = storage.ref('matangazo/' + Date.now());
+                await ref.put(file);
+                imgUrl = await ref.getDownloadURL();
             }
+            await db.collection("matangazo").add({ kichwa, maelezo, image: imgUrl, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+            alert("Tangazo limepakiwa!");
         }
 
-        // 5. Kazi ya Update Mchango
-        async function uploadMchango() {
-            const name = document.getElementById('mchangoName').value;
-            const amount = document.getElementById('mchangoAmount').value;
-            const goal = document.getElementById('mchangoGoal').value;
-            const btn = document.getElementById('btnMchango');
+        async function hifadhiMchango() {
+            const jina = document.getElementById('mchangoJina').value;
+            const nani = document.getElementById('mchangiaji').value;
+            const kiasi = document.getElementById('mchangoKiasi').value;
+            if(!jina || !nani || !kiasi) return alert("Jaza taarifa zote za mchango!");
 
-            if(!name || !amount) return alert("Jaza jina na kiasi!");
-
-            btn.disabled = true;
-            try {
-                await db.collection("huduma").doc("michango").set({
-                    jina: name,
-                    kiasi: amount,
-                    lengo: goal,
-                    updated: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                alert("Michango imesasishwa!");
-                btn.disabled = false;
-            } catch(e) { alert("Imefeli!"); btn.disabled = false; }
+            await db.collection("michango").add({ jina, mchangiaji: nani, kiasi: Number(kiasi), tarehe: new Date() });
+            alert("Mchango umerekodiwa!");
         }
     </script>
 </body>
 </html>
-

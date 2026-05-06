@@ -8,6 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
+        // Unganisha na Firebase yako
         const firebaseConfig = {
             apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
             authDomain: "viwawa-app.firebaseapp.com",
@@ -22,67 +23,122 @@
 
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Poppins', sans-serif; /* Font ya kisasa zaidi */
+            background-color: #fdf2f2;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            /* HII NDIYO MICHORO HAFIFU YA BACKGROUND (Pattern) */
+            background-image: 
+                linear-gradient(30deg, #f8e1e1 12%, transparent 12.5%, transparent 87%, #f8e1e1 87.5%, #f8e1e1),
+                linear-gradient(150deg, #f8e1e1 12%, transparent 12.5%, transparent 87%, #f8e1e1 87.5%, #f8e1e1),
+                linear-gradient(30deg, #f8e1e1 12%, transparent 12.5%, transparent 87%, #f8e1e1 87.5%, #f8e1e1),
+                linear-gradient(150deg, #f8e1e1 12%, transparent 12.5%, transparent 87%, #f8e1e1 87.5%, #f8e1e1),
+                linear-gradient(60deg, #fce9e9 25%, transparent 25.5%, transparent 75%, #fce9e9 75.5%, #fce9e9),
+                linear-gradient(60deg, #fce9e9 25%, transparent 25.5%, transparent 75%, #fce9e9 75.5%, #fce9e9);
+            background-size: 40px 70px;
+            background-position: 0 0, 0 0, 20px 35px, 20px 35px, 0 0, 20px 35px;
         }
-        /* Card ya saizi ya kati na nadhifu */
+
+        /* CARD YA SAIZI YA KATI, Nadhifu na yenye Mvuto (Compact) */
         .card {
-            width: 85%;
-            max-width: 350px; /* Hii inapunguza upana uwe wa kati */
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            width: 88%;
+            max-width: 360px; /* Saizi imepunguzwa iwe nadhifu */
+            background: rgba(255, 255, 255, 0.95); /* Weupe hafifu kuruhusu pattern ionekane */
+            padding: 25px;
+            border-radius: 25px; /* Pembe zimeviringishwa zaidi kwa staili ya kisasa */
+            box-shadow: 0 15px 35px rgba(128, 0, 0, 0.2); /* Kivuli kina rangi ya Maroon kidogo */
             text-align: center;
-            border-top: 6px solid #800000;
+            border: 2px solid #ffd700; /* Mstari wa Gold nyembamba pembeni */
+            position: relative;
+            overflow: hidden;
         }
+
+        /* Mapambo ya Gold juu ya Card */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #800000, #ffd700, #800000);
+        }
+
         .header {
             color: #800000;
-            font-size: 18px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 8px;
+            font-size: 19px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+            margin-top: 10px;
         }
+
         .mstari {
-            font-size: 17px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 700;
             color: #333;
-            margin-bottom: 10px;
-        }
-        .maandiko {
-            font-size: 15px;
-            line-height: 1.5;
-            color: #555;
-            font-style: italic;
+            background: rgba(255, 215, 0, 0.15); /* Gold background hafifu */
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
             margin-bottom: 15px;
         }
-        .tafakari-box {
-            background: #800000;
-            color: white;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 14px;
+
+        .maandiko {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #444;
+            font-style: italic;
+            margin-bottom: 20px;
+            padding: 0 10px;
         }
+
+        /* BOX LA TAFAKARI LIMEBORESHWA (Compact & Stylized) */
+        .tafakari-box {
+            background: linear-gradient(135deg, #800000 0%, #5a0000 100%);
+            color: white;
+            padding: 18px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
         .tafakari-label {
             color: #ffd700;
             font-weight: bold;
             font-size: 12px;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Icon ndogo ya Gold kabla ya neno Tafakari */
+        .tafakari-label::before {
+            content: '✨'; 
+            margin-right: 5px;
+        }
+
+        #loading {
+            font-size: 16px;
+            color: #800000;
+            font-weight: bold;
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="card" id="output">
-        <div style="color: #800000;">Inapakia...</div>
+        <div id="loading">Inapakia...</div>
     </div>
 
     <script>
@@ -95,12 +151,16 @@
                     <div class="mstari">${d.mstari}</div>
                     <div class="maandiko">"${d.maandiko}"</div>
                     <div class="tafakari-box">
-                        <div class="tafakari-label">Tafakari fupi</div>
+                        <div class="tafakari-label">Tafakari</div>
                         <div>${d.tafakari}</div>
                     </div>
                 `;
             } else {
-                output.innerHTML = "Bado neno halijawekwa.";
+                output.innerHTML = `
+                    <div class="header">VIWAWA</div>
+                    <div class="mstari">Subiri kidogo</div>
+                    <div class="maandiko">Bado neno la leo halijawekwa. Angalia baadaye.</div>
+                `;
             }
         });
     </script>

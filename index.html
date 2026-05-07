@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Viwawa App</title>
+<title>Viwawa App - Splash Screen</title>
 
 <style>
 body{
     margin:0;
     height:100vh;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background:#800020; /* Rangi ya Maroon */
+    background:#800020; /* Rangi rasmi ya Maroon */
     display:flex;
     justify-content:center;
     align-items:center;
@@ -18,7 +18,7 @@ body{
     overflow:hidden;
 }
 
-/* Background pattern kwa ajili ya urembo */
+/* Background pattern kwa urembo wa kisasa */
 body::before{
     content:"";
     position:absolute;
@@ -34,54 +34,57 @@ body::before{
     z-index:2;
 }
 
-/* 1. APP LOGO BOX */
+/* 1. APP LOGO BOX - Imetengenezwa kutoshea Logo.png yako */
 .logo-box{
     background:white;
-    width:130px;
-    height:130px;
-    border-radius:35px;
+    width:140px;
+    height:140px;
+    border-radius:40px;
     display:flex;
     justify-content:center;
     align-items:center;
     margin:auto;
-    box-shadow:0 15px 35px rgba(0,0,0,0.3);
+    box-shadow:0 15px 35px rgba(0,0,0,0.4);
+    border: 2px solid #ffcc00; /* Mpaka wa dhahabu kuzunguka logo */
 }
 
 .logo-box img{
-    width:95px;
+    width:110px; /* Saizi nzuri kwa ajili ya nembo uliyotuma */
+    height: auto;
+    object-fit: contain;
 }
 
 /* 2. APP NAME: VIWAWA */
 h1{
     margin-top:25px;
-    font-size:42px;
-    font-weight: 800;
-    letter-spacing:5px;
-    margin-bottom: 5px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    font-size:45px;
+    font-weight: 900;
+    letter-spacing:6px;
+    margin-bottom: 2px;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
 }
 
-/* 3. MAELEZO CHINI YA JINA */
+/* 3. MAELEZO: Vijana Wakatoliki Wafanyakazi */
 .sub-title {
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 1.2px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: #ffcc00; /* Rangi ya Dhahabu kwa mvuto */
-    margin-bottom: 15px;
+    color: #ffcc00; /* Rangi ya dhahabu */
+    margin-bottom: 20px;
 }
 
-/* LOADING DOTS */
+/* LOADING ANIMATION */
 .loader{
-    margin-top:30px;
+    margin-top:20px;
     display:flex;
     justify-content:center;
-    gap:8px;
+    gap:10px;
 }
 
 .dot{
-    width:10px;
-    height:10px;
+    width:12px;
+    height:12px;
     background:white;
     border-radius:50%;
     animation: bounce 1s infinite ease-in-out;
@@ -95,25 +98,25 @@ h1{
     40%{ transform:scale(1); }
 }
 
-/* 4. MOTO CHINI KABISA (FOOTER) */
+/* 4. MOTO: Mapendo Daima */
 .footer{
     position:absolute;
-    bottom:30px;
+    bottom:40px;
     width:100%;
     text-align:center;
 }
 
 .moto-text {
-    font-size: 19px;
-    font-weight: 500;
+    font-size: 20px;
+    font-weight: 600;
     font-style: italic;
-    color: #f6f1ee;
-    letter-spacing: 1px;
+    color: #ffffff;
+    letter-spacing: 1.5px;
 }
 
 .moto-text::before, .moto-text::after {
     content: '"';
-    font-size: 24px;
+    font-size: 26px;
     color: #ffcc00;
 }
 </style>
@@ -123,7 +126,7 @@ h1{
 
 <div class="container">
     <div class="logo-box">
-        <img src="logo.png" alt="Viwawa Logo">
+        <img src="Logo.png" alt="Viwawa Logo">
     </div>
 
     <h1>VIWAWA</h1>
@@ -142,7 +145,7 @@ h1{
 </div>
 
 <script>
-    // Inasubiri sekunde 3 kisha inakupeleka home.html
+    // Inasubiri sekunde 3.5 kisha inafungua ukurasa wa nyumbani
     setTimeout(function(){
         window.location.href = "home.html";
     }, 3500);
@@ -150,4 +153,3 @@ h1{
 
 </body>
 </html>
-

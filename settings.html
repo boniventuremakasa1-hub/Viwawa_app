@@ -42,7 +42,6 @@
         .form-card { background: #fff; border-radius: 15px; padding: 5px; }
         .btn-upload { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; margin-top: 10px; cursor: pointer; }
         .btn-toggle { background: #607d8b; }
-
         .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f2f2f2; }
     </style>
 </head>
@@ -160,25 +159,42 @@
             if(type === 'ada') loadMembersToSelect();
         }
 
-        // KODI YA KUPAKIA NENO NA TIMESTAMP
+        async function uploadTangazo() {
+            const file = document.getElementById('adFile').files[0];
+            const title = document.getElementById('adTitle').value;
+            const msg = document.getElementById('adMsg').value;
+            if(!file || !title || !msg) return alert("Jaza kila kitu!");
+
+            const ref = storage.ref('matangazo/' + file.name);
+            await ref.put(file);
+            const url = await ref.getDownloadURL();
+
+            await db.collection("matangazo").add({
+                kichwa: title,
+                maelezo: msg,
+                picha: url,
+                timestamp: Date.now() // Kwa ajili ya kujifuta baada ya siku 7
+            });
+
+            alert("Tangazo limepakiwa!");
+            location.reload();
+        }
+
         async function uploadNeno() {
             const mstari = document.getElementById('wordVerse').value;
             const maandiko = document.getElementById('wordScripture').value;
             const tafakari = document.getElementById('wordTafakari').value;
-
             if(!mstari || !maandiko || !tafakari) return alert("Jaza nafasi zote!");
 
             await db.collection("leo").doc("neno").set({
                 mstari: mstari,
                 maandiko: maandiko,
                 tafakari: tafakari,
-                timestamp: Date.now() // MUHIMU: Inasave muda wa sasa
+                timestamp: Date.now()
             });
 
-            alert("Neno limepakiwa! Litajifuta lenyewe baada ya saa 24.");
-            document.getElementById('wordVerse').value = "";
-            document.getElementById('wordScripture').value = "";
-            document.getElementById('wordTafakari').value = "";
+            alert("Neno limepakiwa!");
+            location.reload();
         }
 
         async function registerMember() {

@@ -13,16 +13,13 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: #f8f9fa; color: #333; padding-bottom: 50px; }
 
-        /* AppBar Custom */
         .app-bar { background: var(--primary); color: white; padding: 15px; display: flex; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .app-bar i { font-size: 20px; cursor: pointer; margin-right: 15px; }
         .app-bar h1 { font-size: 18px; text-transform: uppercase; }
 
         .container { padding: 15px; }
 
-        /* Kadi za Kuchagua (Kama Picha Yako) */
         .selection-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; }
-        .selection-card:active { transform: scale(0.98); }
         .card-left { display: flex; align-items: center; gap: 15px; }
         .icon-circle { width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         .bg-ada { background: #fff0f0; color: var(--primary); }
@@ -30,25 +27,19 @@
         .card-info h3 { font-size: 16px; font-weight: bold; }
         .card-info p { font-size: 12px; color: #888; }
 
-        /* SPREADSHEET VIEW (ADA) */
         #view-ada, #view-mingine { display: none; }
         .spreadsheet-container { background: white; border-radius: 12px; padding: 10px; overflow-x: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; min-width: 700px; font-size: 12px; }
         th, td { border: 1px solid #eee; padding: 12px 8px; text-align: center; }
         th { background: #f9f9f9; font-weight: bold; color: var(--primary); }
-        .member-name { text-align: left; position: sticky; left: 0; background: white; font-weight: bold; padding-left: 10px; min-width: 140px; }
-        .check-icon { color: var(--success); font-weight: bold; }
-        .cross-icon { color: var(--danger); font-weight: bold; opacity: 0.3; }
+        .member-name { text-align: left; position: sticky; left: 0; background: white; font-weight: bold; padding-left: 10px; min-width: 150px; z-index: 5; }
+        .check-icon { color: var(--success); font-weight: bold; font-size: 16px; }
+        .cross-icon { color: #ccc; font-size: 14px; }
 
-        /* MICHANGO MINGINE VIEW */
         .mchango-list-item { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; border-left: 5px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .mchango-top { display: flex; justify-content: space-between; margin-bottom: 5px; }
         .mchango-title { font-weight: bold; font-size: 14px; color: var(--primary); text-transform: uppercase; }
         .mchango-amt { font-weight: 900; color: #333; }
-        .mchango-user { font-size: 13px; color: #666; display: flex; align-items: center; gap: 5px; }
-        .mchango-date { font-size: 11px; color: #999; margin-top: 5px; }
-
-        /* Bottom Nav Hidden in Sub-pages */
         .sub-nav { color: var(--primary); font-weight: bold; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
     </style>
 </head>
@@ -97,25 +88,14 @@
                         </tr>
                     </thead>
                     <tbody id="adaTableBody">
-                        <tr>
-                            <td class="member-name">Boniventure Makasa</td>
-                            <td class="check-icon">✔</td><td class="check-icon">✔</td>
-                            <td class="check-icon">✔</td><td class="cross-icon">✘</td>
-                            <td class="cross-icon">✘</td><td class="cross-icon">✘</td>
-                            <td class="cross-icon">✘</td><td class="cross-icon">✘</td>
-                            <td class="cross-icon">✘</td><td class="cross-icon">✘</td>
-                            <td class="cross-icon">✘</td><td class="cross-icon">✘</td>
-                        </tr>
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
 
         <div id="view-mingine">
             <div class="sub-nav" onclick="resetPage()"><i class="fa-solid fa-chevron-left"></i> Rudi</div>
-            <div id="otherContributionsList">
-                <div style="text-align:center; padding:20px; color:#999;">Inapakia michango...</div>
-            </div>
+            <div id="otherContributionsList"></div>
         </div>
 
     </div>
@@ -134,11 +114,10 @@
 
         function toggleView(target) {
             document.getElementById('menu-area').style.display = 'none';
-            document.getElementById('mainBack').onclick = resetPage;
-            
             if(target === 'ada') {
                 document.getElementById('view-ada').style.display = 'block';
                 document.getElementById('titleText').innerText = "Ada ya Mwezi";
+                loadAdaTable();
             } else {
                 document.getElementById('view-mingine').style.display = 'block';
                 document.getElementById('titleText').innerText = "Michango Mingine";
@@ -151,23 +130,38 @@
             document.getElementById('view-ada').style.display = 'none';
             document.getElementById('view-mingine').style.display = 'none';
             document.getElementById('titleText').innerText = "Michango";
-            document.getElementById('mainBack').onclick = () => window.history.back();
+        }
+
+        // LOAD SPREADSHEET DATA (ADA)
+        function loadAdaTable() {
+            const tbody = document.getElementById('adaTableBody');
+            const miezi = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ago', 'Sep', 'Okt', 'Nov', 'Des'];
+
+            db.collection("wanachama").orderBy("jina").onSnapshot(snap => {
+                tbody.innerHTML = "";
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    let row = `<tr><td class="member-name">${d.jina}</td>`;
+                    
+                    miezi.forEach(mwezi => {
+                        // Kama mwezi ni true, weka ✔, vinginevyo weka ✘
+                        const icon = d[mwezi] ? '<span class="check-icon">✔</span>' : '<span class="cross-icon">✘</span>';
+                        row += `<td>${icon}</td>`;
+                    });
+                    
+                    row += `</tr>`;
+                    tbody.innerHTML += row;
+                });
+            });
         }
 
         function loadOtherContributions() {
             const listDiv = document.getElementById('otherContributionsList');
-            
             db.collection("michango").orderBy("tarehe", "desc").onSnapshot((snapshot) => {
                 listDiv.innerHTML = "";
-                if(snapshot.empty) {
-                    listDiv.innerHTML = "<div style='text-align:center; padding:20px; color:#999;'>Hakuna rekodi za michango kwa sasa.</div>";
-                    return;
-                }
-
                 snapshot.forEach((doc) => {
                     const d = doc.data();
                     const dateStr = d.tarehe ? d.tarehe.toDate().toLocaleDateString('sw-TZ') : "---";
-                    
                     listDiv.innerHTML += `
                         <div class="mchango-list-item">
                             <div class="mchango-top">

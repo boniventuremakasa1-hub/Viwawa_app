@@ -14,7 +14,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: #ffffff; padding-bottom: 100px; }
 
-        /* HEADER & PROFILE SECTION */
         .profile-card { background: var(--primary); padding: 40px 20px 30px; border-radius: 0 0 45px 45px; text-align: center; color: white; position: relative; }
         .back-btn { position: absolute; top: 20px; left: 20px; font-size: 20px; color: white; cursor: pointer; }
         .profile-img-box { position: relative; width: 110px; height: 110px; margin: 0 auto 15px; }
@@ -26,7 +25,6 @@
         .container { padding: 20px; }
         h2.section-title { font-size: 15px; color: #333; margin: 20px 0 15px; font-weight: bold; text-transform: uppercase; }
 
-        /* ADMIN ACTIONS GRID - Updated to 4 items */
         .admin-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 25px; }
         .action-card { background: #fff; border: 1px solid #eee; padding: 12px 2px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; }
         .action-card i { font-size: 20px; margin-bottom: 8px; display: block; }
@@ -36,17 +34,15 @@
         .card-ada i { color: #2196f3; }
         .action-card span { font-weight: bold; font-size: 9px; color: #333; text-transform: uppercase; }
 
-        /* INPUT FIELDS (TAARIFA BINAFSI) */
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; font-size: 11px; font-weight: bold; color: #888; margin-bottom: 8px; text-transform: uppercase; }
         .input-field { width: 100%; background: var(--bg-input); border: none; padding: 14px; border-radius: 12px; font-size: 14px; outline: none; color: #333; }
 
-        /* HIDDEN FORMS */
         #form-container { display: none; margin-top: 20px; border-top: 2px solid #f2f2f2; padding-top: 20px; }
         .form-card { background: #fff; border-radius: 15px; padding: 5px; }
         .btn-upload { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        .btn-toggle { background: #607d8b; } /* Rangi tofauti kwa kitufe cha tiki */
 
-        /* NOTIFICATION SWITCHES */
         .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f2f2f2; }
         .switch-row span { font-size: 15px; font-weight: 500; color: #333; }
         .toggle { width: 45px; height: 24px; background: #ddd; border-radius: 20px; position: relative; cursor: pointer; }
@@ -90,39 +86,25 @@
         </div>
 
         <h2 class="section-title">Taarifa Binafsi</h2>
-        
-        <div class="input-group">
-            <label>Jina Kamili</label>
-            <input type="text" id="editName" class="input-field" placeholder="Weka jina lako">
-        </div>
-
-        <div class="input-group">
-            <label>Jimbo</label>
-            <input type="text" id="editJimbo" class="input-field" placeholder="Weka Jimbo">
-        </div>
-
-        <div class="input-group">
-            <label>Parokia</label>
-            <input type="text" id="editParokia" class="input-field" placeholder="Weka Parokia">
-        </div>
-
-        <div class="input-group">
-            <label>Jumuiya</label>
-            <input type="text" id="editJumuiya" class="input-field" placeholder="Weka Jumuiya">
-        </div>
+        <div class="input-group"><label>Jina Kamili</label><input type="text" id="editName" class="input-field"></div>
+        <div class="input-group"><label>Jimbo</label><input type="text" id="editJimbo" class="input-field"></div>
+        <div class="input-group"><label>Parokia</label><input type="text" id="editParokia" class="input-field"></div>
+        <div class="input-group"><label>Jumuiya</label><input type="text" id="editJumuiya" class="input-field"></div>
 
         <button class="btn-upload" style="background:#555;" onclick="saveProfile()">HIFADHI TAARIFA</button>
 
         <div id="form-container">
             <div id="form-ada" class="form-card" style="display:none;">
-                <h2 class="section-title">Rekodi Ada</h2>
+                <h2 class="section-title">Usimamizi wa Ada</h2>
                 <div style="background:#f9f9f9; padding:10px; border-radius:10px; margin-bottom:15px;">
-                    <label style="font-size:10px; color:var(--primary);">USAUSAJILI MPYA</label>
+                    <label style="font-size:10px; color:var(--primary);">USAJILI MPYA</label>
                     <input type="text" id="newMemberName" class="input-field" placeholder="Jina la mwanachama">
-                    <button class="btn-upload" style="padding:8px; font-size:12px;" onclick="registerMember()">SAJILI</button>
+                    <button class="btn-upload" onclick="registerMember()">SAJILI MWANACHAMA</button>
                 </div>
+                
                 <label>Chagua Mwanachama</label>
                 <select id="selectMember" class="input-field"></select>
+                
                 <label style="margin-top:10px; display:block;">Chagua Mwezi</label>
                 <select id="selectMonth" class="input-field">
                     <option value="Jan">Januari</option><option value="Feb">Februari</option>
@@ -132,43 +114,35 @@
                     <option value="Sep">Septemba</option><option value="Okt">Oktoba</option>
                     <option value="Nov">Novemba</option><option value="Des">Desemba</option>
                 </select>
-                <button class="btn-upload" onclick="updateAda()">WEKA TIKI (✔)</button>
+                
+                <button class="btn-upload btn-toggle" onclick="updateAda()">BADILI HALI (Tiki/Futa)</button>
+                <p style="font-size: 10px; color: #888; text-align: center; margin-top: 5px;">
+                    *Ikiwa mwanachama ana tiki, itafutwa. Ikiwa hana, itawekwa.
+                </p>
             </div>
 
             <div id="form-tangazo" class="form-card" style="display:none;">
                 <h2 class="section-title">Pakia Tangazo</h2>
-                <label style="font-size:12px; font-weight:bold;">Picha ya Tangazo</label>
-                <input type="file" id="adFile" class="input-field" style="background:white; border:1px solid #ddd;">
-                <input type="text" id="adTitle" class="input-field" placeholder="Kichwa cha Tangazo" style="margin-top:10px;">
-                <textarea id="adMsg" class="input-field" placeholder="Maelezo ya Tangazo" style="height:100px; margin-top:10px;"></textarea>
-                <button class="btn-upload" onclick="uploadTangazo()">PAKIA TANGAZO SASA</button>
+                <input type="file" id="adFile" class="input-field">
+                <input type="text" id="adTitle" class="input-field" placeholder="Kichwa">
+                <textarea id="adMsg" class="input-field" placeholder="Maelezo"></textarea>
+                <button class="btn-upload" onclick="uploadTangazo()">PAKIA</button>
             </div>
 
             <div id="form-mchango" class="form-card" style="display:none;">
                 <h2 class="section-title">Pakia Mchango</h2>
-                <input type="text" id="mType" class="input-field" placeholder="Jina la Mchango (Ada/Vifaa)">
-                <input type="text" id="mPerson" class="input-field" placeholder="Jina la Mchangiaji" style="margin-top:10px;">
-                <input type="number" id="mAmount" class="input-field" placeholder="Kiasi (Tsh)" style="margin-top:10px;">
-                <button class="btn-upload" onclick="uploadMchango()">PAKIZA MCHANGO</button>
+                <input type="text" id="mType" class="input-field" placeholder="Aina ya Mchango">
+                <input type="text" id="mPerson" class="input-field" placeholder="Jina">
+                <input type="number" id="mAmount" class="input-field" placeholder="Kiasi">
+                <button class="btn-upload" onclick="uploadMchango()">PAKIZA</button>
             </div>
 
             <div id="form-neno" class="form-card" style="display:none;">
-                <h2 class="section-title">Pakia Neno la Leo</h2>
-                <input type="text" id="wordVerse" class="input-field" placeholder="Mstari (mf. Zaburi 23:1)">
-                <textarea id="wordScripture" class="input-field" placeholder="Maandiko" style="height:80px; margin-top:10px;"></textarea>
-                <textarea id="wordReflect" class="input-field" placeholder="Tafakari" style="height:100px; margin-top:10px;"></textarea>
-                <button class="btn-upload" onclick="uploadNeno()">PAKIZA NENO SASA</button>
+                <h2 class="section-title">Neno la Leo</h2>
+                <input type="text" id="wordVerse" class="input-field" placeholder="Mstari">
+                <textarea id="wordScripture" class="input-field" placeholder="Maandiko"></textarea>
+                <button class="btn-upload" onclick="uploadNeno()">PAKIZA</button>
             </div>
-        </div>
-
-        <h2 class="section-title" style="margin-top:30px;">Notification Settings</h2>
-        <div class="switch-row">
-            <span>Announcements</span>
-            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
-        </div>
-        <div class="switch-row">
-            <span>Bible Verse of Day</span>
-            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
         </div>
     </div>
 
@@ -188,30 +162,14 @@
         function showForm(type) {
             const pass = prompt("Ingiza Password ya Usimamizi:");
             if(pass !== "Viwawa@2026") return alert("Password si sahihi!");
-
             document.getElementById('form-container').style.display = 'block';
             document.getElementById('form-tangazo').style.display = type === 'tangazo' ? 'block' : 'none';
             document.getElementById('form-mchango').style.display = type === 'mchango' ? 'block' : 'none';
             document.getElementById('form-neno').style.display = type === 'neno' ? 'block' : 'none';
             document.getElementById('form-ada').style.display = type === 'ada' ? 'block' : 'none';
             if(type === 'ada') loadMembersToSelect();
-            window.scrollTo(0, document.body.scrollHeight);
         }
 
-        // PICHA YA WASIFU
-        async function uploadProfilePic(input) {
-            const file = input.files[0];
-            if(!file) return;
-            try {
-                const ref = storage.ref('profiles/admin_pic');
-                await ref.put(file);
-                const url = await ref.getDownloadURL();
-                document.getElementById('displayPic').src = url;
-                alert("Picha imebadilishwa!");
-            } catch(e) { alert("Imeshindwa kupakia picha!"); }
-        }
-
-        // KAZI ZA ADA
         async function registerMember() {
             const name = document.getElementById('newMemberName').value;
             if(!name) return alert("Andika jina!");
@@ -219,8 +177,8 @@
                 jina: name, Jan: false, Feb: false, Mar: false, Apr: false, Mei: false, Jun: false,
                 Jul: false, Ago: false, Sep: false, Okt: false, Nov: false, Des: false 
             });
+            document.getElementById('newMemberName').value = "";
             alert("Mwanachama amesajiliwa!");
-            loadMembersToSelect();
         }
 
         function loadMembersToSelect() {
@@ -233,41 +191,38 @@
             });
         }
 
+        // MAREKEBISHO: TOGGLE TIKI (WEKA AU FUTA)
         async function updateAda() {
             const id = document.getElementById('selectMember').value;
             const month = document.getElementById('selectMonth').value;
             if(!id) return alert("Chagua mwanachama!");
-            let data = {}; data[month] = true;
-            await db.collection("wanachama").doc(id).update(data);
-            alert("Tiki imewekwa!");
-        }
 
-        // KAZI ZA ZAMANI
-        async function uploadTangazo() {
-            const file = document.getElementById('adFile').files[0];
-            const title = document.getElementById('adTitle').value;
-            const msg = document.getElementById('adMsg').value;
-            if(!title || !msg) return alert("Jaza kichwa na maelezo!");
-            try {
-                let url = "";
-                if(file) {
-                    const ref = storage.ref('ads/' + Date.now());
-                    await ref.put(file);
-                    url = await ref.getDownloadURL();
+            const docRef = db.collection("wanachama").doc(id);
+            const doc = await docRef.get();
+            
+            if (doc.exists) {
+                const currentStatus = doc.data()[month]; // Inasoma kama ni true au false
+                let data = {};
+                data[month] = !currentStatus; // Kama ilikuwa true inakuwa false, na kinyume chake
+                
+                await docRef.update(data);
+                
+                if(data[month]) {
+                    alert("Tiki (✔) imewekwa kwa mwezi wa " + month);
+                } else {
+                    alert("Tiki imeondolewa kwa mwezi wa " + month);
                 }
-                await db.collection("matangazo").add({ kichwa: title, ujumbe: msg, image: url, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
-                alert("Tangazo limepakiwa!");
-                location.reload();
-            } catch(e) { alert("Imefeli!"); }
+            }
         }
 
-        async function uploadNeno() {
-            const verse = document.getElementById('wordVerse').value;
-            const scripture = document.getElementById('wordScripture').value;
-            const reflect = document.getElementById('wordReflect').value;
-            if(!verse || !scripture) return alert("Jaza mstari na maandiko!");
-            await db.collection("neno_leo").doc("leo").set({ mstari: verse, maandiko: scripture, tafakari: reflect, tarehe: firebase.firestore.FieldValue.serverTimestamp() });
-            alert("Neno la leo limepakiwa!");
+        async function uploadProfilePic(input) {
+            const file = input.files[0];
+            if(!file) return;
+            const ref = storage.ref('profiles/admin_pic');
+            await ref.put(file);
+            const url = await ref.getDownloadURL();
+            document.getElementById('displayPic').src = url;
+            alert("Picha imesasishwa!");
         }
 
         async function uploadMchango() {
@@ -279,9 +234,7 @@
         }
 
         function saveProfile() {
-            const name = document.getElementById('editName').value;
-            if(name) document.getElementById('displayName').innerText = name;
-            alert("Taarifa zimehifadhiwa!");
+            alert("Taarifa binafsi zimehifadhiwa!");
         }
     </script>
 </body>

@@ -11,12 +11,9 @@
 
 <style>
     body{
-        margin:0;
-        font-family:'Segoe UI',sans-serif;
-        background-color:#f6f1ee;
+        margin:0; font-family:'Segoe UI',sans-serif; background-color:#f6f1ee;
         background-image:url("data:image/svg+xml,%3Csvg width='240' height='240' viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%23e4d6d6' stroke-width='2' fill='none' stroke-opacity='0.45'%3E%3Cpath d='M20 30h20v20H20z'/%3E%3Ccircle cx='120' cy='40' r='12'/%3E%3Cpath d='M190 30l15 15-15 15-15-15z'/%3E%3Cpath d='M40 120c10-15 30-15 40 0'/%3E%3Cpath d='M150 110h25M162 98v25'/%3E%3Cpath d='M70 200l15-10 15 10'/%3E%3Cpath d='M200 180a10 10 0 110 20 10 10 0 010-20z'/%3E%3Cpath d='M30 180l10 10m0-10l-10 10'/%3E%3Cpath d='M110 160c8 0 15 6 15 15s-7 15-15 15-15-6-15-15 7-15 15-15z'/%3E%3Cpath d='M120 90v30M105 105h30'/%3E%3Crect x='170' y='70' width='26' height='18' rx='3'/%3E%3Cline x1='183' y1='70' x2='183' y2='88'/%3E%3Cpath d='M60 60c10-8 22-8 30 0-8 2-10 6-15 10-5-4-7-8-15-10z'/%3E%3Cpath d='M30 70c0-6 8-10 12-4 4-6 12-2 12 4 0 8-12 14-12 14S30 78 30 70z'/%3E%3C/g%3E%3C/svg%3E");
     }
-
     .chat-header{
         background:#800020; color:white; padding:12px 16px;
         display:flex; align-items:center; gap:12px;
@@ -26,36 +23,28 @@
     .back-arrow { color: white; font-size: 20px; text-decoration: none; }
     .chat-header img{ width:40px; height:40px; border-radius:50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.3); }
     .chat-header h2 { font-size: 18px; margin: 0; }
-
     .chat-body{ margin-top:70px; margin-bottom:80px; padding:12px; display:flex; flex-direction:column; gap:10px; }
-
     .message{ display:flex; gap:8px; max-width:85%; align-items:flex-end; margin-bottom: 5px; }
     .message img.user-avatar{ width:30px; height:30px; border-radius:50%; background:#ddd; object-fit: cover; flex-shrink: 0; }
-    
     .bubble{
         background:white; padding:8px 12px; border-radius:15px;
         box-shadow:0 2px 5px rgba(0,0,0,0.05); position: relative;
     }
     .user-name { font-size: 11px; font-weight: bold; color: #800020; margin-bottom: 3px; display: block; }
-    
     .left{ align-self:flex-start; }
     .right{ align-self:flex-end; flex-direction:row-reverse; }
     .right .bubble{ border-bottom-right-radius:2px; background: #e7ffdb; }
     .left .bubble{ border-bottom-left-radius:2px; }
-    
     .msg-content { font-size: 14.5px; color: #333; word-wrap: break-word; }
     .time-container { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 4px; }
     .time{ font-size:10px; color:#777; }
     .ticks { color: #34b7f1; font-size: 12px; }
-
     .chat-input{
         position:fixed; bottom:0; width:100%; background:white;
         padding:10px 12px; display:flex; gap:8px;
         border-top:1px solid #eee; box-sizing: border-box; align-items: center;
     }
-    .chat-input input{
-        flex:1; padding:12px 15px; border-radius:25px; border:1px solid #ddd; outline:none; font-size: 15px;
-    }
+    .chat-input input{ flex:1; padding:12px 15px; border-radius:25px; border:1px solid #ddd; outline:none; font-size: 15px; }
     .send-btn{
         background:#800020; color:white; width:45px; height:45px; 
         border-radius:50%; border:none; display:flex; align-items:center; justify-content:center; font-size:18px;
@@ -82,7 +71,6 @@
 </div>
 
 <script>
-// FIREBASE CONFIG
 const firebaseConfig = {
     apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
     authDomain: "viwawa-app.firebaseapp.com",
@@ -91,29 +79,34 @@ const firebaseConfig = {
     messagingSenderId: "238515321557",
     appId: "1:238515321557:web:e000c87895e54d588308d1"
 };
-if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+
+try {
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+} catch (e) {
+    alert("Firebase imegoma kuanza: " + e.message);
+}
+
 const db = firebase.firestore();
 
-// GET LOCAL PROFILE
 const profileData = JSON.parse(localStorage.getItem('viwawa_profile')) || {};
 const profilePic = localStorage.getItem('profilePic') || 'https://via.placeholder.com/100';
 const fullUserName = profileData.name || "Mwanachama";
-
-// Kuchuja jina la kwanza tu
 const firstName = fullUserName.split(' ')[0];
 
-// LISTEN FOR MESSAGES
-db.collection("chats").orderBy("time", "asc").onSnapshot((snapshot) => {
+// LISTEN FOR MESSAGES (Nimeondoa .orderBy kwa muda ili kulazimisha data itokee)
+db.collection("chats").limit(50).onSnapshot((snapshot) => {
     let chatContainer = document.getElementById('chatBody');
     chatContainer.innerHTML = "";
     
-    snapshot.forEach((doc) => {
-        let data = doc.data();
+    // Kupanga data hapa hapa kwenye kodi (badala ya database) ili kuepuka Index error
+    let docs = [];
+    snapshot.forEach(doc => docs.push(doc.data()));
+    docs.sort((a, b) => a.time - b.time);
+
+    docs.forEach((data) => {
         let isMe = data.fullName === fullUserName; 
-        
         let div = document.createElement('div');
         div.className = `message ${isMe ? 'right' : 'left'}`;
-        
         div.innerHTML = `
             <img src="${data.pic || 'https://via.placeholder.com/100'}" class="user-avatar">
             <div class="bubble">
@@ -126,12 +119,11 @@ db.collection("chats").orderBy("time", "asc").onSnapshot((snapshot) => {
             </div>`;
         chatContainer.appendChild(div);
     });
-    // Scroll to bottom
-    chatContainer.scrollTop = chatContainer.scrollHeight;
     window.scrollTo(0, document.body.scrollHeight);
+}, (err) => {
+    alert("Kosa la kuleta data: " + err.message);
 });
 
-// SEND MESSAGE
 async function sendMsg(){
     let msgInput = document.getElementById('msg');
     let text = msgInput.value.trim();
@@ -139,7 +131,7 @@ async function sendMsg(){
 
     msgInput.value = "";
     
-    // Nimetumia Date.now() ili kuhakikisha ujumbe haupotei kwenye mpangilio
+    // Tumeongeza mtego wa 'catch' ili kukuonyesha kosa kama kutuma kumeshindikana
     await db.collection("chats").add({
         user: firstName,
         fullName: fullUserName,
@@ -147,20 +139,21 @@ async function sendMsg(){
         text: text,
         displayTime: getTime(),
         time: Date.now() 
+    }).then(() => {
+        console.log("Ujumbe umetumwa!");
+    }).catch((error) => {
+        alert("Imeshindikana kutuma! Sababu: " + error.message);
     });
 }
 
 function getTime(){
     let d = new Date();
-    let hrs = d.getHours();
-    let mins = String(d.getMinutes()).padStart(2, '0');
-    return hrs + ":" + mins;
+    return d.getHours() + ":" + String(d.getMinutes()).padStart(2, '0');
 }
 
-document.getElementById('msg').addEventListener('keypress', (e) => { 
-    if(e.key === 'Enter') sendMsg(); 
-});
+document.getElementById('msg').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendMsg(); });
 </script>
 
 </body>
 </html>
+

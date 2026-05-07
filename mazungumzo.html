@@ -89,23 +89,21 @@ const profilePic = localStorage.getItem('profilePic') || 'https://via.placeholde
 const fullUserName = profileData.name || "Mwanachama";
 const firstName = fullUserName.split(' ')[0];
 
-// LISTEN FOR MESSAGES
-db.collection("chats").onSnapshot((snapshot) => {
+// LISTEN FOR MESSAGES (Sasa tunatumia orderBy kwa sababu Index imekamilika)
+db.collection("chats").orderBy("time", "asc").onSnapshot((snapshot) => {
     let chatContainer = document.getElementById('chatBody');
     chatContainer.innerHTML = "";
     
-    let docs = [];
-    snapshot.forEach(doc => docs.push({id: doc.id, ...doc.data()}));
-    docs.sort((a, b) => a.time - b.time);
-
-    docs.forEach((data) => {
+    snapshot.forEach((doc) => {
+        let data = doc.data();
         let isMe = data.fullName === fullUserName; 
+        
         let div = document.createElement('div');
         div.className = `message ${isMe ? 'right' : 'left'}`;
         div.innerHTML = `
             <img src="${data.pic || 'https://via.placeholder.com/100'}" class="user-avatar">
-            <div class="bubble" oncontextmenu="handleDelete('${data.id}', ${isMe}); return false;" 
-                 ontouchstart="startTouch('${data.id}', ${isMe})" ontouchend="endTouch()">
+            <div class="bubble" oncontextmenu="handleDelete('${doc.id}', ${isMe}); return false;" 
+                 ontouchstart="startTouch('${doc.id}', ${isMe})" ontouchend="endTouch()">
                 <span class="user-name">${isMe ? 'Mimi' : data.user}</span>
                 <div class="msg-content">${data.text}</div>
                 <div class="time-container">
@@ -116,9 +114,11 @@ db.collection("chats").onSnapshot((snapshot) => {
         chatContainer.appendChild(div);
     });
     window.scrollTo(0, document.body.scrollHeight);
+}, (error) => {
+    console.error("Firestore Error:", error.message);
 });
 
-// DELETE LOGIC (Long Press)
+// DELETE LOGIC
 let touchTimer;
 function startTouch(id, isMe) { if(isMe) touchTimer = setTimeout(() => handleDelete(id, isMe), 1000); }
 function endTouch() { clearTimeout(touchTimer); }
@@ -130,16 +130,16 @@ async function handleDelete(id, isMe) {
     }
 }
 
-// SEND MESSAGE
+// SEND MESSAGE (Nimeongeza 'abc' ili kufanana na Index yako)
 async function sendMsg(){
     let msgInput = document.getElementById('msg');
     let text = msgInput.value.trim();
     if(text === "") return;
     msgInput.value = "";
     
-    // MABORESHO YA PICHA: Kama picha ni kubwa mno, tunaituma kama placeholder kuzuia error ya 1MB
+    // Kupunguza picha kuzuia kosa la "1048487 bytes"
     let finalPic = profilePic;
-    if (profilePic && profilePic.length > 200000) { 
+    if (profilePic && profilePic.length > 150000) { 
         finalPic = "https://via.placeholder.com/100?text=" + firstName.charAt(0);
     }
 
@@ -149,7 +149,8 @@ async function sendMsg(){
         pic: finalPic,
         text: text,
         displayTime: getTime(),
-        time: Date.now() 
+        time: Date.now(),
+        abc: "active" // Hii ni muhimu kwa ajili ya Index uliyounda
     }).catch((error) => {
         alert("Imeshindikana kutuma: " + error.message);
     });

@@ -41,14 +41,9 @@
         #form-container { display: none; margin-top: 20px; border-top: 2px solid #f2f2f2; padding-top: 20px; }
         .form-card { background: #fff; border-radius: 15px; padding: 5px; }
         .btn-upload { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; margin-top: 10px; cursor: pointer; }
-        .btn-toggle { background: #607d8b; } /* Rangi tofauti kwa kitufe cha tiki */
+        .btn-toggle { background: #607d8b; }
 
         .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f2f2f2; }
-        .switch-row span { font-size: 15px; font-weight: 500; color: #333; }
-        .toggle { width: 45px; height: 24px; background: #ddd; border-radius: 20px; position: relative; cursor: pointer; }
-        .toggle.active { background: var(--primary); }
-        .toggle::after { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
-        .toggle.active::after { left: 23px; }
     </style>
 </head>
 <body>
@@ -101,10 +96,8 @@
                     <input type="text" id="newMemberName" class="input-field" placeholder="Jina la mwanachama">
                     <button class="btn-upload" onclick="registerMember()">SAJILI MWANACHAMA</button>
                 </div>
-                
                 <label>Chagua Mwanachama</label>
                 <select id="selectMember" class="input-field"></select>
-                
                 <label style="margin-top:10px; display:block;">Chagua Mwezi</label>
                 <select id="selectMonth" class="input-field">
                     <option value="Jan">Januari</option><option value="Feb">Februari</option>
@@ -114,11 +107,15 @@
                     <option value="Sep">Septemba</option><option value="Okt">Oktoba</option>
                     <option value="Nov">Novemba</option><option value="Des">Desemba</option>
                 </select>
-                
                 <button class="btn-upload btn-toggle" onclick="updateAda()">BADILI HALI (Tiki/Futa)</button>
-                <p style="font-size: 10px; color: #888; text-align: center; margin-top: 5px;">
-                    *Ikiwa mwanachama ana tiki, itafutwa. Ikiwa hana, itawekwa.
-                </p>
+            </div>
+
+            <div id="form-neno" class="form-card" style="display:none;">
+                <h2 class="section-title">Neno la Leo</h2>
+                <input type="text" id="wordVerse" class="input-field" placeholder="Mstari (Mf: Yohana 3:16)">
+                <textarea id="wordScripture" class="input-field" placeholder="Maandiko"></textarea>
+                <textarea id="wordTafakari" class="input-field" placeholder="Tafakari ya Leo"></textarea>
+                <button class="btn-upload" onclick="uploadNeno()">PAKIZA NENO</button>
             </div>
 
             <div id="form-tangazo" class="form-card" style="display:none;">
@@ -135,13 +132,6 @@
                 <input type="text" id="mPerson" class="input-field" placeholder="Jina">
                 <input type="number" id="mAmount" class="input-field" placeholder="Kiasi">
                 <button class="btn-upload" onclick="uploadMchango()">PAKIZA</button>
-            </div>
-
-            <div id="form-neno" class="form-card" style="display:none;">
-                <h2 class="section-title">Neno la Leo</h2>
-                <input type="text" id="wordVerse" class="input-field" placeholder="Mstari">
-                <textarea id="wordScripture" class="input-field" placeholder="Maandiko"></textarea>
-                <button class="btn-upload" onclick="uploadNeno()">PAKIZA</button>
             </div>
         </div>
     </div>
@@ -170,6 +160,27 @@
             if(type === 'ada') loadMembersToSelect();
         }
 
+        // KODI YA KUPAKIA NENO NA TIMESTAMP
+        async function uploadNeno() {
+            const mstari = document.getElementById('wordVerse').value;
+            const maandiko = document.getElementById('wordScripture').value;
+            const tafakari = document.getElementById('wordTafakari').value;
+
+            if(!mstari || !maandiko || !tafakari) return alert("Jaza nafasi zote!");
+
+            await db.collection("leo").doc("neno").set({
+                mstari: mstari,
+                maandiko: maandiko,
+                tafakari: tafakari,
+                timestamp: Date.now() // MUHIMU: Inasave muda wa sasa
+            });
+
+            alert("Neno limepakiwa! Litajifuta lenyewe baada ya saa 24.");
+            document.getElementById('wordVerse').value = "";
+            document.getElementById('wordScripture').value = "";
+            document.getElementById('wordTafakari').value = "";
+        }
+
         async function registerMember() {
             const name = document.getElementById('newMemberName').value;
             if(!name) return alert("Andika jina!");
@@ -191,27 +202,18 @@
             });
         }
 
-        // MAREKEBISHO: TOGGLE TIKI (WEKA AU FUTA)
         async function updateAda() {
             const id = document.getElementById('selectMember').value;
             const month = document.getElementById('selectMonth').value;
             if(!id) return alert("Chagua mwanachama!");
-
             const docRef = db.collection("wanachama").doc(id);
             const doc = await docRef.get();
-            
             if (doc.exists) {
-                const currentStatus = doc.data()[month]; // Inasoma kama ni true au false
+                const currentStatus = doc.data()[month];
                 let data = {};
-                data[month] = !currentStatus; // Kama ilikuwa true inakuwa false, na kinyume chake
-                
+                data[month] = !currentStatus;
                 await docRef.update(data);
-                
-                if(data[month]) {
-                    alert("Tiki (✔) imewekwa kwa mwezi wa " + month);
-                } else {
-                    alert("Tiki imeondolewa kwa mwezi wa " + month);
-                }
+                alert(data[month] ? "Tiki imewekwa!" : "Tiki imeondolewa!");
             }
         }
 
@@ -233,9 +235,7 @@
             alert("Mchango umerekodiwa!");
         }
 
-        function saveProfile() {
-            alert("Taarifa binafsi zimehifadhiwa!");
-        }
+        function saveProfile() { alert("Taarifa binafsi zimehifadhiwa!"); }
     </script>
 </body>
 </html>

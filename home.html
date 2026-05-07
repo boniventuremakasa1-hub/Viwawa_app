@@ -9,7 +9,16 @@
     <style>
         :root { --maroon: #801313; --white: #ffffff; --bg-light: #f4f4f4; --text-dark: #333; --text-gray: #777; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-light); padding-bottom: 90px; overflow-x: hidden; }
+        
+        /* Marekebisho: Kufanya body ijae kioo chote kwa urefu */
+        body { 
+            background-color: var(--bg-light); 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 90px; 
+            overflow-x: hidden; 
+        }
 
         /* Header */
         .header { 
@@ -72,26 +81,33 @@
         .welcome-section { padding: 25px 20px; }
         .welcome-section h2 { font-size: 22px; color: var(--text-dark); }
 
-        /* Grid Layout */
+        /* Marekebisho: Grid sasa inajaza nafasi iliyobaki (Flex-grow) */
         .grid-container { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
             gap: 15px; 
-            padding: 0 20px; 
+            padding: 0 20px 20px 20px; 
+            flex-grow: 1; /* Inasukuma kadi zijae chini */
+            align-content: stretch; 
         }
+        
         .menu-card { 
             background: var(--white); 
-            padding: 25px 15px; 
+            padding: 20px 15px; 
             border-radius: 20px; 
             text-align: center; 
             text-decoration: none; 
             color: var(--text-dark); 
             box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
             transition: 0.2s; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Inatengeneza icon na maandishi katikati ya kadi */
+            align-items: center;
         }
         .menu-card:active { transform: scale(0.95); }
-        .menu-card i { font-size: 32px; margin-bottom: 12px; display: block; }
-        .menu-card span { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .menu-card i { font-size: 35px; margin-bottom: 12px; display: block; }
+        .menu-card span { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
         /* Icon Colors */
         .c-biblia { color: #5c7cfa; }
@@ -198,20 +214,15 @@
         }
 
         window.onload = function() {
-            // Kupakia data za profile (Jina)
             const savedData = JSON.parse(localStorage.getItem('viwawa_profile'));
-            // Kupakia picha ya profile
             const savedPic = localStorage.getItem('profilePic');
 
             if(savedData && savedData.name) {
-                // Habari, [Jina la kwanza] kwenye Homepage
                 document.getElementById('userName').innerText = savedData.name.split(' ')[0];
-                // Jina kamili kwenye Sidebar
                 document.getElementById('sideName').innerText = savedData.name;
             }
 
             if(savedPic) {
-                // Picha kwenye Sidebar
                 document.getElementById('sideProfilePic').src = savedPic;
             }
         };

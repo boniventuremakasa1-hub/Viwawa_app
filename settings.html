@@ -113,7 +113,6 @@
 
             <div id="form-tangazo" class="form-card" style="display:none;">
                 <h2 class="section-title">Pakia Tangazo</h2>
-                <input type="file" id="adFile" class="input-field">
                 <input type="text" id="adTitle" class="input-field" placeholder="Kichwa cha Tangazo">
                 <textarea id="adMsg" class="input-field" placeholder="Maelezo ya Tangazo"></textarea>
                 <button class="btn-upload" onclick="uploadTangazo()">PAKIA TANGAZO</button>
@@ -153,28 +152,24 @@
             if(type === 'ada') loadMembersToSelect();
         }
 
+        // KODI YA KUPAKIA TANGAZO BILA PICHA
         async function uploadTangazo() {
-            const fileInput = document.getElementById('adFile');
             const title = document.getElementById('adTitle').value;
             const msg = document.getElementById('adMsg').value;
 
-            if(!fileInput.files[0] || !title || !msg) return alert("Tafadhali jaza kichwa, maelezo na chagua picha!");
+            if(!title || !msg) return alert("Jaza kichwa na maelezo!");
 
-            const file = fileInput.files[0];
-            const ref = storage.ref('matangazo/' + Date.now() + "_" + file.name);
-            
             try {
-                await ref.put(file);
-                const url = await ref.getDownloadURL();
                 await db.collection("matangazo").add({
                     kichwa: title,
                     maelezo: msg,
-                    picha: url,
-                    timestamp: Date.now() 
+                    timestamp: Date.now() // Hii itatumika kwa ajili ya kufuta baada ya siku 7
                 });
-                alert("Tangazo limepakiwa na litakaa kwa siku 7!");
+                alert("Tangazo limepakiwa!");
+                document.getElementById('adTitle').value = "";
+                document.getElementById('adMsg').value = "";
                 location.reload();
-            } catch(e) { alert("Hitilafu: " + e.message); }
+            } catch(e) { alert("Error: " + e.message); }
         }
 
         async function uploadNeno() {
@@ -182,7 +177,7 @@
             const maandiko = document.getElementById('wordScripture').value;
             const tafakari = document.getElementById('wordTafakari').value;
 
-            if(!mstari || !maandiko || !tafakari) return alert("Jaza Mstari, Maandiko na Tafakari!");
+            if(!mstari || !maandiko || !tafakari) return alert("Jaza kila kitu!");
 
             await db.collection("leo").doc("neno").set({
                 mstari: mstari,
@@ -194,7 +189,6 @@
             location.reload();
         }
 
-        // --- Functions nyingine zimebaki vilevile ---
         async function registerMember() {
             const name = document.getElementById('newMemberName').value;
             if(!name) return alert("Andika jina!");

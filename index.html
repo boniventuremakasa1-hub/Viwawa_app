@@ -72,7 +72,7 @@
         .welcome-section { padding: 25px 20px; }
         .welcome-section h2 { font-size: 22px; color: var(--text-dark); }
 
-        /* Grid Layout - 6 Tabs kamilifu */
+        /* Grid Layout */
         .grid-container { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
@@ -192,20 +192,27 @@
         function logout() {
             if(confirm("Je, unataka kuondoka?")) {
                 localStorage.removeItem('viwawa_profile');
+                localStorage.removeItem('profilePic');
                 window.location.href = "login.html";
             }
         }
 
         window.onload = function() {
-            const data = JSON.parse(localStorage.getItem('viwawa_profile'));
-            if(data) {
-                if(data.name) {
-                    document.getElementById('userName').innerText = data.name.split(' ')[0];
-                    document.getElementById('sideName').innerText = data.name;
-                }
-                if(data.image) {
-                    document.getElementById('sideProfilePic').src = data.image;
-                }
+            // Kupakia data za profile (Jina)
+            const savedData = JSON.parse(localStorage.getItem('viwawa_profile'));
+            // Kupakia picha ya profile
+            const savedPic = localStorage.getItem('profilePic');
+
+            if(savedData && savedData.name) {
+                // Habari, [Jina la kwanza] kwenye Homepage
+                document.getElementById('userName').innerText = savedData.name.split(' ')[0];
+                // Jina kamili kwenye Sidebar
+                document.getElementById('sideName').innerText = savedData.name;
+            }
+
+            if(savedPic) {
+                // Picha kwenye Sidebar
+                document.getElementById('sideProfilePic').src = savedPic;
             }
         };
     </script>

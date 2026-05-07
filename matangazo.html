@@ -38,7 +38,6 @@
             border-radius: 15px;
             overflow: hidden;
             margin-bottom: 20px;
-            /* Shadow inayofanya kadi ionekane ipo juu (Hai) */
             box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
             border: 1px solid rgba(0,0,0,0.05);
             transition: transform 0.3s ease;
@@ -48,12 +47,11 @@
             width: 100%;
             max-height: 220px;
             object-fit: cover;
-            display: none; /* Inajifungua ikiwa kuna picha */
+            display: none; 
         }
 
         .ad-content { padding: 20px; }
 
-        /* Kichwa cha Tangazo na Emoji */
         .ad-header {
             display: flex;
             align-items: center;
@@ -77,7 +75,6 @@
             white-space: pre-line;
         }
 
-        /* Sehemu ya chini (Tarehe na Share) */
         .ad-footer {
             display: flex;
             justify-content: space-between;
@@ -139,37 +136,50 @@
         function fetchAds() {
             const container = document.getElementById('ad-container');
             
-            db.collection("matangazo").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
+            // Pata muda wa siku 7 zilizopita
+            const sikuSabaAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+
+            // Tunachuja matangazo yaliyozidi siku 7 kwa kutumia timestamp
+            db.collection("matangazo")
+              .where("timestamp", ">", sikuSabaAgo)
+              .orderBy("timestamp", "desc")
+              .onSnapshot((querySnapshot) => {
                 container.innerHTML = "";
                 
                 if (querySnapshot.empty) {
-                    container.innerHTML = "<div id='loader'>Hakuna matangazo kwa sasa.</div>";
+                    container.innerHTML = "<div id='loader'>Hakuna matangazo mapya kwa sasa.</div>";
                     return;
                 }
 
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    const date = data.timestamp ? data.timestamp.toDate().toLocaleDateString('sw-TZ', { day: 'numeric', month: 'short', year: 'numeric' }) : "Hivi sasa";
+                    
+                    // Badilisha namba ya timestamp kuwa tarehe
+                    const date = data.timestamp ? new Date(data.timestamp).toLocaleDateString('sw-TZ', { 
+                        day: 'numeric', 
+                        month: 'short', 
+                        year: 'numeric' 
+                    }) : "Hivi sasa";
 
                     const card = document.createElement('div');
                     card.className = 'ad-card';
 
-                    // HTML ya kadi
+                    // HTML ya kadi (Nimetumia data.maelezo badala ya ujumbe ili iendane na admin panel)
                     card.innerHTML = `
-                        ${data.image ? `<img src="${data.image}" class="ad-image" style="display:block;">` : ''}
+                        ${data.picha ? `<img src="${data.picha}" class="ad-image" style="display:block;">` : ''}
                         <div class="ad-content">
                             <div class="ad-header">
                                 <span class="ad-emoji">📢</span>
                                 <h2>${data.kichwa}</h2>
                             </div>
-                            <div class="ad-message">${data.ujumbe}</div>
+                            <div class="ad-message">${data.maelezo}</div>
                             
                             <div class="ad-footer">
                                 <div class="ad-date">
                                     <i class="fa-regular fa-calendar"></i>
                                     ${date}
                                 </div>
-                                <div class="share-btn" onclick="shareAd('${data.kichwa}', '${data.ujumbe}')">
+                                <div class="share-btn" onclick="shareAd('${data.kichwa}', '${data.maelezo}')">
                                     <i class="fa-solid fa-paper-plane"></i>
                                     SHARE
                                 </div>
@@ -178,6 +188,9 @@
                     `;
                     container.appendChild(card);
                 });
+            }, (error) => {
+                console.error("Hitilafu: ", error);
+                container.innerHTML = "<div id='loader'>Tatizo la kiufundi limetokea.</div>";
             });
         }
 

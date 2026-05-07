@@ -109,7 +109,6 @@ db.collection("chats").orderBy("time", "asc").onSnapshot((snapshot) => {
     
     snapshot.forEach((doc) => {
         let data = doc.data();
-        // Tunatumia jina kamili kulinganisha "isMe" kwa usalama zaidi
         let isMe = data.fullName === fullUserName; 
         
         let div = document.createElement('div');
@@ -127,6 +126,8 @@ db.collection("chats").orderBy("time", "asc").onSnapshot((snapshot) => {
             </div>`;
         chatContainer.appendChild(div);
     });
+    // Scroll to bottom
+    chatContainer.scrollTop = chatContainer.scrollHeight;
     window.scrollTo(0, document.body.scrollHeight);
 });
 
@@ -138,13 +139,14 @@ async function sendMsg(){
 
     msgInput.value = "";
     
+    // Nimetumia Date.now() ili kuhakikisha ujumbe haupotei kwenye mpangilio
     await db.collection("chats").add({
-        user: firstName,         // Jina la kwanza kwa ajili ya bubble
-        fullName: fullUserName,  // Jina kamili kwa ajili ya kulinganisha isMe
-        pic: profilePic,         // Picha kutoka localStorage
+        user: firstName,
+        fullName: fullUserName,
+        pic: profilePic,
         text: text,
         displayTime: getTime(),
-        time: firebase.firestore.FieldValue.serverTimestamp()
+        time: Date.now() 
     });
 }
 
@@ -155,7 +157,6 @@ function getTime(){
     return hrs + ":" + mins;
 }
 
-// Allow Enter key to send
 document.getElementById('msg').addEventListener('keypress', (e) => { 
     if(e.key === 'Enter') sendMsg(); 
 });

@@ -10,7 +10,6 @@
         :root { --maroon: #801313; --white: #ffffff; --bg-light: #f4f4f4; --text-dark: #333; --text-gray: #777; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
-        /* Marekebisho: Kufanya body ijae kioo chote kwa urefu */
         body { 
             background-color: var(--bg-light); 
             min-height: 100vh;
@@ -20,7 +19,6 @@
             overflow-x: hidden; 
         }
 
-        /* Header */
         .header { 
             background-color: var(--maroon); 
             color: white; 
@@ -35,7 +33,6 @@
         }
         .header i { font-size: 20px; cursor: pointer; }
 
-        /* Sidebar */
         .sidebar { 
             position: fixed; 
             top: 0; 
@@ -73,21 +70,18 @@
         }
         .side-item:active { background: #f0f0f0; }
 
-        /* Overlay */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 1500; }
         .overlay.active { display: block; }
 
-        /* Welcome Section */
         .welcome-section { padding: 25px 20px; }
         .welcome-section h2 { font-size: 22px; color: var(--text-dark); }
 
-        /* Marekebisho: Grid sasa inajaza nafasi iliyobaki (Flex-grow) */
         .grid-container { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
             gap: 15px; 
             padding: 0 20px 20px 20px; 
-            flex-grow: 1; /* Inasukuma kadi zijae chini */
+            flex-grow: 1; 
             align-content: stretch; 
         }
         
@@ -102,14 +96,13 @@
             transition: 0.2s; 
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Inatengeneza icon na maandishi katikati ya kadi */
+            justify-content: center; 
             align-items: center;
         }
         .menu-card:active { transform: scale(0.95); }
         .menu-card i { font-size: 35px; margin-bottom: 12px; display: block; }
         .menu-card span { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Icon Colors */
         .c-biblia { color: #5c7cfa; }
         .c-chat { color: #20c997; }
         .c-sala { color: #6c5ce7; }
@@ -117,7 +110,6 @@
         .c-matangazo { color: #fd7e14; }
         .c-settings { color: #636e72; }
 
-        /* Bottom Nav */
         .bottom-nav { 
             position: fixed; 
             bottom: 0; 
@@ -199,7 +191,50 @@
         <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i><br>PROFILE</a>
     </nav>
 
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+
     <script>
+        // FIREBASE CONFIGURATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
+            authDomain: "viwawa-app.firebaseapp.com",
+            projectId: "viwawa-app",
+            storageBucket: "viwawa-app.appspot.com",
+            messagingSenderId: "238515321557",
+            appId: "1:238515321557:web:e000c87895e54d588308d1"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const messaging = firebase.messaging();
+
+        // SAJILI PUSH NOTIFICATIONS
+        function setupNotifications() {
+            Notification.requestPermission().then((permission) => {
+                if (permission === 'granted') {
+                    console.log('Ruhusa ya Notification imetolewa!');
+                    // WEKA VAPID KEY YAKO HAPA
+                    messaging.getToken({ vapidKey: 'WEKA_VAPID_KEY_YAKO_HAPA' }).then((currentToken) => {
+                        if (currentToken) {
+                            console.log('Token ya mwanachama:', currentToken);
+                        }
+                    }).catch((err) => {
+                        console.log('An error occurred while retrieving token: ', err);
+                    });
+                }
+            });
+        }
+
+        // Mapokezi ya ujumbe wakati mwanachama yupo NDANI ya app
+        messaging.onMessage((payload) => {
+            console.log('Ujumbe mpya (Foreground):', payload);
+            alert(payload.notification.title + ": " + payload.notification.body);
+        });
+
+        // UI FUNCTIONS
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
@@ -214,6 +249,8 @@
         }
 
         window.onload = function() {
+            setupNotifications(); // Anza kutafuta ruhusa ya notification
+            
             const savedData = JSON.parse(localStorage.getItem('viwawa_profile'));
             const savedPic = localStorage.getItem('profilePic');
 

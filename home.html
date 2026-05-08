@@ -195,14 +195,14 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
 
     <script>
-        // FIREBASE CONFIGURATION
+        // DATA ZAKO MPYA ZA FIREBASE
         const firebaseConfig = {
-            apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
+            apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wDd-8A",
             authDomain: "viwawa-app.firebaseapp.com",
             projectId: "viwawa-app",
-            storageBucket: "viwawa-app.appspot.com",
-            messagingSenderId: "238515321557",
-            appId: "1:238515321557:web:e000c87895e54d588308d1"
+            storageBucket: "viwawa-app.firebasestorage.app",
+            messagingSenderId: "523436472007",
+            appId: "1:523436472007:web:dda010d18fd00ea60070e2"
         };
 
         // Initialize Firebase
@@ -211,13 +211,10 @@
         }
         const messaging = firebase.messaging();
 
-        // SAJILI PUSH NOTIFICATIONS (MABORESHO YA PATH YA FOLDER)
+        // SAJILI PUSH NOTIFICATIONS
         function setupNotifications() {
-            console.log("Inajaribu kusajili Service Worker...");
-            
-            // Tunaiambia browser iangalie file ndani ya folder la /Viwawa_app/
-            // Hii itarekebisha ile Error 404 uliyoipata mwanzo
-            navigator.serviceWorker.register('/Viwawa_app/firebase-messaging-sw.js')
+            // Njia ya kuelekea kwenye Service Worker
+            navigator.serviceWorker.register('/firebase-messaging-sw.js')
             .then((registration) => {
                 console.log('Service Worker imesajiliwa!');
                 messaging.useServiceWorker(registration);
@@ -226,37 +223,33 @@
             })
             .then((permission) => {
                 if (permission === 'granted') {
-                    console.log('Ruhusa ya Notification imetolewa!');
-                    
+                    // HAPA WEKA ILE VAPID KEY YAKO KUTOKA FIREBASE SETTINGS
                     return messaging.getToken({ 
                         vapidKey: 'BMoq67alz3BBQkVls9GnjqiNrj-Z_AjALjo5sgB7_JWwRPpA722yv6bl3CzoetTyKzY8CPJWyGnApF12MRdg9zl' 
                     });
                 } else {
-                    throw new Error('Ruhusa ya notification imekataliwa na browser.');
+                    throw new Error('Ruhusa ya notification imekataliwa.');
                 }
             })
             .then((currentToken) => {
                 if (currentToken) {
-                    // HAPA NDIPO TOKEN INAPOPATIKANA - ITAONESHA ALERT KWENYE SIMU
+                    // HAPA TOKEN ITAONEKANA SASA!
                     alert('HONGERA! Token Imepatikana:\n\n' + currentToken);
-                    console.log('Token ya mwanachama:', currentToken);
+                    console.log('Token:', currentToken);
                 } else {
-                    alert('Token haijapatikana. Hakikisha file lipo kwenye folder la Viwawa_app.');
+                    alert('Token haijapatikana. Hakikisha VAPID key ni sahihi.');
                 }
             })
             .catch((err) => {
-                console.error('Hitilafu:', err);
-                alert('Hitilafu ya Kiufundi: ' + err.message);
+                console.error(err);
+                alert('Hitilafu: ' + err.message);
             });
         }
 
-        // Mapokezi ya ujumbe wakati mwanachama yupo NDANI ya app
         messaging.onMessage((payload) => {
-            console.log('Ujumbe mpya (Foreground):', payload);
             alert(payload.notification.title + ": " + payload.notification.body);
         });
 
-        // UI FUNCTIONS
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
@@ -271,20 +264,14 @@
         }
 
         window.onload = function() {
-            // Anza mchakato wa kusajili notifications
             setupNotifications(); 
-            
             const savedData = JSON.parse(localStorage.getItem('viwawa_profile'));
             const savedPic = localStorage.getItem('profilePic');
-
             if(savedData && savedData.name) {
                 document.getElementById('userName').innerText = savedData.name.split(' ')[0];
                 document.getElementById('sideName').innerText = savedData.name;
             }
-
-            if(savedPic) {
-                document.getElementById('sideProfilePic').src = savedPic;
-            }
+            if(savedPic) { document.getElementById('sideProfilePic').src = savedPic; }
         };
     </script>
 </body>

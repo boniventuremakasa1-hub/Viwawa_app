@@ -1,27 +1,25 @@
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
 
-// Weka zile kodi zako za firebaseConfig hapa chini
 const firebaseConfig = {
-  apiKey: "WEKA_API_KEY_YAKO",
-  authDomain: "WEKA_AUTH_DOMAIN_YAKO",
-  projectId: "WEKA_PROJECT_ID_YAKO",
-  storageBucket: "WEKA_STORAGE_BUCKET_YAKO",
-  messagingSenderId: "WEKA_SENDER_ID_YAKO",
-  appId: "WEKA_APP_ID_YAKO"
+    apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
+    authDomain: "viwawa-app.firebaseapp.com",
+    projectId: "viwawa-app",
+    storageBucket: "viwawa-app.appspot.com",
+    messagingSenderId: "238515321557",
+    appId: "1:238515321557:web:e000c87895e54d588308d1"
 };
 
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// Hii sehemu ndiyo inapokea ujumbe wakati app imefungwa
+// Inapokea ujumbe wakati mwanachama hatumii app (Background)
 messaging.onBackgroundMessage((payload) => {
-  console.log('Ujumbe umepokelewa background: ', payload);
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
-    body: payload.notification.body,
-    icon: 'Logo.png' // Icon itakayotokea juu ya screen
-  };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
+    console.log('Background Message:', payload);
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+        icon: 'Logo.png'
+    };
+    self.registration.showNotification(notificationTitle, notificationOptions);
 });

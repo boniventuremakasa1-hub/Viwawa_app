@@ -195,7 +195,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
 
     <script>
-        // DATA ZAKO MPYA ZA FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wDd-8A",
             authDomain: "viwawa-app.firebaseapp.com",
@@ -205,25 +204,21 @@
             appId: "1:523436472007:web:dda010d18fd00ea60070e2"
         };
 
-        // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const messaging = firebase.messaging();
 
-        // SAJILI PUSH NOTIFICATIONS
         function setupNotifications() {
-            // Njia ya kuelekea kwenye Service Worker
-            navigator.serviceWorker.register('/firebase-messaging-sw.js')
+            // HAPA NDIPO KUREKEBISHA: Tumeongeza /Viwawa_app/ mwanzo wa jina la faili
+            navigator.serviceWorker.register('/Viwawa_app/firebase-messaging-sw.js')
             .then((registration) => {
                 console.log('Service Worker imesajiliwa!');
                 messaging.useServiceWorker(registration);
-
                 return Notification.requestPermission();
             })
             .then((permission) => {
                 if (permission === 'granted') {
-                    // HAPA WEKA ILE VAPID KEY YAKO KUTOKA FIREBASE SETTINGS
                     return messaging.getToken({ 
                         vapidKey: 'BMoq67alz3BBQkVls9GnjqiNrj-Z_AjALjo5sgB7_JWwRPpA722yv6bl3CzoetTyKzY8CPJWyGnApF12MRdg9zl' 
                     });
@@ -233,15 +228,12 @@
             })
             .then((currentToken) => {
                 if (currentToken) {
-                    // HAPA TOKEN ITAONEKANA SASA!
                     alert('HONGERA! Token Imepatikana:\n\n' + currentToken);
-                    console.log('Token:', currentToken);
                 } else {
-                    alert('Token haijapatikana. Hakikisha VAPID key ni sahihi.');
+                    alert('Token haijapatikana.');
                 }
             })
             .catch((err) => {
-                console.error(err);
                 alert('Hitilafu: ' + err.message);
             });
         }

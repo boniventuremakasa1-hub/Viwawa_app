@@ -211,19 +211,27 @@
         }
         const messaging = firebase.messaging();
 
-        // SAJILI PUSH NOTIFICATIONS
+        // SAJILI PUSH NOTIFICATIONS (KODI ILIYOBORESHA KWA ALERT)
         function setupNotifications() {
             Notification.requestPermission().then((permission) => {
                 if (permission === 'granted') {
                     console.log('Ruhusa ya Notification imetolewa!');
-                    // VAPID KEY IMEWEKWA HAPA
-                    messaging.getToken({ vapidKey: 'BMoq67alz3BBQkVls9GnjqiNrj-Z_AjALjo5sgB7_JWwRPpA722yv6bl3CzoetTyKzY8CPJWyGnApF12MRdg9zl' }).then((currentToken) => {
+                    
+                    messaging.getToken({ 
+                        vapidKey: 'BMoq67alz3BBQkVls9GnjqiNrj-Z_AjALjo5sgB7_JWwRPpA722yv6bl3CzoetTyKzY8CPJWyGnApF12MRdg9zl' 
+                    }).then((currentToken) => {
                         if (currentToken) {
+                            // Hapa ndipo tunapata Token. Alert itatokea kwenye simu yako.
+                            alert('HONGERA! Token Imepatikana: ' + currentToken);
                             console.log('Token ya mwanachama:', currentToken);
+                        } else {
+                            alert('Token haijapatikana. Hakikisha firebase-messaging-sw.js ipo sahihi.');
                         }
                     }).catch((err) => {
-                        console.log('An error occurred while retrieving token: ', err);
+                        alert('Hitilafu ya Firebase (Error): ' + err);
                     });
+                } else {
+                    alert('Ruhusa imekataliwa. Tafadhali ruhusu Notifications kwenye Chrome Settings.');
                 }
             });
         }
@@ -249,7 +257,7 @@
         }
 
         window.onload = function() {
-            setupNotifications(); // Anza kutafuta ruhusa ya notification
+            setupNotifications(); // Itekeleze mara tu ukurasa unapomaliza kuload
             
             const savedData = JSON.parse(localStorage.getItem('viwawa_profile'));
             const savedPic = localStorage.getItem('profilePic');

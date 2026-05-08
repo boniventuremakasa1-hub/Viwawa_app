@@ -26,7 +26,6 @@
     .chat-body{ margin-top:70px; margin-bottom:80px; padding:12px; display:flex; flex-direction:column; gap:10px; }
     .message{ display:flex; gap:8px; max-width:85%; align-items:flex-end; margin-bottom: 5px; }
     
-    /* Style ya Avatar badala ya picha nzito */
     .user-avatar{ 
         width:35px; height:35px; border-radius:50%; 
         object-fit: cover; flex-shrink: 0; 
@@ -82,12 +81,12 @@
 
 <script>
 const firebaseConfig = {
-    apiKey: "AIzaSyDBRoHCdSzu1g9LP9VBjYSeVU4N-wDd-8A",
+    apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wDd-8A",
     authDomain: "viwawa-app.firebaseapp.com",
     projectId: "viwawa-app",
     storageBucket: "viwawa-app.appspot.com",
-    messagingSenderId: "238515321557",
-    appId: "1:238515321557:web:e000c87895e54d588308d1"
+    messagingSenderId: "523436472007",
+    appId: "1:523436472007:web:dda010d18fd00ea60070e2"
 };
 
 if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
@@ -105,8 +104,6 @@ db.collection("chats").orderBy("time", "asc").onSnapshot((snapshot) => {
     snapshot.forEach((doc) => {
         let data = doc.data();
         let isMe = data.fullName === fullUserName; 
-        
-        // Kutengeneza Avatar nzuri kwa kutumia jina
         let avatarUrl = `https://ui-avatars.com/api/?name=${data.user}&background=random&color=fff&bold=true`;
         
         let div = document.createElement('div');
@@ -139,24 +136,53 @@ async function handleDelete(id, isMe) {
     }
 }
 
-// SEND MESSAGE
+// SEND MESSAGE & NOTIFICATION
 async function sendMsg(){
     let msgInput = document.getElementById('msg');
     let text = msgInput.value.trim();
     if(text === "") return;
     msgInput.value = "";
     
+    // 1. Tuma kwenye Firestore
     await db.collection("chats").add({
         user: firstName,
         fullName: fullUserName,
-        // Hapa hatutumi tena picha nzito, tunatuma jina tu avatar ijitegemee
         text: text,
         displayTime: getTime(),
         time: Date.now(),
         abc: "active" 
+    }).then(() => {
+        // 2. Tuma Notification kwa wengine
+        sendNotification(firstName, text);
     }).catch((error) => {
         alert("Imeshindikana kutuma: " + error.message);
     });
+}
+
+// FUNCTION YA KUTUMA NOTIFICATION MOJA KWA MOJA
+function sendNotification(sender, message) {
+    const serverKey = "AAAA37m_OQk:APA91bF8_yN8mS_T2... (HAPA WEKA SERVER KEY YAKO)"; // Nitakuambia utoe wapi
+    
+    const notificationData = {
+        "to": "/topics/viwawa_chat", // Kila mtu aliyejisajili kwenye topic hii atapata
+        "notification": {
+            "title": "Ujumbe Mpya: " + sender,
+            "body": message,
+            "icon": "https://ui-avatars.com/api/?name=VIWAWA&background=800020&color=fff",
+            "click_action": "mazungumzo.html"
+        }
+    };
+
+    fetch('https://fcm.googleapis.com/fcm/send', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'key=' + serverKey,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(notificationData)
+    })
+    .then(response => console.log("Notification imetumwa!"))
+    .catch(error => console.error("Error notification:", error));
 }
 
 function getTime(){

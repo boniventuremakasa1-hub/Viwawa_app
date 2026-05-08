@@ -216,8 +216,8 @@
             Notification.requestPermission().then((permission) => {
                 if (permission === 'granted') {
                     console.log('Ruhusa ya Notification imetolewa!');
-                    // WEKA VAPID KEY YAKO HAPA
-                    messaging.getToken({ vapidKey: 'WEKA_VAPID_KEY_YAKO_HAPA' }).then((currentToken) => {
+                    // VAPID KEY IMEWEKWA HAPA
+                    messaging.getToken({ vapidKey: 'BMoq67alz3BBQkVls9GnjqiNrj-Z_AjALjo5sgB7_JWwRPpA722yv6bl3CzoetTyKzY8CPJWyGnApF12MRdg9zl' }).then((currentToken) => {
                         if (currentToken) {
                             console.log('Token ya mwanachama:', currentToken);
                         }

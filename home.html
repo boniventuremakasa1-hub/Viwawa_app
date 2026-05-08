@@ -210,7 +210,6 @@
         const messaging = firebase.messaging();
 
         function setupNotifications() {
-            // HAPA NDIPO KUREKEBISHA: Tumeongeza /Viwawa_app/ mwanzo wa jina la faili
             navigator.serviceWorker.register('/Viwawa_app/firebase-messaging-sw.js')
             .then((registration) => {
                 console.log('Service Worker imesajiliwa!');
@@ -220,15 +219,15 @@
             .then((permission) => {
                 if (permission === 'granted') {
                     return messaging.getToken({ 
-                        vapidKey: 'BMoq67alz3BBQkVls9GnjqiNrj-Z_AjALjo5sgB7_JWwRPpA722yv6bl3CzoetTyKzY8CPJWyGnApF12MRdg9zl' 
+                        vapidKey: 'BMoq67alz3BBQkVIs9GnjqiNrj-Z_AjALjo5sgB7_JWwRPpA722yv6bI3CzoetTyKzY8CPJWyGnApF12MRdg9zI' 
                     });
                 } else {
-                    throw new Error('Ruhusa ya notification imekataliwa.');
+                    throw new Error('Ruhusa imekataliwa na mtumiaji.');
                 }
             })
             .then((currentToken) => {
                 if (currentToken) {
-                    alert('HONGERA! Token Imepatikana:\n\n' + currentToken);
+                    alert('TOKEN YAKO:\n\n' + currentToken);
                 } else {
                     alert('Token haijapatikana.');
                 }

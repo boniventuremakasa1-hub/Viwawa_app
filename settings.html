@@ -2,247 +2,922 @@
 <html lang="sw">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WASIFU NA USIMAMIZI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mipangilio - VIWAWA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
     <style>
-        :root { --primary: #8d1212; --bg-input: #f2f2f2; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: #ffffff; padding-bottom: 100px; }
+        :root {
+            --maroon: #8d1212;
+            --maroon-light: #b01a1a;
+            --maroon-dark: #5e0d0d;
+            --white: #ffffff;
+            --bg: #f7f3f3;
+            --text: #1a1a1a;
+            --text-gray: #888;
+            --border: #ececec;
+            --card: #ffffff;
+            --danger: #e53935;
+            --success: #2e7d32;
+            --toggle-off: #ccc;
+            --toggle-on: #8d1212;
+        }
 
-        .profile-card { background: var(--primary); padding: 40px 20px 30px; border-radius: 0 0 45px 45px; text-align: center; color: white; position: relative; }
-        .back-btn { position: absolute; top: 20px; left: 20px; font-size: 20px; color: white; cursor: pointer; }
-        .profile-img-box { position: relative; width: 110px; height: 110px; margin: 0 auto 15px; }
-        .profile-img-box img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid white; object-fit: cover; }
-        .cam-badge { position: absolute; bottom: 5px; right: 5px; background: #ffcc00; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; font-size: 14px; border: 2px solid var(--primary); cursor: pointer; }
-        .profile-card h1 { font-size: 22px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
-        .profile-card p { font-size: 14px; opacity: 0.9; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding-bottom: 100px;
+            min-height: 100vh;
+        }
 
-        .container { padding: 20px; }
-        h2.section-title { font-size: 15px; color: #333; margin: 20px 0 15px; font-weight: bold; text-transform: uppercase; }
+        /* HEADER */
+        .header {
+            background: var(--maroon);
+            color: white;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(141,18,18,0.3);
+        }
+        .header i { font-size: 18px; cursor: pointer; }
+        .header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.5px; }
 
-        .admin-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 25px; }
-        .action-card { background: #fff; border: 1px solid #eee; padding: 12px 2px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; }
-        .action-card i { font-size: 20px; margin-bottom: 8px; display: block; }
-        .card-tangazo i { color: #ff8c00; }
-        .card-mchango i { color: #e91e63; }
-        .card-neno i { color: #4caf50; }
-        .card-ada i { color: #2196f3; }
-        .action-card span { font-weight: bold; font-size: 9px; color: #333; text-transform: uppercase; }
+        /* PROFILE SECTION */
+        .profile-section {
+            background: linear-gradient(135deg, var(--maroon-dark) 0%, var(--maroon) 60%, var(--maroon-light) 100%);
+            padding: 30px 20px 40px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        .profile-img-wrap {
+            position: relative;
+            width: 95px;
+            height: 95px;
+            margin: 0 auto 14px;
+        }
+        .profile-img-wrap img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.5);
+        }
+        .cam-btn {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            background: #ffcc00;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-size: 12px;
+            cursor: pointer;
+            border: 2px solid var(--maroon);
+        }
+        .profile-section h2 { font-size: 19px; font-weight: 700; }
+        .profile-section p { font-size: 12px; opacity: 0.85; margin-top: 4px; }
+        .profile-section .role-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            padding: 3px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
 
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 11px; font-weight: bold; color: #888; margin-bottom: 8px; text-transform: uppercase; }
-        .input-field { width: 100%; background: var(--bg-input); border: none; padding: 14px; border-radius: 12px; font-size: 14px; outline: none; color: #333; margin-bottom: 10px; }
+        /* SECTION */
+        .section { padding: 20px 16px 0; }
+        .section-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--maroon);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            padding-left: 4px;
+        }
 
-        #form-container { display: none; margin-top: 20px; border-top: 2px solid #f2f2f2; padding-top: 20px; }
-        .form-card { background: #fff; border-radius: 15px; padding: 5px; }
-        .btn-upload { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        /* SETTINGS CARD */
+        .settings-card {
+            background: var(--card);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-bottom: 12px;
+        }
+        .setting-row {
+            display: flex;
+            align-items: center;
+            padding: 15px 18px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.15s;
+            gap: 15px;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .setting-row:last-child { border-bottom: none; }
+        .setting-row:active { background: #fdf5f5; }
+
+        .row-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .icon-maroon { background: #fdf0f0; color: var(--maroon); }
+        .icon-blue { background: #eef2ff; color: #3b5bdb; }
+        .icon-green { background: #ebfbee; color: #2f9e44; }
+        .icon-orange { background: #fff4e6; color: #e67700; }
+        .icon-purple { background: #f3f0ff; color: #7048e8; }
+        .icon-pink { background: #fff0f6; color: #c2255c; }
+        .icon-gray { background: #f1f3f5; color: #495057; }
+        .icon-red { background: #fff5f5; color: #e03131; }
+
+        .row-text { flex: 1; }
+        .row-text strong { display: block; font-size: 14px; font-weight: 600; }
+        .row-text span { font-size: 12px; color: var(--text-gray); }
+
+        .row-arrow { color: #ccc; font-size: 13px; }
+
+        /* TOGGLE SWITCH */
+        .toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            background: var(--toggle-off);
+            border-radius: 24px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .toggle-slider:before {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: 0.3s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+        .toggle input:checked + .toggle-slider { background: var(--toggle-on); }
+        .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+
+        /* INPUT FIELD */
+        .input-field {
+            width: 100%;
+            background: var(--bg);
+            border: 1.5px solid transparent;
+            padding: 13px 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            outline: none;
+            transition: border 0.2s;
+            margin-bottom: 10px;
+        }
+        .input-field:focus { border-color: var(--maroon); background: white; }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 500;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 24px 24px 0 0;
+            padding: 24px 20px 40px;
+            width: 100%;
+            max-width: 480px;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .modal-handle {
+            width: 40px;
+            height: 4px;
+            background: #ddd;
+            border-radius: 4px;
+            margin: 0 auto 20px;
+        }
+        .modal h3 { font-size: 16px; font-weight: 700; margin-bottom: 18px; color: var(--maroon); }
+
+        /* ADMIN SECTION */
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .admin-card {
+            background: var(--bg);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1.5px solid transparent;
+        }
+        .admin-card:active { transform: scale(0.96); border-color: var(--maroon); }
+        .admin-card i { font-size: 24px; margin-bottom: 8px; display: block; }
+        .admin-card span { font-size: 12px; font-weight: 600; color: var(--text); display: block; }
+        .admin-card small { font-size: 10px; color: var(--text-gray); }
+
+        /* SAVE BTN */
+        .btn-save {
+            width: 100%;
+            background: var(--maroon);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+        }
+        .btn-save:active { opacity: 0.85; }
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        /* STATUS */
+        .status-msg {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #eee;
+            z-index: 100;
+        }
+        .nav-item { text-decoration: none; color: #888; font-size: 10px; text-align: center; flex: 1; }
+        .nav-item i { font-size: 20px; margin-bottom: 3px; display: block; }
+        .nav-item.active { color: var(--maroon); font-weight: 700; }
+
+        /* VERSION */
+        .version-info {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-gray);
+            font-size: 11px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="profile-card">
-        <i class="fa-solid fa-arrow-left back-btn" onclick="history.back()"></i>
-        <div class="profile-img-box">
-            <img src="https://via.placeholder.com/150" id="displayPic">
-            <label for="profileInput" class="cam-badge"><i class="fa-solid fa-camera"></i></label>
-            <input type="file" id="profileInput" style="display:none;" onchange="uploadProfilePic(this)">
-        </div>
-        <h1 id="displayName">Boniventure Makasa</h1>
-        <p>ADMIN</p>
+<!-- HEADER -->
+<div class="header">
+    <i class="fa-solid fa-arrow-left" onclick="history.back()"></i>
+    <h1>Mipangilio</h1>
+</div>
+
+<!-- PROFILE SECTION -->
+<div class="profile-section">
+    <div class="profile-img-wrap">
+        <img id="displayPic" src="https://via.placeholder.com/150" alt="Profile">
+        <label for="profileInput" class="cam-btn">
+            <i class="fa-solid fa-camera"></i>
+        </label>
+        <input type="file" id="profileInput" style="display:none;" accept="image/*" onchange="uploadProfilePic(this)">
     </div>
+    <h2 id="displayName">Mwanachama</h2>
+    <p id="displayJumuiya">Jumuiya yako</p>
+    <div class="role-badge" id="displayRole">MWANACHAMA</div>
+</div>
 
-    <div class="container">
-        <h2 class="section-title">Admin Actions</h2>
-        <div class="admin-grid">
-            <div class="action-card card-tangazo" onclick="showForm('tangazo')">
-                <i class="fa-solid fa-bullhorn"></i>
-                <span>Tangazo</span>
+<!-- TAARIFA BINAFSI -->
+<div class="section">
+    <div class="section-label">Taarifa Binafsi</div>
+    <div class="settings-card">
+        <div class="setting-row" onclick="openModal('modal-profile')">
+            <div class="row-icon icon-maroon"><i class="fa-solid fa-user"></i></div>
+            <div class="row-text">
+                <strong>Wasifu Wangu</strong>
+                <span>Hariri jina, parokia, jumuiya</span>
             </div>
-            <div class="action-card card-mchango" onclick="showForm('mchango')">
-                <i class="fa-solid fa-wallet"></i>
-                <span>Mchango</span>
-            </div>
-            <div class="action-card card-neno" onclick="showForm('neno')">
-                <i class="fa-solid fa-book-bible"></i>
-                <span>Neno</span>
-            </div>
-            <div class="action-card card-ada" onclick="showForm('ada')">
-                <i class="fa-solid fa-file-invoice-dollar"></i>
-                <span>Ada</span>
-            </div>
+            <i class="fa-solid fa-chevron-right row-arrow"></i>
         </div>
-
-        <h2 class="section-title">Taarifa Binafsi</h2>
-        <div class="input-group"><label>Jina Kamili</label><input type="text" id="editName" class="input-field"></div>
-        <div class="input-group"><label>Jimbo</label><input type="text" id="editJimbo" class="input-field"></div>
-        <div class="input-group"><label>Parokia</label><input type="text" id="editParokia" class="input-field"></div>
-        <div class="input-group"><label>Jumuiya</label><input type="text" id="editJumuiya" class="input-field"></div>
-
-        <button class="btn-upload" style="background:#555;" onclick="saveProfile()">HIFADHI TAARIFA</button>
-
-        <div id="form-container">
-            <div id="form-ada" class="form-card" style="display:none;">
-                <h2 class="section-title">Usimamizi wa Ada</h2>
-                <input type="text" id="newMemberName" class="input-field" placeholder="Jina la mwanachama">
-                <button class="btn-upload" onclick="registerMember()">SAJILI MWANACHAMA</button>
-                <hr style="margin:20px 0; border:1px solid #eee;">
-                <select id="selectMember" class="input-field"></select>
-                <select id="selectMonth" class="input-field">
-                    <option value="Jan">Januari</option><option value="Feb">Februari</option>
-                    <option value="Mar">Machi</option><option value="Apr">Aprili</option>
-                    <option value="Mei">Mei</option><option value="Jun">Juni</option>
-                    <option value="Jul">Julai</option><option value="Ago">Agosti</option>
-                    <option value="Sep">Septemba</option><option value="Okt">Oktoba</option>
-                    <option value="Nov">Novemba</option><option value="Des">Desemba</option>
-                </select>
-                <button class="btn-upload" onclick="updateAda()">BADILI HALI (Tiki/Futa)</button>
+        <div class="setting-row" onclick="openModal('modal-password')">
+            <div class="row-icon icon-blue"><i class="fa-solid fa-lock"></i></div>
+            <div class="row-text">
+                <strong>Badilisha Nywila</strong>
+                <span>Sasisha nywila yako</span>
             </div>
+            <i class="fa-solid fa-chevron-right row-arrow"></i>
+        </div>
+    </div>
+</div>
 
-            <div id="form-neno" class="form-card" style="display:none;">
-                <h2 class="section-title">Neno la Leo</h2>
+<!-- MAELEZO YA APP -->
+<div class="section">
+    <div class="section-label">Maelezo ya App</div>
+    <div class="settings-card">
+        <div class="setting-row">
+            <div class="row-icon icon-green"><i class="fa-solid fa-bell"></i></div>
+            <div class="row-text">
+                <strong>Arifa za Push</strong>
+                <span>Pokea matangazo mapya</span>
+            </div>
+            <label class="toggle">
+                <input type="checkbox" id="toggle-notif" checked onchange="saveSetting('notif', this.checked)">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <div class="setting-row">
+            <div class="row-icon icon-purple"><i class="fa-solid fa-moon"></i></div>
+            <div class="row-text">
+                <strong>Hali ya Usiku</strong>
+                <span>Mwanga mzito usiku</span>
+            </div>
+            <label class="toggle">
+                <input type="checkbox" id="toggle-dark" onchange="toggleDarkMode(this.checked)">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <div class="setting-row">
+            <div class="row-icon icon-orange"><i class="fa-solid fa-volume-high"></i></div>
+            <div class="row-text">
+                <strong>Sauti za App</strong>
+                <span>Sauti za ujumbe na arifa</span>
+            </div>
+            <label class="toggle">
+                <input type="checkbox" id="toggle-sound" checked onchange="saveSetting('sound', this.checked)">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <div class="setting-row">
+            <div class="row-icon icon-pink"><i class="fa-solid fa-language"></i></div>
+            <div class="row-text">
+                <strong>Lugha</strong>
+                <span>Kiswahili</span>
+            </div>
+            <i class="fa-solid fa-chevron-right row-arrow"></i>
+        </div>
+    </div>
+</div>
+
+<!-- FARAGHA -->
+<div class="section">
+    <div class="section-label">Faragha & Usalama</div>
+    <div class="settings-card">
+        <div class="setting-row">
+            <div class="row-icon icon-blue"><i class="fa-solid fa-eye-slash"></i></div>
+            <div class="row-text">
+                <strong>Ficha Nambari Yangu</strong>
+                <span>Wengine wasione nambari yako</span>
+            </div>
+            <label class="toggle">
+                <input type="checkbox" id="toggle-privacy" onchange="saveSetting('privacy', this.checked)">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <div class="setting-row">
+            <div class="row-icon icon-green"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="row-text">
+                <strong>Hifadhi Data</strong>
+                <span>Simamia data yako</span>
+            </div>
+            <i class="fa-solid fa-chevron-right row-arrow"></i>
+        </div>
+    </div>
+</div>
+
+<!-- ADMIN SECTION -->
+<div class="section" id="adminSection" style="display:none;">
+    <div class="section-label">Usimamizi (Admin)</div>
+    <div class="settings-card">
+        <div class="setting-row" onclick="openAdminPanel('neno')">
+            <div class="row-icon icon-green"><i class="fa-solid fa-book-bible"></i></div>
+            <div class="row-text">
+                <strong>Pakia Neno la Leo</strong>
+                <span>Andika mstari na tafakari</span>
+            </div>
+            <i class="fa-solid fa-chevron-right row-arrow"></i>
+        </div>
+        <div class="setting-row" onclick="openAdminPanel('tangazo')">
+            <div class="row-icon icon-orange"><i class="fa-solid fa-bullhorn"></i></div>
+            <div class="row-text">
+                <strong>Pakia Tangazo</strong>
+                <span>Tuma habari mpya</span>
+            </div>
+            <i class="fa-solid fa-chevron-right row-arrow"></i>
+        </div>
+        <div class="setting-row" onclick="openAdminPanel('mchango')">
+            <div class="row-icon icon-pink"><i class="fa-solid fa-wallet"></i></div>
+            <div class="row-text">
+                <strong>Rekodi Mchango</strong>
+                <span>Ingiza mchango wa mwanachama</span>
+            </div>
+            <i class="fa-solid fa-chevron-right row-arrow"></i>
+        </div>
+        <div class="setting-row" onclick="openAdminPanel('ada')">
+            <div class="row-icon icon-blue"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+            <div class="row-text">
+                <strong>Usimamizi wa Ada</strong>
+                <span>Sajili na fuatilia wanachama</span>
+            </div>
+            <i class="fa-solid fa-chevron-right row-arrow"></i>
+        </div>
+    </div>
+</div>
+
+<!-- MSAADA -->
+<div class="section">
+    <div class="section-label">Msaada & Habari</div>
+    <div class="settings-card">
+        <a href="about.html" class="setting-row">
+            <div class="row-icon icon-purple"><i class="fa-solid fa-circle-info"></i></div>
+            <div class="row-text">
+                <strong>Kuhusu VIWAWA</strong>
+                <span>Maelezo ya shirika</span>
+            </div>
+            <i class="fa-solid fa-chevron-right row-arrow"></i>
+        </a>
+        <div class="setting-row" onclick="openModal('modal-feedback')">
+            <div class="row-icon icon-green"><i class="fa-solid fa-comment-dots"></i></div>
+            <div class="row-text">
+                <strong>Toa Maoni</strong>
+                <span>Tuambie unavyofikiria</span>
+            </div>
+            <i class="fa-solid fa-chevron-right row-arrow"></i>
+        </div>
+        <div class="setting-row" onclick="openModal('modal-admin-login')">
+            <div class="row-icon icon-gray"><i class="fa-solid fa-user-shield"></i></div>
+            <div class="row-text">
+                <strong>Ingia kama Admin</strong>
+                <span>Kwa wasimamizi tu</span>
+            </div>
+            <i class="fa-solid fa-chevron-right row-arrow"></i>
+        </div>
+    </div>
+</div>
+
+<!-- HATUA HATARI -->
+<div class="section">
+    <div class="section-label">Hatua Nyingine</div>
+    <div class="settings-card">
+        <div class="setting-row" onclick="clearCache()">
+            <div class="row-icon icon-gray"><i class="fa-solid fa-trash-can"></i></div>
+            <div class="row-text">
+                <strong>Futa Hifadhi</strong>
+                <span>Safisha data iliyohifadhiwa</span>
+            </div>
+            <i class="fa-solid fa-chevron-right row-arrow"></i>
+        </div>
+        <div class="setting-row" onclick="logout()" style="color: var(--danger);">
+            <div class="row-icon icon-red"><i class="fa-solid fa-power-off"></i></div>
+            <div class="row-text">
+                <strong style="color:var(--danger);">Ondoka</strong>
+                <span>Toka kwenye akaunti yako</span>
+            </div>
+            <i class="fa-solid fa-chevron-right row-arrow"></i>
+        </div>
+    </div>
+</div>
+
+<div class="version-info">
+    VIWAWA App v1.0.0 &bull; Mapendo Daima 🙏
+</div>
+
+<!-- ============ MODALS ============ -->
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="modal-profile">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <h3><i class="fa-solid fa-user" style="margin-right:8px;"></i>Hariri Wasifu</h3>
+        <input type="text" id="editName" class="input-field" placeholder="Jina Kamili">
+        <input type="text" id="editJimbo" class="input-field" placeholder="Jimbo">
+        <input type="text" id="editParokia" class="input-field" placeholder="Parokia">
+        <input type="text" id="editJumuiya" class="input-field" placeholder="Jumuiya">
+        <input type="tel" id="editPhone" class="input-field" placeholder="Nambari ya Simu">
+        <button class="btn-save" onclick="saveProfile()">HIFADHI TAARIFA</button>
+        <div class="status-msg" id="profile-status"></div>
+    </div>
+</div>
+
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay" id="modal-password">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <h3><i class="fa-solid fa-lock" style="margin-right:8px;"></i>Badilisha Nywila</h3>
+        <input type="password" id="oldPass" class="input-field" placeholder="Nywila ya Zamani">
+        <input type="password" id="newPass" class="input-field" placeholder="Nywila Mpya">
+        <input type="password" id="confirmPass" class="input-field" placeholder="Thibitisha Nywila Mpya">
+        <button class="btn-save" onclick="changePassword()">BADILISHA NYWILA</button>
+        <div class="status-msg" id="pass-status"></div>
+    </div>
+</div>
+
+<!-- FEEDBACK MODAL -->
+<div class="modal-overlay" id="modal-feedback">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <h3><i class="fa-solid fa-comment-dots" style="margin-right:8px;"></i>Toa Maoni</h3>
+        <textarea id="feedbackText" class="input-field" rows="4" placeholder="Andika maoni yako hapa..."></textarea>
+        <button class="btn-save" onclick="submitFeedback()">TUMA MAONI</button>
+        <div class="status-msg" id="feedback-status"></div>
+    </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-overlay" id="modal-admin-login">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <h3><i class="fa-solid fa-user-shield" style="margin-right:8px;"></i>Ingia kama Admin</h3>
+        <input type="password" id="adminPass" class="input-field" placeholder="Nywila ya Usimamizi">
+        <button class="btn-save" onclick="adminLogin()">INGIA</button>
+        <div class="status-msg" id="admin-status"></div>
+    </div>
+</div>
+
+<!-- ADMIN PANEL MODAL -->
+<div class="modal-overlay" id="modal-admin-panel">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <div id="admin-panel-content"></div>
+    </div>
+</div>
+
+<!-- ADA MODAL -->
+<div class="modal-overlay" id="modal-ada">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <h3><i class="fa-solid fa-file-invoice-dollar" style="margin-right:8px;"></i>Usimamizi wa Ada</h3>
+        <input type="text" id="newMemberName" class="input-field" placeholder="Jina la Mwanachama Mpya">
+        <button class="btn-save" onclick="registerMember()" style="margin-bottom:15px;">SAJILI MWANACHAMA</button>
+        <hr style="border:1px solid #eee; margin-bottom:15px;">
+        <select id="selectMember" class="input-field"></select>
+        <select id="selectMonth" class="input-field">
+            <option value="Jan">Januari</option><option value="Feb">Februari</option>
+            <option value="Mar">Machi</option><option value="Apr">Aprili</option>
+            <option value="Mei">Mei</option><option value="Jun">Juni</option>
+            <option value="Jul">Julai</option><option value="Ago">Agosti</option>
+            <option value="Sep">Septemba</option><option value="Okt">Oktoba</option>
+            <option value="Nov">Novemba</option><option value="Des">Desemba</option>
+        </select>
+        <button class="btn-save" onclick="updateAda()">BADILI HALI (Tiki/Futa)</button>
+        <div class="status-msg" id="ada-status"></div>
+    </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+    <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i>HOME</a>
+    <a href="sala.html" class="nav-item"><i class="fa-solid fa-hands-praying"></i>SALA</a>
+    <a href="mazungumzo.html" class="nav-item"><i class="fa-solid fa-comments"></i>CHAT</a>
+    <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i>PROFILE</a>
+</nav>
+
+<script>
+    // ---- FIREBASE ----
+    const firebaseConfig = {
+        apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wDd-8A",
+        authDomain: "viwawa-app.firebaseapp.com",
+        projectId: "viwawa-app",
+        storageBucket: "viwawa-app.firebasestorage.app",
+        messagingSenderId: "523436472007",
+        appId: "1:523436472007:web:dda010d18fd00ea60070e2"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    const ADMIN_PASSWORD = "Viwawa@2026";
+    let isAdmin = false;
+
+    // ---- MODALS ----
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+    }
+    function closeAllModals() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+    }
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) closeAllModals();
+        });
+    });
+
+    // ---- LOAD PROFILE ON START ----
+    window.onload = function () {
+        const saved = JSON.parse(localStorage.getItem('viwawa_profile')) || {};
+        const pic = localStorage.getItem('profilePic');
+        const settings = JSON.parse(localStorage.getItem('viwawa_settings')) || {};
+        isAdmin = localStorage.getItem('viwawa_admin') === 'true';
+
+        if (saved.name) {
+            document.getElementById('displayName').innerText = saved.name;
+            document.getElementById('editName').value = saved.name;
+        }
+        if (saved.jimbo) document.getElementById('editJimbo').value = saved.jimbo;
+        if (saved.parokia) document.getElementById('editParokia').value = saved.parokia;
+        if (saved.jumuiya) {
+            document.getElementById('editJumuiya').value = saved.jumuiya;
+            document.getElementById('displayJumuiya').innerText = saved.jumuiya;
+        }
+        if (saved.phone) document.getElementById('editPhone').value = saved.phone;
+        if (pic) document.getElementById('displayPic').src = pic;
+
+        // Load toggles
+        if (settings.notif !== undefined) document.getElementById('toggle-notif').checked = settings.notif;
+        if (settings.sound !== undefined) document.getElementById('toggle-sound').checked = settings.sound;
+        if (settings.privacy !== undefined) document.getElementById('toggle-privacy').checked = settings.privacy;
+        if (settings.dark) { document.getElementById('toggle-dark').checked = true; applyDarkMode(true); }
+
+        if (isAdmin) {
+            document.getElementById('adminSection').style.display = 'block';
+            document.getElementById('displayRole').innerText = 'ADMIN';
+        }
+    };
+
+    // ---- SAVE PROFILE ----
+    function saveProfile() {
+        const data = {
+            name: document.getElementById('editName').value,
+            jimbo: document.getElementById('editJimbo').value,
+            parokia: document.getElementById('editParokia').value,
+            jumuiya: document.getElementById('editJumuiya').value,
+            phone: document.getElementById('editPhone').value,
+        };
+        if (!data.name) {
+            showStatus('profile-status', 'Jaza jina lako!', 'red');
+            return;
+        }
+        localStorage.setItem('viwawa_profile', JSON.stringify(data));
+        document.getElementById('displayName').innerText = data.name;
+        document.getElementById('displayJumuiya').innerText = data.jumuiya || 'Jumuiya yako';
+        showStatus('profile-status', '✅ Imehifadhiwa!', 'green');
+        setTimeout(closeAllModals, 1200);
+    }
+
+    // ---- CHANGE PASSWORD ----
+    function changePassword() {
+        const oldP = document.getElementById('oldPass').value;
+        const newP = document.getElementById('newPass').value;
+        const confP = document.getElementById('confirmPass').value;
+        const stored = localStorage.getItem('viwawa_pass') || '1234';
+
+        if (oldP !== stored) { showStatus('pass-status', 'Nywila ya zamani si sahihi!', 'red'); return; }
+        if (newP.length < 4) { showStatus('pass-status', 'Nywila mpya ni fupi sana!', 'red'); return; }
+        if (newP !== confP) { showStatus('pass-status', 'Nywila hazifanani!', 'red'); return; }
+
+        localStorage.setItem('viwawa_pass', newP);
+        showStatus('pass-status', '✅ Nywila imebadilishwa!', 'green');
+        setTimeout(closeAllModals, 1200);
+    }
+
+    // ---- SAVE SETTING (TOGGLE) ----
+    function saveSetting(key, value) {
+        const settings = JSON.parse(localStorage.getItem('viwawa_settings')) || {};
+        settings[key] = value;
+        localStorage.setItem('viwawa_settings', JSON.stringify(settings));
+    }
+
+    // ---- DARK MODE ----
+    function toggleDarkMode(on) {
+        applyDarkMode(on);
+        saveSetting('dark', on);
+    }
+    function applyDarkMode(on) {
+        if (on) {
+            document.documentElement.style.setProperty('--bg', '#1a1a1a');
+            document.documentElement.style.setProperty('--card', '#2a2a2a');
+            document.documentElement.style.setProperty('--text', '#f0f0f0');
+            document.documentElement.style.setProperty('--border', '#333');
+            document.body.style.background = '#1a1a1a';
+        } else {
+            document.documentElement.style.setProperty('--bg', '#f7f3f3');
+            document.documentElement.style.setProperty('--card', '#ffffff');
+            document.documentElement.style.setProperty('--text', '#1a1a1a');
+            document.documentElement.style.setProperty('--border', '#ececec');
+            document.body.style.background = '#f7f3f3';
+        }
+    }
+
+    // ---- ADMIN LOGIN ----
+    function adminLogin() {
+        const pass = document.getElementById('adminPass').value;
+        if (pass === ADMIN_PASSWORD) {
+            isAdmin = true;
+            localStorage.setItem('viwawa_admin', 'true');
+            document.getElementById('adminSection').style.display = 'block';
+            document.getElementById('displayRole').innerText = 'ADMIN';
+            showStatus('admin-status', '✅ Umeingia kama Admin!', 'green');
+            setTimeout(closeAllModals, 1200);
+        } else {
+            showStatus('admin-status', '❌ Nywila si sahihi!', 'red');
+        }
+    }
+
+    // ---- ADMIN PANEL ----
+    function openAdminPanel(type) {
+        if (!isAdmin) { alert('Unahitaji kuingia kama Admin kwanza!'); return; }
+        if (type === 'ada') { openModal('modal-ada'); loadMembersToSelect(); return; }
+
+        const forms = {
+            neno: `
+                <h3><i class="fa-solid fa-book-bible" style="margin-right:8px;color:var(--maroon)"></i>Neno la Leo</h3>
                 <input type="text" id="wordVerse" class="input-field" placeholder="Mstari (Mf: Yohana 3:16)">
-                <textarea id="wordScripture" class="input-field" placeholder="Maandiko"></textarea>
-                <textarea id="wordTafakari" class="input-field" placeholder="Tafakari ya Leo"></textarea>
-                <button class="btn-upload" onclick="uploadNeno()">PAKIZA NENO</button>
-            </div>
-
-            <div id="form-tangazo" class="form-card" style="display:none;">
-                <h2 class="section-title">Pakia Tangazo</h2>
+                <textarea id="wordScripture" class="input-field" rows="3" placeholder="Maandiko"></textarea>
+                <textarea id="wordTafakari" class="input-field" rows="3" placeholder="Tafakari ya Leo"></textarea>
+                <button class="btn-save" onclick="uploadNeno()">PAKIZA NENO</button>
+                <div class="status-msg" id="neno-status"></div>`,
+            tangazo: `
+                <h3><i class="fa-solid fa-bullhorn" style="margin-right:8px;color:var(--maroon)"></i>Pakia Tangazo</h3>
                 <input type="text" id="adTitle" class="input-field" placeholder="Kichwa cha Tangazo">
-                <textarea id="adMsg" class="input-field" placeholder="Maelezo ya Tangazo"></textarea>
-                <button class="btn-upload" onclick="uploadTangazo()">PAKIA TANGAZO</button>
-            </div>
-
-            <div id="form-mchango" class="form-card" style="display:none;">
-                <h2 class="section-title">Pakia Mchango</h2>
+                <textarea id="adMsg" class="input-field" rows="4" placeholder="Maelezo ya Tangazo"></textarea>
+                <button class="btn-save" onclick="uploadTangazo()">PAKIA TANGAZO</button>
+                <div class="status-msg" id="tangazo-status"></div>`,
+            mchango: `
+                <h3><i class="fa-solid fa-wallet" style="margin-right:8px;color:var(--maroon)"></i>Rekodi Mchango</h3>
                 <input type="text" id="mType" class="input-field" placeholder="Aina ya Mchango">
                 <input type="text" id="mPerson" class="input-field" placeholder="Jina la Mchangiaji">
-                <input type="number" id="mAmount" class="input-field" placeholder="Kiasi">
-                <button class="btn-upload" onclick="uploadMchango()">PAKIZA MCHANGO</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
-            authDomain: "viwawa-app.firebaseapp.com",
-            projectId: "viwawa-app",
-            storageBucket: "viwawa-app.firebasestorage.app",
-            messagingSenderId: "523436472007",
-            appId: "1:523436472007:web:dda010d18fd00ea60070e2"
+                <input type="number" id="mAmount" class="input-field" placeholder="Kiasi (TZS)">
+                <button class="btn-save" onclick="uploadMchango()">REKODI MCHANGO</button>
+                <div class="status-msg" id="mchango-status"></div>`
         };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const storage = firebase.storage();
+        document.getElementById('admin-panel-content').innerHTML = forms[type];
+        openModal('modal-admin-panel');
+    }
 
-        function showForm(type) {
-            const pass = prompt("Ingiza Password ya Usimamizi:");
-            if(pass !== "Viwawa@2026") return alert("Password si sahihi!");
-            document.getElementById('form-container').style.display = 'block';
-            document.getElementById('form-tangazo').style.display = type === 'tangazo' ? 'block' : 'none';
-            document.getElementById('form-mchango').style.display = type === 'mchango' ? 'block' : 'none';
-            document.getElementById('form-neno').style.display = type === 'neno' ? 'block' : 'none';
-            document.getElementById('form-ada').style.display = type === 'ada' ? 'block' : 'none';
-            if(type === 'ada') loadMembersToSelect();
-        }
+    // ---- UPLOAD NENO ----
+    async function uploadNeno() {
+        const mstari = document.getElementById('wordVerse').value;
+        const maandiko = document.getElementById('wordScripture').value;
+        const tafakari = document.getElementById('wordTafakari').value;
+        if (!mstari || !maandiko || !tafakari) { showStatus('neno-status', 'Jaza kila kitu!', 'red'); return; }
+        try {
+            await db.collection("leo").doc("neno").set({ mstari, maandiko, tafakari, timestamp: Date.now() });
+            showStatus('neno-status', '✅ Neno limepakiwa!', 'green');
+            setTimeout(closeAllModals, 1500);
+        } catch(e) { showStatus('neno-status', 'Kosa: ' + e.message, 'red'); }
+    }
 
-        // KODI YA KUPAKIA TANGAZO BILA PICHA
-        async function uploadTangazo() {
-            const title = document.getElementById('adTitle').value;
-            const msg = document.getElementById('adMsg').value;
+    // ---- UPLOAD TANGAZO ----
+    async function uploadTangazo() {
+        const title = document.getElementById('adTitle').value;
+        const msg = document.getElementById('adMsg').value;
+        if (!title || !msg) { showStatus('tangazo-status', 'Jaza kichwa na maelezo!', 'red'); return; }
+        try {
+            await db.collection("matangazo").add({ kichwa: title, maelezo: msg, timestamp: Date.now() });
+            showStatus('tangazo-status', '✅ Tangazo limepakiwa!', 'green');
+            setTimeout(closeAllModals, 1500);
+        } catch(e) { showStatus('tangazo-status', 'Kosa: ' + e.message, 'red'); }
+    }
 
-            if(!title || !msg) return alert("Jaza kichwa na maelezo!");
-
-            try {
-                await db.collection("matangazo").add({
-                    kichwa: title,
-                    maelezo: msg,
-                    timestamp: Date.now() // Hii itatumika kwa ajili ya kufuta baada ya siku 7
-                });
-                alert("Tangazo limepakiwa!");
-                document.getElementById('adTitle').value = "";
-                document.getElementById('adMsg').value = "";
-                location.reload();
-            } catch(e) { alert("Error: " + e.message); }
-        }
-
-        async function uploadNeno() {
-            const mstari = document.getElementById('wordVerse').value;
-            const maandiko = document.getElementById('wordScripture').value;
-            const tafakari = document.getElementById('wordTafakari').value;
-
-            if(!mstari || !maandiko || !tafakari) return alert("Jaza kila kitu!");
-
-            await db.collection("leo").doc("neno").set({
-                mstari: mstari,
-                maandiko: maandiko,
-                tafakari: tafakari,
-                timestamp: Date.now()
-            });
-            alert("Neno limepakiwa!");
-            location.reload();
-        }
-
-        async function registerMember() {
-            const name = document.getElementById('newMemberName').value;
-            if(!name) return alert("Andika jina!");
-            await db.collection("wanachama").add({ 
-                jina: name, Jan: false, Feb: false, Mar: false, Apr: false, Mei: false, Jun: false,
-                Jul: false, Ago: false, Sep: false, Okt: false, Nov: false, Des: false 
-            });
-            alert("Mwanachama amesajiliwa!");
-            document.getElementById('newMemberName').value = "";
-        }
-
-        function loadMembersToSelect() {
-            const select = document.getElementById('selectMember');
-            db.collection("wanachama").orderBy("jina").onSnapshot(snap => {
-                select.innerHTML = '<option value="">-- Chagua Jina --</option>';
-                snap.forEach(doc => { select.innerHTML += `<option value="${doc.id}">${doc.data().jina}</option>`; });
-            });
-        }
-
-        async function updateAda() {
-            const id = document.getElementById('selectMember').value;
-            const month = document.getElementById('selectMonth').value;
-            if(!id) return alert("Chagua mwanachama!");
-            const docRef = db.collection("wanachama").doc(id);
-            const doc = await docRef.get();
-            if (doc.exists) {
-                let data = {};
-                data[month] = !doc.data()[month];
-                await docRef.update(data);
-                alert("Hali imebadilishwa!");
-            }
-        }
-
-        async function uploadProfilePic(input) {
-            const file = input.files[0];
-            if(!file) return;
-            const ref = storage.ref('profiles/admin_pic');
-            await ref.put(file);
-            const url = await ref.getDownloadURL();
-            document.getElementById('displayPic').src = url;
-            alert("Picha imesasishwa!");
-        }
-
-        async function uploadMchango() {
-            const type = document.getElementById('mType').value;
-            const name = document.getElementById('mPerson').value;
-            const amt = document.getElementById('mAmount').value;
-            if(!type || !name || !amt) return alert("Jaza michango yote!");
+    // ---- UPLOAD MCHANGO ----
+    async function uploadMchango() {
+        const type = document.getElementById('mType').value;
+        const name = document.getElementById('mPerson').value;
+        const amt = document.getElementById('mAmount').value;
+        if (!type || !name || !amt) { showStatus('mchango-status', 'Jaza nafasi zote!', 'red'); return; }
+        try {
             await db.collection("michango").add({ aina: type, jina: name, kiasi: amt, tarehe: new Date() });
-            alert("Mchango umerekodiwa!");
-            location.reload();
-        }
+            showStatus('mchango-status', '✅ Mchango umerekodiwa!', 'green');
+            setTimeout(closeAllModals, 1500);
+        } catch(e) { showStatus('mchango-status', 'Kosa: ' + e.message, 'red'); }
+    }
 
-        function saveProfile() { alert("Taarifa binafsi zimehifadhiwa!"); }
-    </script>
+    // ---- ADA ----
+    async function registerMember() {
+        const name = document.getElementById('newMemberName').value;
+        if (!name) { showStatus('ada-status', 'Andika jina!', 'red'); return; }
+        await db.collection("wanachama").add({
+            jina: name, Jan:false, Feb:false, Mar:false, Apr:false, Mei:false, Jun:false,
+            Jul:false, Ago:false, Sep:false, Okt:false, Nov:false, Des:false
+        });
+        showStatus('ada-status', '✅ Mwanachama amesajiliwa!', 'green');
+        document.getElementById('newMemberName').value = '';
+        loadMembersToSelect();
+    }
+
+    function loadMembersToSelect() {
+        const select = document.getElementById('selectMember');
+        db.collection("wanachama").orderBy("jina").onSnapshot(snap => {
+            select.innerHTML = '<option value="">-- Chagua Jina --</option>';
+            snap.forEach(doc => { select.innerHTML += `<option value="${doc.id}">${doc.data().jina}</option>`; });
+        });
+    }
+
+    async function updateAda() {
+        const id = document.getElementById('selectMember').value;
+        const month = document.getElementById('selectMonth').value;
+        if (!id) { showStatus('ada-status', 'Chagua mwanachama!', 'red'); return; }
+        const docRef = db.collection("wanachama").doc(id);
+        const doc = await docRef.get();
+        if (doc.exists) {
+            let data = {}; data[month] = !doc.data()[month];
+            await docRef.update(data);
+            showStatus('ada-status', '✅ Hali imebadilishwa!', 'green');
+        }
+    }
+
+    // ---- PROFILE PIC ----
+    async function uploadProfilePic(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const url = e.target.result;
+            document.getElementById('displayPic').src = url;
+            localStorage.setItem('profilePic', url);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // ---- FEEDBACK ----
+    async function submitFeedback() {
+        const text = document.getElementById('feedbackText').value;
+        if (!text) { showStatus('feedback-status', 'Andika maoni kwanza!', 'red'); return; }
+        try {
+            await db.collection("maoni").add({ maoni: text, timestamp: Date.now() });
+            showStatus('feedback-status', '✅ Maoni yametumwa! Asante.', 'green');
+            document.getElementById('feedbackText').value = '';
+            setTimeout(closeAllModals, 1500);
+        } catch(e) { showStatus('feedback-status', 'Kosa: ' + e.message, 'red'); }
+    }
+
+    // ---- CLEAR CACHE ----
+    function clearCache() {
+        if (confirm("Je, unataka kufuta data iliyohifadhiwa? Taarifa zako za akaunti zitabaki.")) {
+            const profile = localStorage.getItem('viwawa_profile');
+            const pic = localStorage.getItem('profilePic');
+            const admin = localStorage.getItem('viwawa_admin');
+            localStorage.clear();
+            if (profile) localStorage.setItem('viwawa_profile', profile);
+            if (pic) localStorage.setItem('profilePic', pic);
+            if (admin) localStorage.setItem('viwawa_admin', admin);
+            alert("✅ Hifadhi imefutwa!");
+        }
+    }
+
+    // ---- LOGOUT ----
+    function logout() {
+        if (confirm("Je, unataka kuondoka?")) {
+            localStorage.removeItem('viwawa_profile');
+            localStorage.removeItem('profilePic');
+            localStorage.removeItem('viwawa_admin');
+            window.location.href = "login.html";
+        }
+    }
+
+    // ---- HELPER ----
+    function showStatus(id, msg, color) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.innerText = msg;
+        el.style.color = color === 'green' ? 'var(--success)' : 'var(--danger)';
+    }
+</script>
+
 </body>
 </html>

@@ -2,259 +2,625 @@
 <html lang="sw">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wasifu - Viwawa App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Wasifu - VIWAWA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
-            --maroon: #801313;
-            --light-gray: #f4f4f4;
-            --text-dark: #333;
-            --text-gray: #777;
-            --yellow: #ffc107;
+            --maroon: #7a1010;
+            --maroon2: #a01818;
+            --maroon3: #5a0b0b;
+            --gold: #e8b84b;
+            --bg: #f9f5f5;
             --white: #ffffff;
+            --text: #1c1c1c;
+            --text-soft: #888;
+            --border: #f0e8e8;
+            --card: #ffffff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--white); padding-bottom: 100px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Header Section */
-        .profile-header {
-            background-color: var(--maroon);
-            padding: 20px 20px 40px;
-            text-align: center;
-            color: var(--white);
-            border-radius: 0 0 45px 45px;
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding-bottom: 110px;
+            min-height: 100vh;
+        }
+
+        /* ── HERO HEADER ── */
+        .hero {
+            background: linear-gradient(160deg, var(--maroon3) 0%, var(--maroon) 50%, var(--maroon2) 100%);
+            padding: 0 0 50px;
             position: relative;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
 
-        .back-nav { display: flex; align-items: center; margin-bottom: 10px; }
-        .back-btn { color: white; text-decoration: none; font-size: 20px; cursor: pointer; }
-
-        .img-container {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 15px;
-        }
-
-        .profile-img {
-            width: 120px;
-            height: 120px;
+        /* Decorative circles */
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 220px; height: 220px;
+            background: rgba(255,255,255,0.04);
             border-radius: 50%;
-            border: 4px solid var(--white);
-            object-fit: cover;
-            background: #fff;
-            display: block;
+            top: -60px; right: -60px;
         }
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 140px; height: 140px;
+            background: rgba(232,184,75,0.08);
+            border-radius: 50%;
+            bottom: 20px; left: -30px;
+        }
+
+        .hero-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px 0;
+        }
+        .back-btn {
+            color: rgba(255,255,255,0.85);
+            font-size: 20px;
+            cursor: pointer;
+            width: 38px; height: 38px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 17px;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+        .edit-toggle {
+            color: var(--gold);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            background: rgba(232,184,75,0.15);
+            border: 1px solid rgba(232,184,75,0.3);
+            border-radius: 20px;
+            padding: 5px 14px;
+        }
+
+        /* Avatar */
+        .avatar-wrap {
+            position: relative;
+            width: 100px; height: 100px;
+            margin: 22px auto 16px;
+            animation: fadeUp 0.5s ease;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .avatar-wrap img {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.6);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        .avatar-ring {
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            border: 2px dashed rgba(232,184,75,0.5);
+            animation: spin 12s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .cam-btn {
             position: absolute;
-            bottom: 5px;
-            right: 5px;
-            background: var(--yellow);
-            width: 35px;
-            height: 35px;
+            bottom: 2px; right: 2px;
+            background: var(--gold);
+            width: 30px; height: 30px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-dark);
-            border: 3px solid var(--maroon);
+            display: flex; align-items: center; justify-content: center;
+            color: #333;
+            font-size: 13px;
             cursor: pointer;
+            border: 2px solid var(--maroon);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
-        .profile-header h2 { font-size: 22px; font-weight: 700; text-transform: uppercase; margin-top: 10px; }
-        .profile-header p { font-size: 13px; opacity: 0.8; font-weight: 400; margin-top: 2px; }
+        .hero-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: white;
+            text-align: center;
+            margin-bottom: 4px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+        .hero-sub {
+            text-align: center;
+            color: rgba(255,255,255,0.65);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: fadeUp 0.5s 0.15s ease both;
+        }
 
-        /* Form Fields */
-        .container { padding: 25px 20px; }
-        .section-title { font-size: 13px; font-weight: 800; margin: 20px 0 15px; color: var(--maroon); text-transform: uppercase; letter-spacing: 1px; }
-        
-        .input-box { margin-bottom: 18px; }
-        .input-box label { font-size: 11px; font-weight: 700; color: var(--text-gray); display: block; margin-bottom: 6px; text-transform: uppercase; }
-        .input-field {
+        /* Stats strip */
+        .stats-strip {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 18px;
+            animation: fadeUp 0.5s 0.2s ease both;
+        }
+        .stat { text-align: center; }
+        .stat-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            color: var(--gold);
+            display: block;
+        }
+        .stat-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.55);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-divider {
+            width: 1px;
+            background: rgba(255,255,255,0.15);
+            align-self: stretch;
+            margin: 4px 0;
+        }
+
+        /* ── FLOATING CARD ── */
+        .floating-card {
+            background: var(--white);
+            border-radius: 28px 28px 0 0;
+            margin-top: -25px;
+            position: relative;
+            z-index: 10;
+            padding: 30px 20px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+            animation: fadeUp 0.5s 0.25s ease both;
+        }
+
+        /* Section label */
+        .section-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--maroon);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Input fields */
+        .field-group { margin-bottom: 14px; }
+        .field-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-soft);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 7px;
+            display: block;
+        }
+        .field-input {
             width: 100%;
-            padding: 14px 15px;
-            border-radius: 12px;
-            border: 1px solid #eee;
-            background: var(--light-gray);
+            background: var(--bg);
+            border: 1.5px solid transparent;
+            border-radius: 14px;
+            padding: 13px 16px;
             font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
             outline: none;
-            color: var(--text-dark);
+            transition: all 0.2s;
+        }
+        .field-input:focus {
+            border-color: var(--maroon);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(122,16,16,0.07);
+        }
+        .field-input:disabled {
+            color: var(--text-soft);
+            cursor: default;
+        }
+
+        /* Two column grid */
+        .field-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* Notification cards */
+        .notif-card {
+            background: var(--bg);
+            border-radius: 14px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border: 1.5px solid transparent;
+            transition: 0.2s;
+        }
+        .notif-card:has(input:checked) {
+            border-color: rgba(122,16,16,0.15);
+            background: #fdf5f5;
+        }
+        .notif-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .notif-icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px;
+        }
+        .ni-orange { background: #fff4e6; color: #e67700; }
+        .ni-blue   { background: #eef2ff; color: #3b5bdb; }
+        .ni-green  { background: #ebfbee; color: #2f9e44; }
+
+        .notif-text strong { font-size: 13px; font-weight: 600; display: block; }
+        .notif-text small  { font-size: 11px; color: var(--text-soft); }
+
+        /* Toggle */
+        .toggle {
+            position: relative;
+            width: 42px; height: 23px;
+            flex-shrink: 0;
+        }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-track {
+            position: absolute; inset: 0;
+            background: #ddd;
+            border-radius: 23px;
+            cursor: pointer;
             transition: 0.3s;
         }
-        .input-field:focus { border-color: var(--maroon); background: #fff; }
+        .toggle-track::before {
+            content: '';
+            position: absolute;
+            width: 17px; height: 17px;
+            background: white;
+            border-radius: 50%;
+            top: 3px; left: 3px;
+            transition: 0.3s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+        .toggle input:checked + .toggle-track { background: var(--maroon); }
+        .toggle input:checked + .toggle-track::before { transform: translateX(19px); }
 
-        /* Toggle Switches */
-        .toggle-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 0;
-            border-bottom: 1px solid #f2f2f2;
-        }
-        .toggle-group span { font-size: 14px; font-weight: 600; color: var(--text-dark); }
-        
-        .switch { position: relative; display: inline-block; width: 42px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ddd; transition: .4s; border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
-            background-color: white; transition: .4s; border-radius: 50%;
-        }
-        input:checked + .slider { background-color: var(--maroon); }
-        input:checked + .slider:before { transform: translateX(18px); }
-
-        /* Save Button */
+        /* Save button */
         .save-btn {
-            background-color: var(--maroon);
-            color: white;
             width: 100%;
-            padding: 16px;
+            background: linear-gradient(135deg, var(--maroon3), var(--maroon2));
+            color: white;
             border: none;
-            border-radius: 15px;
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 14px;
             font-weight: 700;
-            margin-top: 30px;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            margin-top: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(128, 19, 19, 0.2);
-            transition: 0.3s;
+            letter-spacing: 0.5px;
+            box-shadow: 0 6px 20px rgba(122,16,16,0.25);
+            transition: 0.2s;
         }
-        .save-btn:active { transform: scale(0.98); }
+        .save-btn:active { transform: scale(0.98); opacity: 0.9; }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 110px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #1c1c1c;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.35s ease;
+            z-index: 9999;
+            white-space: nowrap;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
 
         /* Bottom Nav */
         .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: white;
-            display: flex; justify-content: space-around; padding: 12px 0;
-            border-top: 1px solid #eee; z-index: 1000;
+            position: fixed;
+            bottom: 0; width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #eee;
+            z-index: 100;
         }
-        .nav-item { text-decoration: none; color: var(--text-gray); font-size: 10px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .nav-item i { font-size: 20px; margin-bottom: 4px; }
-        .nav-item.active { color: var(--maroon); font-weight: 700; }
+        .nav-item {
+            text-decoration: none;
+            color: #aaa;
+            font-size: 10px;
+            font-weight: 600;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+        .nav-item i { font-size: 19px; }
+        .nav-item.active { color: var(--maroon); }
+
+        /* Divider */
+        .divider { height: 1px; background: var(--border); margin: 22px 0; }
     </style>
 </head>
 <body>
 
-    <div class="profile-header">
-        <div class="back-nav">
-            <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-top">
+        <div class="back-btn" onclick="history.back()">
+            <i class="fa-solid fa-arrow-left"></i>
         </div>
-        
-        <div class="img-container" onclick="document.getElementById('imageUpload').click()">
-            <img src="https://via.placeholder.com/150" alt="User" class="profile-img" id="profileDisplay">
-            <div class="cam-btn"><i class="fa-solid fa-camera"></i></div>
-            <input type="file" id="imageUpload" hidden accept="image/*">
-        </div>
-        <h2 id="userNameDisplay">Mwanachama</h2>
-        <p id="userStatus">VIWAWA - KATOLIKI</p>
+        <span class="hero-title">Wasifu Wangu</span>
+        <span class="edit-toggle" id="editToggle" onclick="toggleEdit()">Hariri</span>
     </div>
 
-    <div class="container">
-        <h3 class="section-title">Taarifa Binafsi</h3>
-        
-        <div class="input-box">
-            <label>Jina Kamili</label>
-            <input type="text" id="fullName" class="input-field" placeholder="Weka jina lako">
+    <div class="avatar-wrap">
+        <div class="avatar-ring"></div>
+        <img id="profileDisplay" src="https://via.placeholder.com/150" alt="Picha">
+        <div class="cam-btn" onclick="document.getElementById('imageUpload').click()">
+            <i class="fa-solid fa-camera"></i>
         </div>
-        <div class="input-box">
-            <label>Jimbo</label>
-            <input type="text" id="jimbo" class="input-field" placeholder="Weka Jimbo">
-        </div>
-        <div class="input-box">
-            <label>Parokia</label>
-            <input type="text" id="parokia" class="input-field" placeholder="Weka Parokia">
-        </div>
-        <div class="input-box">
-            <label>Jumuiya</label>
-            <input type="text" id="jumuiya" class="input-field" placeholder="Weka Jumuiya">
-        </div>
-
-        <h3 class="section-title">Notification Settings</h3>
-        
-        <div class="toggle-group">
-            <span>Announcements</span>
-            <label class="switch"><input type="checkbox" id="note1" checked><span class="slider"></span></label>
-        </div>
-        <div class="toggle-group">
-            <span>Bible Verse of Day</span>
-            <label class="switch"><input type="checkbox" id="note2" checked><span class="slider"></span></label>
-        </div>
-        <div class="toggle-group">
-            <span>Contribution Updates</span>
-            <label class="switch"><input type="checkbox" id="note3"><span class="slider"></span></label>
-        </div>
-
-        <button class="save-btn" onclick="saveData()">
-            <i class="fa-solid fa-check-circle"></i> HIFADHI TAARIFA
-        </button>
+        <input type="file" id="imageUpload" hidden accept="image/*">
     </div>
 
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i>NYUMBANI</a>
-        <a href="biblia.html" class="nav-item"><i class="fa-solid fa-book-bible"></i>BIBLIA</a>
-        <a href="michango.html" class="nav-item"><i class="fa-solid fa-wallet"></i>MICHANGO</a>
-        <a href="mazungumzo.html" class="nav-item"><i class="fa-regular fa-comments"></i>MAZUNGUMZO</a>
-        <a href="profile.html" class="nav-item active"><i class="fa-solid fa-user"></i>WASIFU</a>
-    </nav>
+    <div class="hero-name" id="userNameDisplay">Mwanachama</div>
+    <div class="hero-sub">VIWAWA &bull; Mapendo Daima</div>
 
-    <script>
-        // Pakia picha na kuipunguza ukubwa ili isijaze localStorage
-        document.getElementById('imageUpload').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const imgUrl = event.target.result;
-                    document.getElementById('profileDisplay').src = imgUrl;
-                    localStorage.setItem('profilePic', imgUrl);
-                }
-                reader.readAsDataURL(file);
-            }
-        });
+    <div class="stats-strip">
+        <div class="stat">
+            <span class="stat-num" id="statJimbo">—</span>
+            <span class="stat-label">Jimbo</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <span class="stat-num" id="statParokia">—</span>
+            <span class="stat-label">Parokia</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <span class="stat-num" id="statJumuiya">—</span>
+            <span class="stat-label">Jumuiya</span>
+        </div>
+    </div>
+</div>
 
-        function saveData() {
-            const data = {
-                name: document.getElementById('fullName').value,
-                jimbo: document.getElementById('jimbo').value,
-                parokia: document.getElementById('parokia').value,
-                jumuiya: document.getElementById('jumuiya').value,
-                note1: document.getElementById('note1').checked,
-                note2: document.getElementById('note2').checked,
-                note3: document.getElementById('note3').checked
-            };
-            localStorage.setItem('viwawa_profile', JSON.stringify(data));
-            document.getElementById('userNameDisplay').innerText = data.name || "Mwanachama";
-            alert("Taarifa zako zimehifadhiwa kikamilifu!");
-        }
+<!-- FLOATING CARD -->
+<div class="floating-card">
 
-        window.onload = function() {
-            const savedData = JSON.parse(localStorage.getItem('viwawa_profile'));
-            const savedPic = localStorage.getItem('profilePic');
-            
-            if (savedData) {
-                document.getElementById('fullName').value = savedData.name || "";
-                document.getElementById('userNameDisplay').innerText = savedData.name || "Mwanachama";
-                document.getElementById('jimbo').value = savedData.jimbo || "";
-                document.getElementById('parokia').value = savedData.parokia || "";
-                document.getElementById('jumuiya').value = savedData.jumuiya || "";
-                document.getElementById('note1').checked = savedData.note1;
-                document.getElementById('note2').checked = savedData.note2;
-                document.getElementById('note3').checked = savedData.note3;
-            }
-            if (savedPic) {
-                document.getElementById('profileDisplay').src = savedPic;
-            }
+    <!-- Personal Info -->
+    <div class="section-label">Taarifa Binafsi</div>
+
+    <div class="field-group">
+        <label class="field-label">Jina Kamili</label>
+        <input type="text" id="fullName" class="field-input" placeholder="Andika jina lako" disabled>
+    </div>
+
+    <div class="field-grid">
+        <div class="field-group">
+            <label class="field-label">Jimbo</label>
+            <input type="text" id="jimbo" class="field-input" placeholder="Jimbo" disabled>
+        </div>
+        <div class="field-group">
+            <label class="field-label">Parokia</label>
+            <input type="text" id="parokia" class="field-input" placeholder="Parokia" disabled>
+        </div>
+    </div>
+
+    <div class="field-group">
+        <label class="field-label">Jumuiya</label>
+        <input type="text" id="jumuiya" class="field-input" placeholder="Andika jumuiya yako" disabled>
+    </div>
+
+    <div class="field-group">
+        <label class="field-label">Nambari ya Simu</label>
+        <input type="tel" id="phone" class="field-input" placeholder="+255 ..." disabled>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Notifications -->
+    <div class="section-label">Arifa za App</div>
+
+    <div class="notif-card">
+        <div class="notif-left">
+            <div class="notif-icon ni-orange"><i class="fa-solid fa-bullhorn"></i></div>
+            <div class="notif-text">
+                <strong>Matangazo</strong>
+                <small>Habari mpya za VIWAWA</small>
+            </div>
+        </div>
+        <label class="toggle">
+            <input type="checkbox" id="note1" checked>
+            <span class="toggle-track"></span>
+        </label>
+    </div>
+
+    <div class="notif-card">
+        <div class="notif-left">
+            <div class="notif-icon ni-blue"><i class="fa-solid fa-book-bible"></i></div>
+            <div class="notif-text">
+                <strong>Neno la Leo</strong>
+                <small>Mstari wa Biblia kila siku</small>
+            </div>
+        </div>
+        <label class="toggle">
+            <input type="checkbox" id="note2" checked>
+            <span class="toggle-track"></span>
+        </label>
+    </div>
+
+    <div class="notif-card">
+        <div class="notif-left">
+            <div class="notif-icon ni-green"><i class="fa-solid fa-wallet"></i></div>
+            <div class="notif-text">
+                <strong>Michango</strong>
+                <small>Masasisho ya michango</small>
+            </div>
+        </div>
+        <label class="toggle">
+            <input type="checkbox" id="note3">
+            <span class="toggle-track"></span>
+        </label>
+    </div>
+
+    <button class="save-btn" id="saveBtn" onclick="saveData()" style="display:none;">
+        <i class="fa-solid fa-check-circle"></i> HIFADHI TAARIFA
+    </button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">✅ Taarifa zimehifadhiwa!</div>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+    <a href="home.html" class="nav-item"><i class="fa-solid fa-house"></i>HOME</a>
+    <a href="sala.html" class="nav-item"><i class="fa-solid fa-hands-praying"></i>SALA</a>
+    <a href="mazungumzo.html" class="nav-item"><i class="fa-solid fa-comments"></i>CHAT</a>
+    <a href="profile.html" class="nav-item active"><i class="fa-solid fa-user"></i>WASIFU</a>
+</nav>
+
+<script>
+    let editMode = false;
+
+    // Toggle edit mode
+    function toggleEdit() {
+        editMode = !editMode;
+        const inputs = document.querySelectorAll('.field-input');
+        const btn = document.getElementById('saveBtn');
+        const toggle = document.getElementById('editToggle');
+
+        inputs.forEach(input => { input.disabled = !editMode; });
+        btn.style.display = editMode ? 'flex' : 'none';
+        toggle.innerText = editMode ? 'Ghairi' : 'Hariri';
+        toggle.style.background = editMode ? 'rgba(255,255,255,0.15)' : 'rgba(232,184,75,0.15)';
+
+        if (!editMode) loadData(); // reset if cancelled
+    }
+
+    // Save
+    function saveData() {
+        const name    = document.getElementById('fullName').value.trim();
+        const jimbo   = document.getElementById('jimbo').value.trim();
+        const parokia = document.getElementById('parokia').value.trim();
+        const jumuiya = document.getElementById('jumuiya').value.trim();
+        const phone   = document.getElementById('phone').value.trim();
+
+        if (!name) { showToast('❗ Jaza jina lako kwanza!'); return; }
+
+        const data = {
+            name, jimbo, parokia, jumuiya, phone,
+            note1: document.getElementById('note1').checked,
+            note2: document.getElementById('note2').checked,
+            note3: document.getElementById('note3').checked
         };
-    </script>
+
+        localStorage.setItem('viwawa_profile', JSON.stringify(data));
+        updateHero(data);
+        showToast('✅ Taarifa zimehifadhiwa!');
+
+        // Exit edit mode
+        editMode = false;
+        document.querySelectorAll('.field-input').forEach(i => i.disabled = true);
+        document.getElementById('saveBtn').style.display = 'none';
+        document.getElementById('editToggle').innerText = 'Hariri';
+        document.getElementById('editToggle').style.background = 'rgba(232,184,75,0.15)';
+    }
+
+    // Update hero section with short versions
+    function updateHero(data) {
+        document.getElementById('userNameDisplay').innerText = data.name || 'Mwanachama';
+        document.getElementById('statJimbo').innerText   = shorten(data.jimbo)   || '—';
+        document.getElementById('statParokia').innerText = shorten(data.parokia) || '—';
+        document.getElementById('statJumuiya').innerText = shorten(data.jumuiya) || '—';
+    }
+
+    function shorten(str) {
+        if (!str) return '';
+        const words = str.trim().split(' ');
+        return words.length > 1 ? words[0] : str;
+    }
+
+    // Load saved data
+    function loadData() {
+        const saved = JSON.parse(localStorage.getItem('viwawa_profile')) || {};
+        const pic   = localStorage.getItem('profilePic');
+
+        document.getElementById('fullName').value = saved.name    || '';
+        document.getElementById('jimbo').value    = saved.jimbo   || '';
+        document.getElementById('parokia').value  = saved.parokia || '';
+        document.getElementById('jumuiya').value  = saved.jumuiya || '';
+        document.getElementById('phone').value    = saved.phone   || '';
+        document.getElementById('note1').checked  = saved.note1 !== false;
+        document.getElementById('note2').checked  = saved.note2 !== false;
+        document.getElementById('note3').checked  = !!saved.note3;
+
+        if (pic) document.getElementById('profileDisplay').src = pic;
+        updateHero(saved);
+    }
+
+    // Profile pic
+    document.getElementById('imageUpload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            document.getElementById('profileDisplay').src = ev.target.result;
+            localStorage.setItem('profilePic', ev.target.result);
+            showToast('📸 Picha imebadilishwa!');
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // Toast
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    window.onload = loadData;
+</script>
 </body>
 </html>

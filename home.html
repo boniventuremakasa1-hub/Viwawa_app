@@ -141,7 +141,9 @@
             <a href="settings.html" class="side-item"><i class="fa-solid fa-gear"></i> Mipangilio</a>
             <a href="about.html" class="side-item"><i class="fa-solid fa-circle-info"></i> Kuhusu App</a>
             <hr style="margin: 10px 0; opacity: 0.1;">
-            <a href="#" class="side-item" style="color: var(--maroon);" onclick="logout()"><i class="fa-solid fa-power-off"></i> Ondoka</a>
+            <a href="#" class="side-item" style="color: var(--maroon);" onclick="logout()">
+                <i class="fa-solid fa-power-off"></i> Ondoka
+            </a>
         </div>
     </div>
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
@@ -149,11 +151,11 @@
     <div class="header">
         <i class="fa-solid fa-bars" onclick="toggleSidebar()"></i>
         <h1 style="font-size: 18px; font-weight: 700;">VIWAWA</h1>
-        <i class="fa-regular fa-bell"></i>
+        <i class="fa-regular fa-bell" onclick="requestNotificationPermission()"></i>
     </div>
 
     <div class="welcome-section">
-        <h2>Habari, <span id="userName">Mwanachama</span></h2>
+        <h2>Habari, <span id="userName">Mwanachama</span> 👋</h2>
         <p style="font-size: 13px; color: var(--text-gray);">Karibu kwenye huduma za vijana.</p>
     </div>
 
@@ -185,7 +187,7 @@
     </div>
 
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active"><i class="fa-solid fa-house"></i><br>HOME</a>
+        <a href="home.html" class="nav-item active"><i class="fa-solid fa-house"></i><br>HOME</a>
         <a href="sala.html" class="nav-item"><i class="fa-solid fa-hands-praying"></i><br>SALA</a>
         <a href="mazungumzo.html" class="nav-item"><i class="fa-solid fa-comments"></i><br>CHAT</a>
         <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i><br>PROFILE</a>
@@ -209,10 +211,10 @@
         }
         const messaging = firebase.messaging();
 
-        function setupNotifications() {
+        // ✅ ARIFA - inaitwa TU mtumiaji akibonyeza kengele, si moja kwa moja
+        function requestNotificationPermission() {
             navigator.serviceWorker.register('/Viwawa_app/firebase-messaging-sw.js')
             .then((registration) => {
-                console.log('Service Worker imesajiliwa!');
                 messaging.useServiceWorker(registration);
                 return Notification.requestPermission();
             })
@@ -222,24 +224,43 @@
                         vapidKey: 'BMoq67alz3BBQkVIs9GnjqiNrj-Z_AjALjo5sgB7_JWwRPpA722yv6bI3CzoetTyKzY8CPJWyGnApF12MRdg9zI' 
                     });
                 } else {
-                    throw new Error('Ruhusa imekataliwa na mtumiaji.');
+                    console.log('Mtumiaji amekataa arifa.');
                 }
             })
             .then((currentToken) => {
                 if (currentToken) {
-                    alert('TOKEN YAKO:\n\n' + currentToken);
-                } else {
-                    alert('Token haijapatikana.');
+                    // ✅ Hifadhi token kwenye localStorage tu - USIONYESHE kwa alert!
+                    localStorage.setItem('fcm_token', currentToken);
+                    console.log('Token imehifadhiwa.');
                 }
             })
             .catch((err) => {
-                alert('Hitilafu: ' + err.message);
+                console.error('Hitilafu ya arifa:', err.message);
             });
         }
 
+        // ✅ Pokea ujumbe ukiwa ndani ya app - onyesha vizuri bila alert
         messaging.onMessage((payload) => {
-            alert(payload.notification.title + ": " + payload.notification.body);
+            showInAppNotification(
+                payload.notification.title,
+                payload.notification.body
+            );
         });
+
+        // ✅ Notification ndogo nzuri badala ya alert ya kutisha
+        function showInAppNotification(title, body) {
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+                position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+                background: #801313; color: white; padding: 12px 20px;
+                border-radius: 12px; z-index: 9999; font-size: 13px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3); max-width: 90%;
+                animation: slideDown 0.3s ease;
+            `;
+            notif.innerHTML = `<strong>${title}</strong><br>${body}`;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 4000);
+        }
 
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
@@ -250,20 +271,24 @@
             if(confirm("Je, unataka kuondoka?")) {
                 localStorage.removeItem('viwawa_profile');
                 localStorage.removeItem('profilePic');
+                localStorage.removeItem('fcm_token');
                 window.location.href = "login.html";
             }
         }
 
+        // ✅ window.onload - hakuna setupNotifications hapa!
         window.onload = function() {
-            setupNotifications(); 
             const savedData = JSON.parse(localStorage.getItem('viwawa_profile'));
             const savedPic = localStorage.getItem('profilePic');
             if(savedData && savedData.name) {
                 document.getElementById('userName').innerText = savedData.name.split(' ')[0];
                 document.getElementById('sideName').innerText = savedData.name;
             }
-            if(savedPic) { document.getElementById('sideProfilePic').src = savedPic; }
+            if(savedPic) { 
+                document.getElementById('sideProfilePic').src = savedPic; 
+            }
         };
     </script>
 </body>
 </html>
+

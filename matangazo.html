@@ -2,214 +2,584 @@
 <html lang="sw">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATANGAZO - VIWAWA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Matangazo - VIWAWA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
     <style>
-        :root { --primary: #8d1212; --bg: #fdfdfd; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
-
-        body { background-color: #f4f4f4; padding-bottom: 30px; }
-
-        /* AppBar */
-        .app-bar {
-            background-color: var(--primary);
-            color: white;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        :root {
+            --maroon: #7a1010;
+            --maroon2: #9e1515;
+            --maroon3: #4a0808;
+            --gold: #c9963a;
+            --gold2: #f0c94a;
+            --bg: #f6f1f1;
+            --white: #ffffff;
+            --text: #1a1010;
+            --text-soft: #9a7a7a;
+            --border: #ede0e0;
         }
-        .app-bar i { font-size: 20px; margin-right: 15px; cursor: pointer; }
-        .app-bar h1 { font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .container { padding: 15px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Kadi mpya ya Tangazo */
-        .ad-card {
-            background: white;
-            border-radius: 15px;
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding-bottom: 110px;
+            color: var(--text);
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: linear-gradient(150deg, var(--maroon3), var(--maroon), var(--maroon2));
+            padding: 0 0 36px;
+            position: relative;
             overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-            border: 1px solid rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            width: 200px; height: 200px;
+            background: rgba(201,150,58,0.07);
+            border-radius: 50%;
+            top: -60px; right: -60px;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            width: 120px; height: 120px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 50%;
+            bottom: 10px; left: -30px;
+        }
+        .header-top {
+            display: flex; align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px 0;
+            position: relative; z-index: 2;
+        }
+        .back-btn {
+            width: 38px; height: 38px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 17px; cursor: pointer;
+            text-decoration: none;
+        }
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 19px; color: white; letter-spacing: 0.5px;
+        }
+        .header-bell {
+            width: 38px; height: 38px;
+            background: rgba(240,201,74,0.15);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--gold2); font-size: 16px;
+            position: relative;
+        }
+        .bell-dot {
+            position: absolute;
+            top: 8px; right: 8px;
+            width: 8px; height: 8px;
+            background: var(--gold2);
+            border-radius: 50%;
+            border: 2px solid var(--maroon);
         }
 
-        .ad-image {
-            width: 100%;
-            max-height: 220px;
-            object-fit: cover;
-            display: none; 
+        /* Hero text */
+        .header-body {
+            padding: 16px 20px 0;
+            position: relative; z-index: 2;
+        }
+        .header-sub {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+        .header-count {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: white;
+        }
+        .header-count span { color: var(--gold2); }
+
+        /* ── FILTER TABS ── */
+        .tabs-wrap {
+            padding: 0 16px;
+            margin-top: -18px;
+            position: relative; z-index: 10;
+            margin-bottom: 16px;
+            display: flex; gap: 8px;
+            overflow-x: auto; scrollbar-width: none;
+        }
+        .tabs-wrap::-webkit-scrollbar { display: none; }
+        .tab {
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            padding: 8px 18px;
+            font-size: 12px; font-weight: 600;
+            color: var(--text-soft);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .tab.active { background: var(--maroon); border-color: var(--maroon); color: white; }
+
+        /* ── ADS LIST ── */
+        .ads-list { padding: 0 16px; }
+
+        /* ── AD CARD ── */
+        .ad-card {
+            background: var(--white);
+            border-radius: 22px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            border: 1px solid var(--border);
+            animation: riseUp 0.4s ease both;
+            position: relative;
+        }
+        @keyframes riseUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        .ad-content { padding: 20px; }
+        /* Color accent bar on left */
+        .ad-accent {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            border-radius: 22px 0 0 22px;
+        }
 
-        .ad-header {
+        /* Card top meta */
+        .ad-meta {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
+            justify-content: space-between;
+            padding: 16px 18px 10px 22px;
         }
-        .ad-header h2 {
-            color: var(--primary);
-            font-size: 18px;
-            font-weight: 800;
+        .ad-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 10px;
+            font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .ad-time {
+            font-size: 11px;
+            color: var(--text-soft);
+            display: flex; align-items: center; gap: 5px;
+        }
+
+        /* Card image */
+        .ad-img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            display: none;
+        }
+        .ad-img.show { display: block; }
+
+        /* Card body */
+        .ad-body { padding: 4px 18px 18px 22px; }
+        .ad-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            color: var(--text);
+            margin-bottom: 10px;
             line-height: 1.3;
         }
-        .ad-emoji { font-size: 20px; }
-
         .ad-message {
-            color: #444;
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.75;
+            color: #5a3a3a;
             white-space: pre-line;
+            margin-bottom: 16px;
         }
 
+        /* Card footer */
         .ad-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 15px;
-            border-top: 1px solid #f0f0f0;
-        }
-
-        .ad-date {
-            font-size: 12px;
-            color: #888;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .share-btn {
-            background: #f8f9fa;
-            color: var(--primary);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
             display: flex;
             align-items: center;
             gap: 8px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+        .ad-action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
+            border: none;
+            font-family: 'DM Sans', sans-serif;
             transition: 0.2s;
         }
-        .share-btn:active { background: #eee; transform: scale(0.95); }
+        .ad-action-btn:active { transform: scale(0.96); }
+        .btn-share-ad { background: var(--maroon); color: white; }
+        .btn-copy-ad  { background: var(--bg); color: var(--maroon); }
+        .btn-read-more {
+            background: none;
+            border: none;
+            color: var(--maroon);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 10px;
+            font-family: 'DM Sans', sans-serif;
+            display: none;
+        }
 
-        #loader { text-align: center; margin-top: 50px; color: #888; font-size: 14px; }
+        /* NEW badge */
+        .new-dot {
+            position: absolute;
+            top: 14px; right: 14px;
+            background: var(--gold2);
+            color: var(--maroon3);
+            font-size: 9px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── CATEGORY COLORS ── */
+        .cat-general  { background:#fdf0f0; color:var(--maroon); }
+        .acc-general  { background: linear-gradient(var(--maroon), var(--maroon2)); }
+
+        .cat-tukio    { background:#eef4ff; color:#1a56db; }
+        .acc-tukio    { background: linear-gradient(#1a56db, #2563eb); }
+
+        .cat-haraka   { background:#fff7e6; color:#b45309; }
+        .acc-haraka   { background: linear-gradient(#d97706, #f59e0b); }
+
+        .cat-sala     { background:#f0fdf4; color:#166534; }
+        .acc-sala     { background: linear-gradient(#166534, #16a34a); }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            animation: riseUp 0.4s ease both;
+        }
+        .empty-icon { font-size: 52px; margin-bottom: 14px; display: block; }
+        .empty-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px; color: var(--text);
+            margin-bottom: 8px;
+        }
+        .empty-sub { font-size: 13px; color: var(--text-soft); line-height: 1.6; }
+
+        /* ── SKELETON LOADER ── */
+        .skeleton-card {
+            background: white;
+            border-radius: 22px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .skel {
+            background: linear-gradient(90deg, #f0e8e8 25%, #fdf5f5 50%, #f0e8e8 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+        @keyframes shimmer { to { background-position: -200% 0; } }
+        .skel-line { height: 12px; margin-bottom: 10px; }
+        .skel-title { height: 20px; width: 70%; margin-bottom: 14px; }
+        .skel-body  { height: 10px; margin-bottom: 8px; }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            bottom: 110px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--maroon3);
+            color: white;
+            padding: 11px 22px;
+            border-radius: 30px;
+            font-size: 13px; font-weight: 600;
+            opacity: 0; transition: all 0.3s;
+            z-index: 9999; white-space: nowrap;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* ── BOTTOM NAV ── */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%;
+            background: white;
+            display: flex; justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #eee;
+            z-index: 100;
+        }
+        .nav-item {
+            text-decoration: none; color: #aaa;
+            font-size: 10px; font-weight: 600;
+            text-align: center; flex: 1;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 3px;
+        }
+        .nav-item i { font-size: 19px; }
+        .nav-item.active { color: var(--maroon); }
     </style>
 </head>
 <body>
 
-    <div class="app-bar">
-        <i class="fa-solid fa-arrow-left" onclick="history.back()"></i>
-        <h1>Matangazo</h1>
+<!-- HEADER -->
+<div class="header">
+    <div class="header-top">
+        <a href="home.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        <span class="header-title">Matangazo</span>
+        <div class="header-bell">
+            <i class="fa-solid fa-bell"></i>
+            <div class="bell-dot" id="bellDot" style="display:none;"></div>
+        </div>
     </div>
-
-    <div class="container" id="ad-container">
-        <div id="loader">Inapakia matangazo...</div>
+    <div class="header-body">
+        <div class="header-sub">Habari za VIWAWA</div>
+        <div class="header-count">
+            <span id="adCount">0</span> Matangazo mapya
+        </div>
     </div>
+</div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
-            authDomain: "viwawa-app.firebaseapp.com",
-            projectId: "viwawa-app",
-            storageBucket: "viwawa-app.firebasestorage.app",
-            messagingSenderId: "523436472007",
-            appId: "1:523436472007:web:dda010d18fd00ea60070e2"
+<!-- FILTER TABS -->
+<div class="tabs-wrap">
+    <div class="tab active" onclick="filterAds('zote', this)">🔔 Yote</div>
+    <div class="tab" onclick="filterAds('tukio', this)">📅 Matukio</div>
+    <div class="tab" onclick="filterAds('haraka', this)">⚡ Haraka</div>
+    <div class="tab" onclick="filterAds('sala', this)">🙏 Sala</div>
+    <div class="tab" onclick="filterAds('general', this)">📢 Jumla</div>
+</div>
+
+<!-- ADS LIST -->
+<div class="ads-list" id="adsList">
+    <!-- Skeleton loaders -->
+    <div class="skeleton-card" id="skel1">
+        <div class="skel skel-line" style="width:40%;"></div>
+        <div class="skel skel-title"></div>
+        <div class="skel skel-body" style="width:100%;"></div>
+        <div class="skel skel-body" style="width:85%;"></div>
+        <div class="skel skel-body" style="width:60%;"></div>
+    </div>
+    <div class="skeleton-card" id="skel2">
+        <div class="skel skel-line" style="width:35%;"></div>
+        <div class="skel skel-title" style="width:55%;"></div>
+        <div class="skel skel-body" style="width:90%;"></div>
+        <div class="skel skel-body" style="width:70%;"></div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+    <a href="home.html" class="nav-item"><i class="fa-solid fa-house"></i>HOME</a>
+    <a href="biblia.html" class="nav-item"><i class="fa-solid fa-book-bible"></i>BIBLIA</a>
+    <a href="sala.html" class="nav-item"><i class="fa-solid fa-hands-praying"></i>SALA</a>
+    <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i>WASIFU</a>
+</nav>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
+        authDomain: "viwawa-app.firebaseapp.com",
+        projectId: "viwawa-app",
+        storageBucket: "viwawa-app.firebasestorage.app",
+        messagingSenderId: "523436472007",
+        appId: "1:523436472007:web:dda010d18fd00ea60070e2"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let allAds = [];
+    let currentFilter = 'zote';
+
+    // Time ago helper
+    function timeAgo(ts) {
+        const diff = Date.now() - ts;
+        const min  = Math.floor(diff / 60000);
+        const hrs  = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
+        if (min < 1)   return 'Sasa hivi';
+        if (min < 60)  return `Dakika ${min} zilizopita`;
+        if (hrs < 24)  return `Masaa ${hrs} yaliyopita`;
+        if (days === 1) return 'Jana';
+        return `Siku ${days} zilizopita`;
+    }
+
+    // Category config
+    function getCatConfig(cat) {
+        const map = {
+            tukio:   { label:'Tukio',   icon:'fa-calendar-star',  badge:'cat-tukio',   acc:'acc-tukio'  },
+            haraka:  { label:'Haraka!',  icon:'fa-bolt',           badge:'cat-haraka',  acc:'acc-haraka' },
+            sala:    { label:'Sala',     icon:'fa-hands-praying',  badge:'cat-sala',    acc:'acc-sala'   },
+            general: { label:'Tangazo', icon:'fa-bullhorn',        badge:'cat-general', acc:'acc-general'},
         };
+        return map[cat] || map.general;
+    }
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+    // Render
+    function render() {
+        const list = document.getElementById('adsList');
 
-        function fetchAds() {
-            const container = document.getElementById('ad-container');
-            
-            // Pata muda wa siku 7 zilizopita
-            const sikuSabaAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+        // Remove skeletons
+        const s1 = document.getElementById('skel1');
+        const s2 = document.getElementById('skel2');
+        if (s1) s1.remove();
+        if (s2) s2.remove();
 
-            // Tunachuja matangazo yaliyozidi siku 7 kwa kutumia timestamp
-            db.collection("matangazo")
-              .where("timestamp", ">", sikuSabaAgo)
-              .orderBy("timestamp", "desc")
-              .onSnapshot((querySnapshot) => {
-                container.innerHTML = "";
-                
-                if (querySnapshot.empty) {
-                    container.innerHTML = "<div id='loader'>Hakuna matangazo mapya kwa sasa.</div>";
-                    return;
-                }
+        list.innerHTML = '';
 
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    
-                    // Badilisha namba ya timestamp kuwa tarehe
-                    const date = data.timestamp ? new Date(data.timestamp).toLocaleDateString('sw-TZ', { 
-                        day: 'numeric', 
-                        month: 'short', 
-                        year: 'numeric' 
-                    }) : "Hivi sasa";
+        const filtered = currentFilter === 'zote'
+            ? allAds
+            : allAds.filter(a => (a.kategoria || 'general') === currentFilter);
 
-                    const card = document.createElement('div');
-                    card.className = 'ad-card';
-
-                    // HTML ya kadi (Nimetumia data.maelezo badala ya ujumbe ili iendane na admin panel)
-                    card.innerHTML = `
-                        ${data.picha ? `<img src="${data.picha}" class="ad-image" style="display:block;">` : ''}
-                        <div class="ad-content">
-                            <div class="ad-header">
-                                <span class="ad-emoji">📢</span>
-                                <h2>${data.kichwa}</h2>
-                            </div>
-                            <div class="ad-message">${data.maelezo}</div>
-                            
-                            <div class="ad-footer">
-                                <div class="ad-date">
-                                    <i class="fa-regular fa-calendar"></i>
-                                    ${date}
-                                </div>
-                                <div class="share-btn" onclick="shareAd('${data.kichwa}', '${data.maelezo}')">
-                                    <i class="fa-solid fa-paper-plane"></i>
-                                    SHARE
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-            }, (error) => {
-                console.error("Hitilafu: ", error);
-                container.innerHTML = "<div id='loader'>Tatizo la kiufundi limetokea.</div>";
-            });
+        if (filtered.length === 0) {
+            list.innerHTML = `
+                <div class="empty-state">
+                    <span class="empty-icon">📭</span>
+                    <div class="empty-title">Hakuna matangazo</div>
+                    <p class="empty-sub">Hakuna matangazo katika sehemu hii kwa sasa.<br>Rudi baadaye! 🙏</p>
+                </div>`;
+            return;
         }
 
-        async function shareAd(title, text) {
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: title,
-                        text: `${title}\n\n${text}\n\nImeandaliwa na Viwawa.`,
-                    });
-                } catch (err) {
-                    console.log("Share cancelled");
-                }
-            } else {
-                alert("Share haitumiki kwenye browser hii.");
-            }
-        }
+        filtered.forEach((ad, i) => {
+            const cat    = getCatConfig(ad.kategoria || 'general');
+            const isNew  = (Date.now() - (ad.timestamp || 0)) < 86400000; // chini ya saa 24
+            const isLong = (ad.maelezo || '').length > 200;
+            const shortText = isLong ? (ad.maelezo || '').substring(0, 200) + '...' : (ad.maelezo || '');
 
-        window.onload = fetchAds;
-    </script>
+            const card = document.createElement('div');
+            card.className = 'ad-card';
+            card.style.animationDelay = (i * 0.07) + 's';
+            card.innerHTML = `
+                <div class="ad-accent ${cat.acc}"></div>
+                ${isNew ? '<div class="new-dot">MPYA</div>' : ''}
+                <div class="ad-meta">
+                    <div class="ad-badge ${cat.badge}">
+                        <i class="fa-solid ${cat.icon}"></i> ${cat.label}
+                    </div>
+                    <div class="ad-time">
+                        <i class="fa-regular fa-clock"></i>
+                        ${timeAgo(ad.timestamp || Date.now())}
+                    </div>
+                </div>
+                ${ad.picha ? `<img src="${ad.picha}" class="ad-img show" alt="picha">` : ''}
+                <div class="ad-body">
+                    <div class="ad-title">${ad.kichwa || '—'}</div>
+                    <div class="ad-message" id="msg-${i}">${shortText}</div>
+                    ${isLong ? `<button class="btn-read-more" id="rbtn-${i}" style="display:block;" onclick="toggleRead(${i}, ${JSON.stringify(ad.maelezo || '').replace(/"/g,'&quot;')})">Soma zaidi <i class="fa-solid fa-chevron-down"></i></button>` : ''}
+                    <div class="ad-footer">
+                        <button class="ad-action-btn btn-share-ad" onclick="shareAd('${(ad.kichwa||'').replace(/'/g,"\\'")}','${(ad.maelezo||'').replace(/'/g,"\\'").replace(/\n/g,'\\n')}')">
+                            <i class="fa-solid fa-share-nodes"></i> Shiriki
+                        </button>
+                        <button class="ad-action-btn btn-copy-ad" onclick="copyAd('${(ad.kichwa||'').replace(/'/g,"\\'")}','${(ad.maelezo||'').replace(/'/g,"\\'").replace(/\n/g,'\\n')}')">
+                            <i class="fa-regular fa-copy"></i> Nakili
+                        </button>
+                    </div>
+                </div>`;
+            list.appendChild(card);
+        });
+    }
+
+    // Toggle read more
+    function toggleRead(i, fullText) {
+        const msgEl  = document.getElementById('msg-' + i);
+        const btnEl  = document.getElementById('rbtn-' + i);
+        const isExpanded = btnEl.dataset.expanded === 'true';
+        if (isExpanded) {
+            msgEl.innerText = fullText.substring(0, 200) + '...';
+            btnEl.innerHTML = 'Soma zaidi <i class="fa-solid fa-chevron-down"></i>';
+            btnEl.dataset.expanded = 'false';
+        } else {
+            msgEl.innerText = fullText;
+            btnEl.innerHTML = 'Ficha <i class="fa-solid fa-chevron-up"></i>';
+            btnEl.dataset.expanded = 'true';
+        }
+    }
+
+    function filterAds(cat, el) {
+        currentFilter = cat;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        render();
+    }
+
+    async function shareAd(title, text) {
+        const msg = `📢 ${title}\n\n${text}\n\n— VIWAWA App | Mapendo Daima 🙏`;
+        if (navigator.share) {
+            try { await navigator.share({ title, text: msg }); } catch(e) {}
+        } else {
+            navigator.clipboard.writeText(msg);
+            showToast('📋 Tangazo imenakiliwa!');
+        }
+    }
+
+    function copyAd(title, text) {
+        const msg = `📢 ${title}\n\n${text}\n\n— VIWAWA App | Mapendo Daima 🙏`;
+        navigator.clipboard.writeText(msg);
+        showToast('📋 Imenakiliwa!');
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // Firebase load
+    window.onload = function() {
+        const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+
+        db.collection("matangazo")
+          .where("timestamp", ">", sevenDaysAgo)
+          .orderBy("timestamp", "desc")
+          .onSnapshot(snap => {
+              allAds = [];
+              snap.forEach(doc => allAds.push({ id: doc.id, ...doc.data() }));
+
+              // Update count
+              const countEl = document.getElementById('adCount');
+              countEl.innerText = allAds.length;
+
+              // Bell dot
+              const bellDot = document.getElementById('bellDot');
+              bellDot.style.display = allAds.some(a => (Date.now() - (a.timestamp||0)) < 86400000) ? 'block' : 'none';
+
+              render();
+          }, err => {
+              document.getElementById('adsList').innerHTML = `
+                  <div class="empty-state">
+                      <span class="empty-icon">⚠️</span>
+                      <div class="empty-title">Tatizo limetokea</div>
+                      <p class="empty-sub">Jaribu tena baadaye.</p>
+                  </div>`;
+          });
+    };
+</script>
 </body>
 </html>

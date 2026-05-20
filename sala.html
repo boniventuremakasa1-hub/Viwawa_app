@@ -2,299 +2,729 @@
 <html lang="sw">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SALA ZETU</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sala Zetu - VIWAWA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
-        :root { 
-            --primary: #800000;
-            --gold: #b8860b;
+        :root {
+            --maroon: #6b0f0f;
+            --maroon2: #8c1515;
+            --maroon3: #3d0808;
+            --gold: #c9963a;
+            --gold2: #e8c06a;
+            --cream: #fdf6ed;
+            --cream2: #f5ede0;
+            --white: #ffffff;
+            --text: #1e1208;
+            --text-soft: #8a7060;
+            --border: #e8d5bc;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Georgia', serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body { 
-            background-color: #f4ece1;
-            /* Background kama ya Biblia.html */
-            background-image: url('https://www.transparenttextures.com/patterns/parchment.png');
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            min-height: 100vh;
+            padding-bottom: 110px;
+            position: relative;
         }
 
-        .app-bar {
-            background-color: var(--primary);
-            color: white;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 2px solid var(--gold);
+        /* Subtle cross watermark */
+        body::before {
+            content: '✝';
+            position: fixed;
+            font-size: 500px;
+            color: rgba(107,15,15,0.025);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+            font-family: serif;
         }
 
-        .back-btn { font-size: 20px; margin-right: 15px; cursor: pointer; }
-        .app-bar h1 { font-size: 19px; font-weight: bold; color: #ffd700; }
-
-        .jumuiya-btn {
-            background: linear-gradient(135deg, var(--primary), #a52a2a);
-            margin: 15px;
-            padding: 15px;
-            border-radius: 8px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            border: 1px solid var(--gold);
-        }
-
-        .prayer-list { padding: 10px; }
-
-        /* Mfumo wa Kuficha Sala (Accordion) */
-        .card {
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 5px;
-            margin-bottom: 10px;
-            border: 1px solid #c3a36a;
+        /* ── HEADER ── */
+        .header {
+            background: linear-gradient(150deg, var(--maroon3) 0%, var(--maroon) 60%, var(--maroon2) 100%);
+            padding: 0 0 32px;
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            width: 250px; height: 250px;
+            background: rgba(201,150,58,0.07);
+            border-radius: 50%;
+            top: -80px; right: -80px;
         }
 
-        .card-header {
-            padding: 15px;
-            cursor: pointer;
-            background: rgba(128, 0, 0, 0.05);
+        .header-top {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-weight: bold;
-            color: var(--primary);
+            justify-content: space-between;
+            padding: 18px 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+        .back-btn {
+            width: 38px; height: 38px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 17px; cursor: pointer;
+            text-decoration: none;
+        }
+        .header-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 1px;
+        }
+        .header-right { width: 38px; }
+
+        /* Cross icon in center */
+        .header-cross {
+            text-align: center;
+            padding: 16px 0 4px;
+            position: relative;
+            z-index: 2;
+        }
+        .cross-icon {
+            font-size: 28px;
+            color: var(--gold2);
+            display: inline-block;
+            animation: glow 3s ease-in-out infinite;
+        }
+        @keyframes glow {
+            0%, 100% { opacity: 0.7; text-shadow: 0 0 10px rgba(232,192,106,0.3); }
+            50% { opacity: 1; text-shadow: 0 0 20px rgba(232,192,106,0.6); }
+        }
+        .header-sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            margin-top: 4px;
+            padding-bottom: 2px;
+        }
+
+        /* ── JUMUIYA CARD ── */
+        .jumuiya-wrap {
+            padding: 0 16px;
+            margin-top: -18px;
+            position: relative;
+            z-index: 10;
+            margin-bottom: 16px;
+        }
+        .jumuiya-card {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(201,150,58,0.35);
+            transition: 0.2s;
+        }
+        .jumuiya-card:active { transform: scale(0.98); }
+        .jumuiya-icon {
+            width: 52px; height: 52px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            color: var(--maroon3);
+            flex-shrink: 0;
+        }
+        .jumuiya-text { flex: 1; }
+        .jumuiya-text strong {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--maroon3);
+            margin-bottom: 2px;
+        }
+        .jumuiya-text span {
+            font-size: 12px;
+            color: rgba(61,8,8,0.7);
+        }
+        .jumuiya-arrow {
+            color: var(--maroon3);
+            font-size: 18px;
+            opacity: 0.7;
+        }
+
+        /* ── SEARCH ── */
+        .search-wrap {
+            padding: 0 16px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 5;
+        }
+        .search-box {
+            background: white;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            gap: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1.5px solid var(--border);
+        }
+        .search-box i { color: var(--text-soft); font-size: 15px; }
+        .search-box input {
+            border: none; outline: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: transparent;
+            flex: 1;
+        }
+        .search-box input::placeholder { color: #bbb; }
+
+        /* ── CATEGORY TABS ── */
+        .tabs-wrap {
+            padding: 0 16px;
+            margin-bottom: 18px;
+            overflow-x: auto;
+            display: flex;
+            gap: 8px;
+            scrollbar-width: none;
+        }
+        .tabs-wrap::-webkit-scrollbar { display: none; }
+        .tab {
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            padding: 7px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-soft);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .tab.active {
+            background: var(--maroon);
+            border-color: var(--maroon);
+            color: white;
+        }
+
+        /* ── PRAYER LIST ── */
+        .prayer-list {
+            padding: 0 16px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .prayer-card {
+            background: var(--white);
+            border-radius: 18px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            transition: box-shadow 0.2s;
+            animation: fadeIn 0.4s ease both;
+        }
+        .prayer-card.hidden { display: none; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .prayer-card.open {
+            box-shadow: 0 6px 24px rgba(107,15,15,0.1);
+            border-color: rgba(107,15,15,0.15);
+        }
+
+        .prayer-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 18px;
+            cursor: pointer;
+            gap: 14px;
+            user-select: none;
+        }
+        .prayer-num {
+            width: 32px; height: 32px;
+            background: var(--cream2);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
             font-size: 15px;
-            border-bottom: 1px solid transparent;
+            color: var(--maroon);
+            flex-shrink: 0;
+            transition: 0.3s;
+        }
+        .prayer-card.open .prayer-num {
+            background: var(--maroon);
+            color: white;
+        }
+        .prayer-name {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .prayer-chevron {
+            color: var(--text-soft);
+            font-size: 13px;
+            transition: transform 0.35s ease;
+        }
+        .prayer-card.open .prayer-chevron {
+            transform: rotate(180deg);
+            color: var(--maroon);
         }
 
-        .card.active .card-header {
-            border-bottom: 1px solid #c3a36a;
-            background: rgba(128, 0, 0, 0.1);
+        /* Divider line */
+        .prayer-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0 18px;
+            display: none;
         }
+        .prayer-card.open .prayer-divider { display: block; }
 
-        .card-content {
+        /* Content */
+        .prayer-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            padding: 0 15px;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .prayer-card.open .prayer-content {
+            max-height: 2000px;
+        }
+        .prayer-inner {
+            padding: 20px 20px 24px;
         }
 
-        .card.active .card-content {
-            max-height: 1500px;
-            padding: 15px;
+        /* Opening quote */
+        .prayer-quote-mark {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 60px;
+            color: rgba(107,15,15,0.08);
+            line-height: 0.5;
+            margin-bottom: 8px;
+            display: block;
         }
 
-        .card p {
-            font-size: 16px;
-            line-height: 1.8;
-            color: #2b1e16;
+        .prayer-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 17px;
+            font-style: italic;
+            line-height: 2;
+            color: #2a1a14;
             white-space: pre-line;
-            text-align: justify;
         }
 
-        .card i.fa-chevron-down {
-            transition: transform 0.3s;
+        /* Action buttons inside card */
+        .prayer-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+        .prayer-action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 9px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+        }
+        .prayer-action-btn:active { transform: scale(0.96); }
+        .btn-pray {
+            background: var(--maroon);
+            color: white;
+        }
+        .btn-copy-sala {
+            background: var(--cream2);
+            color: var(--maroon);
+        }
+        .btn-share-sala {
+            background: var(--cream2);
+            color: var(--text-soft);
         }
 
-        .card.active i.fa-chevron-down {
-            transform: rotate(180deg);
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            display: none;
         }
+        .empty-state i { font-size: 40px; color: var(--border); margin-bottom: 12px; display: block; }
+        .empty-state p { color: var(--text-soft); font-size: 14px; }
 
-        #empty { text-align: center; padding: 40px; color: #888; display: none; }
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            bottom: 110px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--maroon3);
+            color: white;
+            padding: 11px 22px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 9999;
+            white-space: nowrap;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* ── BOTTOM NAV ── */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%;
+            background: white;
+            display: flex; justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #eee;
+            z-index: 100;
+        }
+        .nav-item {
+            text-decoration: none; color: #aaa;
+            font-size: 10px; font-weight: 600;
+            text-align: center; flex: 1;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 3px;
+        }
+        .nav-item i { font-size: 19px; }
+        .nav-item.active { color: var(--maroon); }
     </style>
 </head>
 <body>
 
-    <div class="app-bar">
-        <div class="back-btn" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></div>
-        <h1>SALA ZETU</h1>
+<!-- HEADER -->
+<div class="header">
+    <div class="header-top">
+        <a href="home.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        <span class="header-title">SALA ZETU</span>
+        <div class="header-right"></div>
     </div>
-
-    <div class="jumuiya-btn" onclick="funguaSalaJumuiya()">
-        <div>
-            <h2 style="font-size: 16px;">SALA YA JUMUIYA</h2>
-            <p style="font-size: 12px; opacity: 0.9;">Bikira Maria Malkia wa Malaika</p>
-        </div>
-        <i class="fa-solid fa-hands-praying fa-2x"></i>
+    <div class="header-cross">
+        <span class="cross-icon">✝</span>
+        <div class="header-sub">"Ombeni, nanyi mtapewa" — Mathayo 7:7</div>
     </div>
+</div>
 
-    <div class="prayer-list" id="pBox">
-        
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">SALA YA ASUBUHI <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Ee Baba yetu Mungu mkuu, Umenilinda usiku huu, Nakushukuru kwa Moyo, Ee Baba, Mwana, na Roho. Nilinde tena siku hii, Niache dhambi, nikutii. Naomba sana, Baba wee, Baraka yako nipokee. Bikira safi, Ee Maria, nisipotee nisimamie, Mlinzi mkuu Malaika wee. Kwa Mungu wetu niombee. Nitake, nitende mema tu, na mwisho nije kwako juu. Amina.</p>
-            </div>
+<!-- JUMUIYA CARD -->
+<div class="jumuiya-wrap">
+    <div class="jumuiya-card" onclick="funguaSalaJumuiya()">
+        <div class="jumuiya-icon"><i class="fa-solid fa-hands-praying"></i></div>
+        <div class="jumuiya-text">
+            <strong>SALA YA JUMUIYA</strong>
+            <span>Bikira Maria Malkia wa Malaika</span>
         </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">NIA NJEMA <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Kumheshimu Mungu wangu namtolea roho yangu, nifanye kazi nipumzike, Amri zake tu nishike. Wazo, neno, tendo lote namtolea Mungu pote, Roho, mwili, chote changu, Pendo na uzima wangu, Mungu wangu nitampenda, wala dhambi sitatenda. Jina lako nasifia, utakalo hutimia, kwa utii navumilia, teso na matata pia. Nipe Bwana, neema zako niongeze sifa yako. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">SALA YA MATOLEO <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Ee Yesu, kwa mikono ya Bikira Maria, na kwa muungano na sadaka yako kuu, ninakutolea sala, matendo, masumbuko na furaha zangu zote za leo. Ee Yesu, ufalme wako utufikie.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">BABA YETU <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Baba yetu uliye mbinguni, jina lako litukuzwe, Ufalme wako ufike, utakalo lifanyike duniani kama mbinguni. Utupe leo mkate wetu wa kila siku. Utusamehe makosa yetu, kama tunavyowasamehe na sisi waliotukosea. Usitutie katika kishawishi, lakini utuopoe maovuni. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">SALAMU MARIA <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Salamu Maria, umejaa neema, Bwana yu nawe, umebarikiwa kuliko wanawake wote, na Yesu mzao wa tumbo lako amebarikiwa. Maria Mtakatifu, Mama wa Mungu, utuombee sisi wakosefu, sasa na saa ya kufa kwetu. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">ATUKUZWE BABA <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Atukuzwe Baba, na Mwana, na Roho Mtakatifu. Kama mwanzo, na sasa, na siku zote na milele. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">KANUNI YA IMANI (NASADIKI) <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Nasadiki kwa Mungu Baba Mwenyezi, Muumba mbingu na dunia, Na kwa Yesu Kristo, Mwana wa pekee, Bwana wetu, aliye tungwa kwa uwezo wa Roho Mtakatifu, Akazaliwa na Bikira Maria, Akateswa kwa mamlaka ya Ponsyo Pilato, akasulubiwa, akafa, akazikwa, Akashukia kuzimu, siku ya tatu akafufuka katika wafu, Akapaa Mbinguni, Amekaa kuume kwa Mungu Baba Mwenyezi; Toka huko atakuja kuwahukumu wazima na wafu. Nasadiki kwa Roho Mtakatifu, Kanisa Takatifu Katoliki, ushirika wa watakatifu, maondoleo ya dhambi, ufufuko wa miili na uzima wa milele. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">SALA YA MATUMAINI <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Mungu wangu, natumaini kwako nitapewa kwa njia ya Yesu Kristu, neema zako hapa duniani na utukufu mbinguni, kwani ndiwe uliyeagana hayo nasi, nawe mwamini. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">SALA YA MAPENDO <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Mungu wangu, nakupenda zaidi ya chochote; kwani ndiwe mwema, ndiwe mwenye kupendeza. Nampenda na jirani yangu kama nafsi yangu kwa ajili yako. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">SALA YA KUTUBU <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Mungu wangu, nimetubu sana dhambi zangu, kwani ndiwe mwema, ndiwe mwenye kupendeza, wachukizwa na dhambi. Basi sitaki kukosa tena, nitafanya kitubio, naomba neema yako nipate kurudi. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">SALA KWA MALAIKA MLINZI <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Malaika Mlinzi wangu, unilinde katika hatari zote za roho na mwili. Ee Malaika wa Mungu, niliyekabidhiwa kwako kwa wema wa Mungu, uniangazie, unilinde, uniongoze na unitawale leo. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">MALAIKA WA BWANA <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Malaika wa Bwana alimpasha habari Maria. Naye akapata mimba kwa uwezo wa Roho Mtakatifu. (Salamu Maria...)
-                Ndimi mtumishi wa Bwana. Nitendewe ulivyonena. (Salamu Maria...)
-                Neno la Mungu akatwaa mwili. Akakaa kwetu. (Salamu Maria...)
-                
-                V. Utuombee, mzazi mtakatifu wa Mungu.
-                R. Tujalie ahadi za Kristu.
-                
-                Tuombe: Tunakuomba Ee Bwana utie neema yako miyoni mwetu, ili sisi tuliojua kwa maelezo ya malaika kwamba mwanao amejifanya mtu kwa mateso na msalaba wake tufikishwe kwenye utukufu na ufufuko. Tunaomba hayo kwa njia ya Kristu Bwana wetu. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">TUNAKIMBILIA <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Tunakimbilia, ulinzi wako, mzazi Mtakatifu wa Mungu, Usitunyime tukiomba katika shida zetu, utuokoe siku zote kila tuingiapo hatarini, ee Bikira mtukufu mwenye baraka. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">SALA KABLA YA KULA <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Unibariki, Mungu wangu, mimi na chakula changu, ulichonipa nipate nguvu za kukutumikia vema. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">SALA BAADA YA KULA <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Nakushukuru Mungu wangu, kwa chakula ulichonipa, Nimepata nguvu za kukutumikia vema. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">SALA KABLA YA KAZI <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Uje Roho Mtakatifu uzienee nyoyo za waamini wako, uwatie mapendo yako. Peleka Roho wako, vitaumbwa upya, na nchi zitageuka.
-                
-                Tuombe: Ee Mungu uliyefundisha nyoyo za waamini wako ukiwaletea mwanga wa Roho Mtakatifu, tunaomba tuongozwe na huyo Roho, tupende yaliyo mema, tupate daima faraja zake. Tunaomba hayo kwa njia ya Kristo, Bwana wetu. Amina.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header" onclick="toggleSala(this)">SALA BAADA YA KAZI <i class="fa-solid fa-chevron-down"></i></div>
-            <div class="card-content">
-                <p>Ee Mungu, mwanzo na mwisho wa mambo yote, tunakushukuru kwa kuwa umetujalia neema ya kufanya kazi hii. Utusamehe makosa tuliyofanya, na utujalie bidii na moyo wa upendo katika kazi zetu zote. Tunaomba hayo kwa njia ya Kristo Bwana wetu. Amina.</p>
-            </div>
-        </div>
-
+        <i class="fa-solid fa-chevron-right jumuiya-arrow"></i>
     </div>
+</div>
 
-    <script>
-        // Mfumo wa kufungua na kufunga sala
-        function toggleSala(element) {
-            const card = element.parentElement;
-            card.classList.toggle('active');
-            
-            // Funga zingine zote
-            const allCards = document.querySelectorAll('.card');
-            allCards.forEach(c => {
-                if (c !== card) c.classList.remove('active');
-            });
-        }
+<!-- SEARCH -->
+<div class="search-wrap">
+    <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Tafuta sala..." oninput="filterSala(this.value)">
+    </div>
+</div>
 
-        // Firebase Setup
-        const firebaseConfig = {
-          apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
-          authDomain: "viwawa-app.firebaseapp.com",
-          databaseURL: "https://viwawa-app-default-rtdb.firebaseio.com",
-          projectId: "viwawa-app",
-          storageBucket: "viwawa-app.firebasestorage.app",
-          messagingSenderId: "523436472007",
-          appId: "1:523436472007:web:dda010d18fd00ea60070e2"
-        };
+<!-- CATEGORY TABS -->
+<div class="tabs-wrap" id="tabs">
+    <div class="tab active" onclick="filterTab('zote', this)">Zote</div>
+    <div class="tab" onclick="filterTab('asubuhi', this)">Asubuhi/Jioni</div>
+    <div class="tab" onclick="filterTab('msingi', this)">Msingi</div>
+    <div class="tab" onclick="filterTab('maria', this)">Kwa Maria</div>
+    <div class="tab" onclick="filterTab('chakula', this)">Chakula/Kazi</div>
+</div>
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+<!-- PRAYER LIST -->
+<div class="prayer-list" id="prayerList"></div>
+<div class="empty-state" id="emptyState">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <p>Sala haikupatikana.<br>Jaribu maneno mengine.</p>
+</div>
 
-        let jumuiyaUrl = "#";
-        db.collection("huduma").doc("sala").get().then((doc) => {
-            if (doc.exists) jumuiyaUrl = doc.data().link;
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+    <a href="home.html" class="nav-item"><i class="fa-solid fa-house"></i>HOME</a>
+    <a href="biblia.html" class="nav-item"><i class="fa-solid fa-book-bible"></i>BIBLIA</a>
+    <a href="sala.html" class="nav-item active"><i class="fa-solid fa-hands-praying"></i>SALA</a>
+    <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i>WASIFU</a>
+</nav>
+
+<script>
+    // ── FIREBASE ──
+    const firebaseConfig = {
+        apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
+        authDomain: "viwawa-app.firebaseapp.com",
+        projectId: "viwawa-app",
+        storageBucket: "viwawa-app.firebasestorage.app",
+        messagingSenderId: "523436472007",
+        appId: "1:523436472007:web:dda010d18fd00ea60070e2"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let jumuiyaUrl = "#";
+    db.collection("huduma").doc("sala").get().then(doc => {
+        if (doc.exists) jumuiyaUrl = doc.data().link;
+    });
+
+    function funguaSalaJumuiya() {
+        if (jumuiyaUrl !== "#") window.location.href = jumuiyaUrl;
+        else showToast("🙏 Inapakia...");
+    }
+
+    // ── SALA DATA ──
+    const sala = [
+        { id: 1, jina: "SALA YA ASUBUHI", tag: "asubuhi", maandishi: `Ee Baba yetu Mungu mkuu,
+Umenilinda usiku huu,
+Nakushukuru kwa Moyo,
+Ee Baba, Mwana, na Roho.
+
+Nilinde tena siku hii,
+Niache dhambi, nikutii.
+Naomba sana, Baba wee,
+Baraka yako nipokee.
+
+Bikira safi, Ee Maria,
+nisipotee nisimamie,
+Mlinzi mkuu Malaika wee.
+Kwa Mungu wetu niombee.
+
+Nitake, nitende mema tu,
+na mwisho nije kwako juu. Amina.` },
+
+        { id: 2, jina: "NIA NJEMA", tag: "asubuhi", maandishi: `Kumheshimu Mungu wangu namtolea roho yangu,
+nifanye kazi nipumzike, Amri zake tu nishike.
+
+Wazo, neno, tendo lote namtolea Mungu pote,
+Roho, mwili, chote changu, Pendo na uzima wangu,
+
+Mungu wangu nitampenda, wala dhambi sitatenda.
+Jina lako nasifia, utakalo hutimia,
+kwa utii navumilia, teso na matata pia.
+
+Nipe Bwana, neema zako niongeze sifa yako. Amina.` },
+
+        { id: 3, jina: "SALA YA MATOLEO", tag: "msingi", maandishi: `Ee Yesu, kwa mikono ya Bikira Maria, na kwa muungano na sadaka yako kuu, ninakutolea sala, matendo, masumbuko na furaha zangu zote za leo.
+
+Ee Yesu, ufalme wako utufikie.` },
+
+        { id: 4, jina: "BABA YETU", tag: "msingi", maandishi: `Baba yetu uliye mbinguni, jina lako litukuzwe,
+Ufalme wako ufike, utakalo lifanyike duniani kama mbinguni.
+
+Utupe leo mkate wetu wa kila siku. Utusamehe makosa yetu, kama tunavyowasamehe na sisi waliotukosea.
+
+Usitutie katika kishawishi, lakini utuopoe maovuni. Amina.` },
+
+        { id: 5, jina: "SALAMU MARIA", tag: "maria", maandishi: `Salamu Maria, umejaa neema,
+Bwana yu nawe,
+umebarikiwa kuliko wanawake wote,
+na Yesu mzao wa tumbo lako amebarikiwa.
+
+Maria Mtakatifu, Mama wa Mungu,
+utuombee sisi wakosefu,
+sasa na saa ya kufa kwetu. Amina.` },
+
+        { id: 6, jina: "ATUKUZWE BABA", tag: "msingi", maandishi: `Atukuzwe Baba, na Mwana, na Roho Mtakatifu.
+Kama mwanzo, na sasa, na siku zote na milele. Amina.` },
+
+        { id: 7, jina: "KANUNI YA IMANI (NASADIKI)", tag: "msingi", maandishi: `Nasadiki kwa Mungu Baba Mwenyezi, Muumba mbingu na dunia,
+
+Na kwa Yesu Kristo, Mwana wa pekee, Bwana wetu, aliye tungwa kwa uwezo wa Roho Mtakatifu, Akazaliwa na Bikira Maria, Akateswa kwa mamlaka ya Ponsyo Pilato, akasulubiwa, akafa, akazikwa,
+
+Akashukia kuzimu, siku ya tatu akafufuka katika wafu, Akapaa Mbinguni, Amekaa kuume kwa Mungu Baba Mwenyezi; Toka huko atakuja kuwahukumu wazima na wafu.
+
+Nasadiki kwa Roho Mtakatifu, Kanisa Takatifu Katoliki, ushirika wa watakatifu, maondoleo ya dhambi, ufufuko wa miili na uzima wa milele. Amina.` },
+
+        { id: 8, jina: "SALA YA MATUMAINI", tag: "msingi", maandishi: `Mungu wangu, natumaini kwako nitapewa kwa njia ya Yesu Kristu, neema zako hapa duniani na utukufu mbinguni, kwani ndiwe uliyeagana hayo nasi, nawe mwamini. Amina.` },
+
+        { id: 9, jina: "SALA YA MAPENDO", tag: "msingi", maandishi: `Mungu wangu, nakupenda zaidi ya chochote; kwani ndiwe mwema, ndiwe mwenye kupendeza.
+
+Nampenda na jirani yangu kama nafsi yangu kwa ajili yako. Amina.` },
+
+        { id: 10, jina: "SALA YA KUTUBU", tag: "msingi", maandishi: `Mungu wangu, nimetubu sana dhambi zangu, kwani ndiwe mwema, ndiwe mwenye kupendeza, wachukizwa na dhambi.
+
+Basi sitaki kukosa tena, nitafanya kitubio, naomba neema yako nipate kurudi. Amina.` },
+
+        { id: 11, jina: "SALA KWA MALAIKA MLINZI", tag: "msingi", maandishi: `Malaika Mlinzi wangu, unilinde katika hatari zote za roho na mwili.
+
+Ee Malaika wa Mungu, niliyekabidhiwa kwako kwa wema wa Mungu, uniangazie, unilinde, uniongoze na unitawale leo. Amina.` },
+
+        { id: 12, jina: "MALAIKA WA BWANA", tag: "maria", maandishi: `Malaika wa Bwana alimpasha habari Maria. Naye akapata mimba kwa uwezo wa Roho Mtakatifu.
+(Salamu Maria...)
+
+Ndimi mtumishi wa Bwana. Nitendewe ulivyonena.
+(Salamu Maria...)
+
+Neno la Mungu akatwaa mwili. Akakaa kwetu.
+(Salamu Maria...)
+
+V. Utuombee, mzazi mtakatifu wa Mungu.
+R. Tujalie ahadi za Kristu.
+
+Tuombe: Tunakuomba Ee Bwana utie neema yako miyoni mwetu, ili sisi tuliojua kwa maelezo ya malaika kwamba mwanao amejifanya mtu kwa mateso na msalaba wake tufikishwe kwenye utukufu na ufufuko. Tunaomba hayo kwa njia ya Kristu Bwana wetu. Amina.` },
+
+        { id: 13, jina: "TUNAKIMBILIA", tag: "maria", maandishi: `Tunakimbilia, ulinzi wako, mzazi Mtakatifu wa Mungu,
+
+Usitunyime tukiomba katika shida zetu, utuokoe siku zote kila tuingiapo hatarini,
+
+Ee Bikira mtukufu mwenye baraka. Amina.` },
+
+        { id: 14, jina: "SALA KABLA YA KULA", tag: "chakula", maandishi: `Unibariki, Mungu wangu, mimi na chakula changu, ulichonipa nipate nguvu za kukutumikia vema. Amina.` },
+
+        { id: 15, jina: "SALA BAADA YA KULA", tag: "chakula", maandishi: `Nakushukuru Mungu wangu, kwa chakula ulichonipa, Nimepata nguvu za kukutumikia vema. Amina.` },
+
+        { id: 16, jina: "SALA KABLA YA KAZI", tag: "chakula", maandishi: `Uje Roho Mtakatifu uzienee nyoyo za waamini wako, uwatie mapendo yako. Peleka Roho wako, vitaumbwa upya, na nchi zitageuka.
+
+Tuombe: Ee Mungu uliyefundisha nyoyo za waamini wako ukiwaletea mwanga wa Roho Mtakatifu, tunaomba tuongozwe na huyo Roho, tupende yaliyo mema, tupate daima faraja zake. Tunaomba hayo kwa njia ya Kristo, Bwana wetu. Amina.` },
+
+        { id: 17, jina: "SALA BAADA YA KAZI", tag: "chakula", maandishi: `Ee Mungu, mwanzo na mwisho wa mambo yote, tunakushukuru kwa kuwa umetujalia neema ya kufanya kazi hii.
+
+Utusamehe makosa tuliyofanya, na utujalie bidii na moyo wa upendo katika kazi zetu zote. Tunaomba hayo kwa njia ya Kristo Bwana wetu. Amina.` },
+    ];
+
+    let currentFilter = 'zote';
+    let currentSearch = '';
+    let openCard = null;
+
+    // ── RENDER ──
+    function render() {
+        const list = document.getElementById('prayerList');
+        const empty = document.getElementById('emptyState');
+        list.innerHTML = '';
+
+        const filtered = sala.filter(s => {
+            const matchTag  = currentFilter === 'zote' || s.tag === currentFilter;
+            const matchSearch = s.jina.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                                s.maandishi.toLowerCase().includes(currentSearch.toLowerCase());
+            return matchTag && matchSearch;
         });
 
-        function funguaSalaJumuiya() {
-            if(jumuiyaUrl !== "#") window.location.href = jumuiyaUrl;
-            else alert("Inapakia...");
+        if (filtered.length === 0) {
+            empty.style.display = 'block';
+            return;
         }
-    </script>
+        empty.style.display = 'none';
+
+        filtered.forEach((s, i) => {
+            const card = document.createElement('div');
+            card.className = 'prayer-card';
+            card.id = 'card-' + s.id;
+            card.style.animationDelay = (i * 0.04) + 's';
+            card.innerHTML = `
+                <div class="prayer-header" onclick="toggleCard(${s.id})">
+                    <div class="prayer-num">${i + 1}</div>
+                    <div class="prayer-name">${s.jina}</div>
+                    <i class="fa-solid fa-chevron-down prayer-chevron"></i>
+                </div>
+                <div class="prayer-divider"></div>
+                <div class="prayer-content">
+                    <div class="prayer-inner">
+                        <span class="prayer-quote-mark">"</span>
+                        <div class="prayer-text">${s.maandishi}</div>
+                        <div class="prayer-actions">
+                            <button class="prayer-action-btn btn-pray" onclick="saliaSasa('${s.jina}')">
+                                <i class="fa-solid fa-hands-praying"></i> Salia
+                            </button>
+                            <button class="prayer-action-btn btn-copy-sala" onclick="copyText('${s.id}')">
+                                <i class="fa-regular fa-copy"></i> Nakili
+                            </button>
+                            <button class="prayer-action-btn btn-share-sala" onclick="shareText('${s.id}')">
+                                <i class="fa-solid fa-share"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            list.appendChild(card);
+        });
+    }
+
+    function toggleCard(id) {
+        const card = document.getElementById('card-' + id);
+        const isOpen = card.classList.contains('open');
+
+        // Close all
+        document.querySelectorAll('.prayer-card').forEach(c => c.classList.remove('open'));
+
+        if (!isOpen) {
+            card.classList.add('open');
+            setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+        }
+    }
+
+    function filterTab(tag, el) {
+        currentFilter = tag;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        render();
+    }
+
+    function filterSala(val) {
+        currentSearch = val;
+        render();
+    }
+
+    // ── SALA SASA (prayer mode) ──
+    function saliaSasa(jina) {
+        showToast('🙏 Unasali: ' + jina);
+    }
+
+    // ── COPY ──
+    function copyText(id) {
+        const s = sala.find(x => x.id == id);
+        if (!s) return;
+        navigator.clipboard.writeText(s.jina + '\n\n' + s.maandishi + '\n\n— VIWAWA App 🙏');
+        showToast('📋 Sala imenakiliwa!');
+    }
+
+    // ── SHARE ──
+    function shareText(id) {
+        const s = sala.find(x => x.id == id);
+        if (!s) return;
+        const text = s.jina + '\n\n' + s.maandishi + '\n\n— VIWAWA App | Mapendo Daima 🙏';
+        if (navigator.share) {
+            navigator.share({ title: s.jina, text });
+        } else {
+            navigator.clipboard.writeText(text);
+            showToast('📋 Sala imenakiliwa kwa kushiriki!');
+        }
+    }
+
+    // ── TOAST ──
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // ── INIT ──
+    render();
+</script>
 </body>
 </html>

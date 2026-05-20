@@ -2,179 +2,608 @@
 <html lang="sw">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MICHANGO - VIWAWA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Michango - VIWAWA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
     <style>
-        :root { --primary: #8d1212; --success: #2e7d32; --danger: #c62828; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: #f8f9fa; color: #333; padding-bottom: 50px; }
+        :root {
+            --maroon: #7a1010;
+            --maroon2: #9e1515;
+            --maroon3: #4a0808;
+            --gold: #d4a017;
+            --gold2: #f0c94a;
+            --bg: #f5f0f0;
+            --white: #ffffff;
+            --text: #1a1010;
+            --text-soft: #997777;
+            --border: #ede0e0;
+            --success: #1e7e34;
+            --success-bg: #eafaf1;
+            --zero-bg: #fdf5f5;
+            --zero: #c0392b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding-bottom: 110px;
+            color: var(--text);
+        }
 
-        .app-bar { background: var(--primary); color: white; padding: 15px; display: flex; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .app-bar i { font-size: 20px; cursor: pointer; margin-right: 15px; }
-        .app-bar h1 { font-size: 18px; text-transform: uppercase; }
+        /* HEADER */
+        .header {
+            background: linear-gradient(150deg, var(--maroon3), var(--maroon), var(--maroon2));
+            padding: 0 0 28px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::after {
+            content: 'Tsh';
+            position: absolute;
+            font-size: 100px;
+            font-weight: 900;
+            color: rgba(255,255,255,0.04);
+            bottom: -10px; right: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px 0;
+            position: relative; z-index: 2;
+        }
+        .back-btn {
+            width: 38px; height: 38px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 17px; cursor: pointer;
+            text-decoration: none;
+        }
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 19px; color: white;
+        }
+        .header-right { width: 38px; }
 
-        .container { padding: 15px; }
+        /* SUMMARY STRIP */
+        .summary-strip {
+            display: flex;
+            justify-content: space-around;
+            padding: 18px 16px 0;
+            position: relative; z-index: 2;
+        }
+        .sum-item { text-align: center; }
+        .sum-val {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px; color: var(--gold2);
+            display: block;
+        }
+        .sum-label {
+            font-size: 10px; color: rgba(255,255,255,0.55);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .sum-divider { width: 1px; background: rgba(255,255,255,0.15); align-self: stretch; margin: 4px 0; }
 
-        .selection-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; }
-        .card-left { display: flex; align-items: center; gap: 15px; }
-        .icon-circle { width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-        .bg-ada { background: #fff0f0; color: var(--primary); }
-        .bg-mingine { background: #f0f7ff; color: #1976d2; }
-        .card-info h3 { font-size: 16px; font-weight: bold; }
-        .card-info p { font-size: 12px; color: #888; }
+        /* MENU CARDS */
+        .menu-wrap {
+            padding: 0 16px;
+            margin-top: -16px;
+            position: relative; z-index: 10;
+        }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .menu-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 20px 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+            transition: 0.2s;
+            border: 1.5px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        .menu-card:active { transform: scale(0.97); }
+        .menu-card.active-card { border-color: var(--maroon); }
+        .menu-card-icon {
+            width: 46px; height: 46px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .ic-ada { background: #fdf0f0; color: var(--maroon); }
+        .ic-other { background: #eef4ff; color: #1a56db; }
+        .menu-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+        .menu-card p { font-size: 11px; color: var(--text-soft); }
+        .menu-card-arrow {
+            position: absolute;
+            top: 16px; right: 16px;
+            color: #ddd; font-size: 13px;
+        }
 
-        #view-ada, #view-mingine { display: none; }
-        .spreadsheet-container { background: white; border-radius: 12px; padding: 10px; overflow-x: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        table { width: 100%; border-collapse: collapse; min-width: 700px; font-size: 12px; }
-        th, td { border: 1px solid #eee; padding: 12px 8px; text-align: center; }
-        th { background: #f9f9f9; font-weight: bold; color: var(--primary); }
-        .member-name { text-align: left; position: sticky; left: 0; background: white; font-weight: bold; padding-left: 10px; min-width: 150px; z-index: 5; }
-        .check-icon { color: var(--success); font-weight: bold; font-size: 16px; }
-        .cross-icon { color: #ccc; font-size: 14px; }
+        /* ═══════════════════════════════
+           SECTION: ADA TABLE
+        ═══════════════════════════════ */
+        .section-wrap {
+            padding: 16px 16px 0;
+            display: none;
+        }
+        .section-wrap.visible { display: block; }
 
-        .mchango-list-item { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; border-left: 5px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .mchango-top { display: flex; justify-content: space-between; margin-bottom: 5px; }
-        .mchango-title { font-weight: bold; font-size: 14px; color: var(--primary); text-transform: uppercase; }
-        .mchango-amt { font-weight: 900; color: #333; }
-        .sub-nav { color: var(--primary); font-weight: bold; margin-bottom: 15px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .section-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .section-back {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 13px; font-weight: 600;
+            color: var(--maroon); cursor: pointer;
+        }
+        .section-title-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px; color: var(--text);
+        }
+
+        /* Ada Table */
+        .table-scroll { overflow-x: auto; border-radius: 18px; background: var(--white); box-shadow: 0 4px 18px rgba(0,0,0,0.07); }
+        table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        thead tr { background: var(--maroon); }
+        thead th {
+            padding: 13px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.9);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            border: none;
+        }
+        thead th.name-col { text-align: left; padding-left: 16px; min-width: 150px; }
+
+        tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: #fdf8f8; }
+
+        tbody td {
+            padding: 12px 8px;
+            font-size: 12px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        td.name-col {
+            text-align: left;
+            padding-left: 16px;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text);
+            position: sticky; left: 0;
+            background: var(--white);
+            z-index: 5;
+        }
+        tr:hover td.name-col { background: #fdf8f8; }
+
+        /* Amount pill */
+        .amt-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 52px;
+        }
+        .amt-paid { background: var(--success-bg); color: var(--success); }
+        .amt-zero { background: var(--zero-bg); color: #ccc; font-size: 13px; }
+
+        /* Row total */
+        .row-total { background: #fdf0f0; color: var(--maroon); font-weight: 800; font-size: 12px; }
+
+        /* Footer row */
+        tfoot tr { background: var(--maroon3); }
+        tfoot td {
+            padding: 10px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+        }
+        tfoot td.name-col { text-align: left; padding-left: 16px; color: var(--gold2); font-size: 12px; }
+
+        /* Loading shimmer */
+        .shimmer-row td { padding: 14px 8px; }
+        .shimmer-box {
+            height: 14px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #f0e8e8 25%, #fdf5f5 50%, #f0e8e8 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer { to { background-position: -200% 0; } }
+
+        /* ═══════════════════════════════
+           SECTION: MICHANGO MINGINE
+        ═══════════════════════════════ */
+        .contributions-list { display: flex; flex-direction: column; gap: 12px; }
+
+        .contrib-card {
+            background: var(--white);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            animation: riseUp 0.35s ease both;
+        }
+        @keyframes riseUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .contrib-avatar {
+            width: 46px; height: 46px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--maroon3), var(--maroon));
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 16px; font-weight: 800;
+            flex-shrink: 0;
+            font-family: 'Playfair Display', serif;
+        }
+        .contrib-info { flex: 1; }
+        .contrib-type {
+            font-size: 11px; font-weight: 700;
+            color: var(--maroon);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+        }
+        .contrib-name {
+            font-size: 14px; font-weight: 700;
+            color: var(--text); margin-bottom: 3px;
+        }
+        .contrib-date {
+            font-size: 11px; color: var(--text-soft);
+            display: flex; align-items: center; gap: 4px;
+        }
+        .contrib-amount {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .contrib-amt-big {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px; font-weight: 700;
+            color: var(--maroon);
+            display: block;
+        }
+        .contrib-amt-label {
+            font-size: 10px; color: var(--text-soft);
+            display: block; margin-top: 2px;
+        }
+
+        /* Total card */
+        .total-card {
+            background: linear-gradient(135deg, var(--maroon3), var(--maroon));
+            border-radius: 18px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            box-shadow: 0 6px 20px rgba(74,8,8,0.2);
+        }
+        .total-left { }
+        .total-label { font-size: 11px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .total-val { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--gold2); }
+        .total-icon { font-size: 32px; color: rgba(255,255,255,0.15); }
+
+        /* Empty */
+        .empty-state { text-align: center; padding: 50px 20px; color: var(--text-soft); }
+        .empty-state i { font-size: 42px; margin-bottom: 12px; display: block; color: var(--border); }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 110px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--maroon3);
+            color: white;
+            padding: 11px 22px;
+            border-radius: 30px;
+            font-size: 13px; font-weight: 600;
+            opacity: 0; transition: all 0.3s;
+            z-index: 9999; white-space: nowrap;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%;
+            background: white;
+            display: flex; justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #eee;
+            z-index: 100;
+        }
+        .nav-item {
+            text-decoration: none; color: #aaa;
+            font-size: 10px; font-weight: 600;
+            text-align: center; flex: 1;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 3px;
+        }
+        .nav-item i { font-size: 19px; }
+        .nav-item.active { color: var(--maroon); }
     </style>
 </head>
 <body>
 
-    <div class="app-bar">
-        <i class="fa-solid fa-arrow-left" id="mainBack" onclick="window.history.back()"></i>
-        <h1 id="titleText">Michango</h1>
+<!-- HEADER -->
+<div class="header">
+    <div class="header-top">
+        <a href="home.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        <span class="header-title">Michango</span>
+        <div class="header-right"></div>
     </div>
-
-    <div class="container">
-        
-        <div id="menu-area">
-            <div class="selection-card" onclick="toggleView('ada')">
-                <div class="card-left">
-                    <div class="icon-circle bg-ada"><i class="fa-solid fa-calendar-check"></i></div>
-                    <div class="card-info">
-                        <h3>Ada ya Mwezi</h3>
-                        <p>Januari - Desemba</p>
-                    </div>
-                </div>
-                <i class="fa-solid fa-chevron-right" style="color:#ccc;"></i>
-            </div>
-
-            <div class="selection-card" onclick="toggleView('mingine')">
-                <div class="card-left">
-                    <div class="icon-circle bg-mingine"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-                    <div class="card-info">
-                        <h3>Michango Mingine</h3>
-                        <p>Kambi, Ujenzi, Sherehe n.k</p>
-                    </div>
-                </div>
-                <i class="fa-solid fa-chevron-right" style="color:#ccc;"></i>
-            </div>
+    <div class="summary-strip">
+        <div class="sum-item">
+            <span class="sum-val" id="sumWanachama">—</span>
+            <span class="sum-label">Wanachama</span>
         </div>
-
-        <div id="view-ada">
-            <div class="sub-nav" onclick="resetPage()"><i class="fa-solid fa-chevron-left"></i> Rudi</div>
-            <div class="spreadsheet-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="member-name">Mwanachama</th>
-                            <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>Mei</th><th>Jun</th>
-                            <th>Jul</th><th>Ago</th><th>Sep</th><th>Okt</th><th>Nov</th><th>Des</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adaTableBody">
-                        </tbody>
-                </table>
-            </div>
+        <div class="sum-divider"></div>
+        <div class="sum-item">
+            <span class="sum-val" id="sumMichango">—</span>
+            <span class="sum-label">Michango</span>
         </div>
-
-        <div id="view-mingine">
-            <div class="sub-nav" onclick="resetPage()"><i class="fa-solid fa-chevron-left"></i> Rudi</div>
-            <div id="otherContributionsList"></div>
+        <div class="sum-divider"></div>
+        <div class="sum-item">
+            <span class="sum-val" id="sumJumla">—</span>
+            <span class="sum-label">Jumla (Tsh)</span>
         </div>
-
     </div>
+</div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
-            authDomain: "viwawa-app.firebaseapp.com",
-            projectId: "viwawa-app",
-            storageBucket: "viwawa-app.firebasestorage.app",
-            messagingSenderId: "523436472007",
-            appId: "1:523436472007:web:dda010d18fd00ea60070e2"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+<!-- MENU -->
+<div class="menu-wrap" id="menuArea">
+    <div class="menu-grid">
+        <div class="menu-card" onclick="showSection('ada')">
+            <div class="menu-card-icon ic-ada"><i class="fa-solid fa-calendar-check"></i></div>
+            <h3>Ada ya Mwezi</h3>
+            <p>Fuatilia malipo ya kila mwezi</p>
+            <i class="fa-solid fa-chevron-right menu-card-arrow"></i>
+        </div>
+        <div class="menu-card" onclick="showSection('mingine')">
+            <div class="menu-card-icon ic-other"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+            <h3>Michango Mingine</h3>
+            <p>Kambi, Ujenzi, Sherehe n.k</p>
+            <i class="fa-solid fa-chevron-right menu-card-arrow"></i>
+        </div>
+    </div>
+</div>
 
-        function toggleView(target) {
-            document.getElementById('menu-area').style.display = 'none';
-            if(target === 'ada') {
-                document.getElementById('view-ada').style.display = 'block';
-                document.getElementById('titleText').innerText = "Ada ya Mwezi";
-                loadAdaTable();
-            } else {
-                document.getElementById('view-mingine').style.display = 'block';
-                document.getElementById('titleText').innerText = "Michango Mingine";
-                loadOtherContributions();
+<!-- ADA SECTION -->
+<div class="section-wrap" id="sectionAda">
+    <div class="section-top">
+        <div class="section-back" onclick="hideSection()">
+            <i class="fa-solid fa-chevron-left"></i> Rudi
+        </div>
+        <span class="section-title-text">Ada ya Mwezi</span>
+    </div>
+    <div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th class="name-col">Mwanachama</th>
+                    <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th>
+                    <th>Mei</th><th>Jun</th><th>Jul</th><th>Ago</th>
+                    <th>Sep</th><th>Okt</th><th>Nov</th><th>Des</th>
+                    <th>Jumla</th>
+                </tr>
+            </thead>
+            <tbody id="adaTableBody">
+                <tr class="shimmer-row">
+                    <td><div class="shimmer-box" style="width:120px;"></div></td>
+                    <td colspan="13"><div class="shimmer-box"></div></td>
+                </tr>
+            </tbody>
+            <tfoot id="adaTableFoot"></tfoot>
+        </table>
+    </div>
+</div>
+
+<!-- MICHANGO MINGINE SECTION -->
+<div class="section-wrap" id="sectionMingine">
+    <div class="section-top">
+        <div class="section-back" onclick="hideSection()">
+            <i class="fa-solid fa-chevron-left"></i> Rudi
+        </div>
+        <span class="section-title-text">Michango Mingine</span>
+    </div>
+    <div class="total-card" id="totalCard" style="display:none;">
+        <div class="total-left">
+            <div class="total-label">Jumla Iliyokusanywa</div>
+            <div class="total-val" id="totalMingine">Tsh 0</div>
+        </div>
+        <i class="fa-solid fa-wallet total-icon"></i>
+    </div>
+    <div class="contributions-list" id="contribList"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+    <a href="home.html" class="nav-item"><i class="fa-solid fa-house"></i>HOME</a>
+    <a href="biblia.html" class="nav-item"><i class="fa-solid fa-book-bible"></i>BIBLIA</a>
+    <a href="sala.html" class="nav-item"><i class="fa-solid fa-hands-praying"></i>SALA</a>
+    <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i>WASIFU</a>
+</nav>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDBRoHCdSzu1g9lP9VBjYSeVU4N-wdD-8A",
+        authDomain: "viwawa-app.firebaseapp.com",
+        projectId: "viwawa-app",
+        storageBucket: "viwawa-app.firebasestorage.app",
+        messagingSenderId: "523436472007",
+        appId: "1:523436472007:web:dda010d18fd00ea60070e2"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const MIEZI = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ago','Sep','Okt','Nov','Des'];
+    const ADA_KILA_MWEZI = 5000; // TZS — badilisha kulingana na jumuiya yako
+
+    // ── LOAD SUMMARY ──
+    function loadSummary() {
+        db.collection("wanachama").get().then(snap => {
+            document.getElementById('sumWanachama').innerText = snap.size;
+        });
+        db.collection("michango").get().then(snap => {
+            let jumla = 0;
+            snap.forEach(d => { jumla += Number(d.data().kiasi) || 0; });
+            document.getElementById('sumMichango').innerText = snap.size;
+            document.getElementById('sumJumla').innerText = jumla > 0 ? formatNum(jumla) : '0';
+        });
+    }
+
+    // ── SHOW / HIDE ──
+    function showSection(which) {
+        document.getElementById('menuArea').style.display = 'none';
+        if (which === 'ada') {
+            document.getElementById('sectionAda').classList.add('visible');
+            loadAdaTable();
+        } else {
+            document.getElementById('sectionMingine').classList.add('visible');
+            loadMichango();
+        }
+    }
+    function hideSection() {
+        document.getElementById('menuArea').style.display = 'block';
+        document.getElementById('sectionAda').classList.remove('visible');
+        document.getElementById('sectionMingine').classList.remove('visible');
+    }
+
+    // ── ADA TABLE ──
+    function loadAdaTable() {
+        const tbody = document.getElementById('adaTableBody');
+        const tfoot = document.getElementById('adaTableFoot');
+
+        db.collection("wanachama").orderBy("jina").onSnapshot(snap => {
+            tbody.innerHTML = '';
+
+            // Totals per month
+            const monthTotals = {};
+            MIEZI.forEach(m => monthTotals[m] = 0);
+            let grandTotal = 0;
+
+            snap.forEach((doc, idx) => {
+                const d = doc.data();
+                let rowTotal = 0;
+                let cells = '';
+
+                MIEZI.forEach(m => {
+                    const val = d[m];
+                    // Support both boolean (old) and number (new)
+                    if (typeof val === 'number' && val > 0) {
+                        rowTotal += val;
+                        monthTotals[m] += val;
+                        cells += `<td><span class="amt-pill amt-paid">${formatNum(val)}</span></td>`;
+                    } else if (val === true) {
+                        rowTotal += ADA_KILA_MWEZI;
+                        monthTotals[m] += ADA_KILA_MWEZI;
+                        cells += `<td><span class="amt-pill amt-paid">${formatNum(ADA_KILA_MWEZI)}</span></td>`;
+                    } else {
+                        cells += `<td><span class="amt-zero">—</span></td>`;
+                    }
+                });
+
+                grandTotal += rowTotal;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="name-col">${d.jina}</td>
+                        ${cells}
+                        <td><span class="amt-pill amt-paid row-total">${formatNum(rowTotal)}</span></td>
+                    </tr>`;
+            });
+
+            // Footer totals
+            let footCells = MIEZI.map(m =>
+                `<td>${monthTotals[m] > 0 ? formatNum(monthTotals[m]) : '—'}</td>`
+            ).join('');
+            tfoot.innerHTML = `
+                <tr>
+                    <td class="name-col">JUMLA</td>
+                    ${footCells}
+                    <td style="color:var(--gold2); font-size:12px;">${formatNum(grandTotal)}</td>
+                </tr>`;
+        });
+    }
+
+    // ── MICHANGO MINGINE ──
+    function loadMichango() {
+        const list = document.getElementById('contribList');
+        const totalEl = document.getElementById('totalMingine');
+        const totalCard = document.getElementById('totalCard');
+
+        db.collection("michango").orderBy("tarehe", "desc").onSnapshot(snap => {
+            list.innerHTML = '';
+            let jumla = 0;
+
+            if (snap.empty) {
+                list.innerHTML = `<div class="empty-state"><i class="fa-solid fa-wallet"></i><p>Hakuna michango iliyorekodiwa bado.</p></div>`;
+                totalCard.style.display = 'none';
+                return;
             }
-        }
 
-        function resetPage() {
-            document.getElementById('menu-area').style.display = 'block';
-            document.getElementById('view-ada').style.display = 'none';
-            document.getElementById('view-mingine').style.display = 'none';
-            document.getElementById('titleText').innerText = "Michango";
-        }
+            totalCard.style.display = 'flex';
+            snap.forEach((doc, i) => {
+                const d = doc.data();
+                const kiasi = Number(d.kiasi) || 0;
+                jumla += kiasi;
+                const dateStr = d.tarehe ? d.tarehe.toDate().toLocaleDateString('sw-TZ', { day:'2-digit', month:'short', year:'numeric' }) : '—';
+                const initials = (d.jina || '?').split(' ').map(w => w[0]).join('').substring(0,2).toUpperCase();
 
-        // LOAD SPREADSHEET DATA (ADA)
-        function loadAdaTable() {
-            const tbody = document.getElementById('adaTableBody');
-            const miezi = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ago', 'Sep', 'Okt', 'Nov', 'Des'];
-
-            db.collection("wanachama").orderBy("jina").onSnapshot(snap => {
-                tbody.innerHTML = "";
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    let row = `<tr><td class="member-name">${d.jina}</td>`;
-                    
-                    miezi.forEach(mwezi => {
-                        // Kama mwezi ni true, weka ✔, vinginevyo weka ✘
-                        const icon = d[mwezi] ? '<span class="check-icon">✔</span>' : '<span class="cross-icon">✘</span>';
-                        row += `<td>${icon}</td>`;
-                    });
-                    
-                    row += `</tr>`;
-                    tbody.innerHTML += row;
-                });
-            });
-        }
-
-        function loadOtherContributions() {
-            const listDiv = document.getElementById('otherContributionsList');
-            db.collection("michango").orderBy("tarehe", "desc").onSnapshot((snapshot) => {
-                listDiv.innerHTML = "";
-                snapshot.forEach((doc) => {
-                    const d = doc.data();
-                    const dateStr = d.tarehe ? d.tarehe.toDate().toLocaleDateString('sw-TZ') : "---";
-                    listDiv.innerHTML += `
-                        <div class="mchango-list-item">
-                            <div class="mchango-top">
-                                <span class="mchango-title">${d.aina}</span>
-                                <span class="mchango-amt">Tsh ${Number(d.kiasi).toLocaleString()}</span>
-                            </div>
-                            <div class="mchango-user"><i class="fa-solid fa-user-check"></i> ${d.jina}</div>
-                            <div class="mchango-date"><i class="fa-regular fa-calendar"></i> ${dateStr}</div>
+                list.innerHTML += `
+                    <div class="contrib-card" style="animation-delay:${i*0.05}s">
+                        <div class="contrib-avatar">${initials}</div>
+                        <div class="contrib-info">
+                            <div class="contrib-type">${d.aina || '—'}</div>
+                            <div class="contrib-name">${d.jina || '—'}</div>
+                            <div class="contrib-date"><i class="fa-regular fa-calendar"></i>${dateStr}</div>
                         </div>
-                    `;
-                });
+                        <div class="contrib-amount">
+                            <span class="contrib-amt-big">${formatNum(kiasi)}</span>
+                            <span class="contrib-amt-label">TZS</span>
+                        </div>
+                    </div>`;
             });
-        }
-    </script>
+
+            totalEl.innerText = 'Tsh ' + formatNum(jumla);
+        });
+    }
+
+    function formatNum(n) {
+        return Number(n).toLocaleString('sw-TZ');
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // Init
+    loadSummary();
+</script>
 </body>
 </html>
